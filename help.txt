@@ -1,0 +1,121 @@
+Optimize Performance
+Use lazy loading for modules to reduce the initial bundle size.
+
+Enable AOT (Ahead-of-Time) compilation for better performance in production.
+
+Use OnPush change detection strategy to minimize unnecessary change detection cycles.
+
+Stay Secure
+Sanitize user inputs to prevent XSS attacks.
+
+Use Angular's built-in features like HTTPClient for secure HTTP requests.
+
+
+ State Management
+For complex state management, consider using libraries like NgRx or Akita.
+
+Alternatively, Angular's built-in Services and RxJS can handle state management for smaller applications
+
+
+<p>{{ 'john doe' | titleCase }}</p>
+
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+  name: 'titleCase'
+})
+export class TitleCasePipe implements PipeTransform {
+  transform(value: string): string {
+    if (!value) return value;
+    return value
+      .toLowerCase()
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  }
+}
+
+npm install lodash
+
+import { startCase, lowerCase } from 'lodash';
+
+const lowercaseName = 'john doe';
+const normalCaseName = startCase(lowerCase(lowercaseName));
+
+console.log(normalCaseName); // Output: "John Doe"
+
+
+
+
+
+
+import { Directive, ElementRef, Renderer2, HostListener } from '@angular/core';
+
+@Directive({
+  selector: '[appMyDirective]', // Use this selector to apply the directive
+})
+export class MyDirective {
+  constructor(private el: ElementRef, private renderer: Renderer2) {}
+
+  // Add event listener for mouseenter
+  @HostListener('mouseenter') onMouseEnter() {
+    this.setBackgroundColor('yellow');
+  }
+
+  // Add event listener for mouseleave
+  @HostListener('mouseleave') onMouseLeave() {
+    this.setBackgroundColor('white');
+  }
+
+  private setBackgroundColor(color: string) {
+    this.renderer.setStyle(this.el.nativeElement, 'backgroundColor', color);
+  }
+}
+
+
+
+
+
+
+
+<p>Step 1 Data: {{ wizardData.step1 | json }}</p>
+
+
+
+sortBy(field: string) {
+    this.employees.sort((a, b) => (a[field] > b[field] ? 1 : -1));
+  }
+ <thead>
+     <tr>
+       <th (click)="sortBy('name')">Name ⬆️⬇️</th>
+       <th (click)="sortBy('department')">Department ⬆️⬇️</th>
+     </tr>
+   </thead>
+
+
+<div cdkDropList class="list" (cdkDropListDropped)="drop($event)">
+    <div *ngFor="let item of list1" cdkDrag class="item">
+      {{ item }}
+    </div>
+  </div>
+
+  <div cdkDropList class="list" (cdkDropListDropped)="drop($event)">
+    <div *ngFor="let item of list2" cdkDrag class="item">
+      {{ item }}
+    </div>
+  </div>
+
+import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/drag-drop';
+
+   drop(event: CdkDragDrop<string[]>) {
+       if (event.previousContainer === event.container) {
+         moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
+       } else {
+         transferArrayItem(
+           event.previousContainer.data,
+           event.container.data,
+           event.previousIndex,
+           event.currentIndex
+         );
+       }
+     }

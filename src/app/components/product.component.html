@@ -1,0 +1,50 @@
+<div class="container mt-5" xmlns="http://www.w3.org/1999/html">
+  <div class="card shadow-lg">
+    <div class="card-header bg-primary text-white text-center">
+      <h3>Product Setup</h3>
+    </div>
+    <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+    <div class="card-body">
+      <div class="mb-3">
+        <label for="name" class="form-label">Product Name</label>
+        <input
+          type="text"
+          id="name"
+          class="form-control"
+          formControlName="name"
+          placeholder="Enter your product name"
+          [showErrors]="{ required: 'Product Name is required' }"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="emailProductManager" class="form-label">Product Manager Email</label>
+        <input
+          type="text"
+          id="emailProductManager"
+          class="form-control"
+          formControlName="emailProductManager"
+          placeholder="Enter Product Manager email"
+          [showErrors]="{ required: 'Product Manager Email is required', email: 'Product Manager Email is not valid' }"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="emailProductOwner" class="form-label">Product Owner Email</label>
+        <input
+          type="text"
+          id="emailProductOwner"
+          class="form-control"
+          formControlName="emailProductOwner"
+          placeholder="Enter Product Owner email"
+          [showErrors]="{ required: 'Product Owner Email is required', email: 'Product Owner Email is not valid' }"
+        />
+      </div>
+      <!-- Submit Button -->
+      <div class="text-center">
+        <button class="btn btn-primary" type="submit">Submit</button>
+        <button type="reset" class="btn btn-secondary" >Reset</button>
+      </div>
+    </div>
+    </form>
+  </div>
+
+</div>

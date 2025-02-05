@@ -1,0 +1,113 @@
+<div class="container mt-5" xmlns="http://www.w3.org/1999/html">
+  <div class="card shadow-lg">
+    <div class="card-header bg-primary text-white text-center">
+      <h3>Upload Product Epics/Stories</h3>
+    </div>
+
+  <input type="file" (change)="onFileChange($event)" class="form-control mt-2" accept=".xls,.xlsx" />
+
+    <div class="table-responsive">
+      <table class="table table-striped table-hover table-bordered" *ngIf="rawData.length > 0">
+        <thead class="table-primary">
+        <tr>
+          <th *ngFor="let key of excelHeaders">
+            {{ key | titlecase }}<div class="text-muted"> {{ predefinedFieldLabels[searchExcelColumnMapping(key)] || 'Unmapped' }}</div>
+          </th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let row of rawData.slice((1 - 1) * 5, 1 * 5); let i = index">
+          <td *ngFor="let key of excelHeaders">{{ row[key] || ' - '  }}</td>
+        </tr>
+        </tbody>
+      </table>
+    </div>
+  <div *ngIf="predefinedFields.length > 0 && excelHeadersUnmapped.length>0" class="card-body">
+    <h5 class="mt-4">Column Mapping</h5>
+    <div *ngFor="let header of predefinedFields" class="mb-3" >
+      <div *ngIf="mappedHeaders[header] === undefined">
+      <label>{{ predefinedFieldLabels[header] }}</label>
+        <label class="required-label" *ngIf="!!requiredFields[header]">&nbsp;* </label>
+      <select class="form-select" [(ngModel)]="mappedHeaders[header]" (change)="onMappingChange()"
+              [required]="!!requiredFields[header]"
+              [showErrors]="{ required: 'It is required' }">
+        <option value="">&#45;&#45; Select Field &#45;&#45;</option>
+        <option *ngFor="let field of excelHeadersUnmapped" [value]="field">{{ field }}</option>
+      </select>
+      </div>
+    </div>
+  </div>
+  <div *ngIf="!!mappedHeaders['requiredBy']" class="card-body">
+    <div class="mb-3" >
+      <div>
+        <label>Date Format</label><label class="required-label">&nbsp;* </label>
+        <select class="form-select" [(ngModel)]="dateFormat" required
+                [showErrors]="{ required: 'It is required' }">
+          <option value="">&#45;&#45; Select Field &#45;&#45;</option>
+          <option *ngFor="let field of dateFormats" [value]="field">{{ field }}</option>
+        </select>
+      </div>
+    </div>
+  </div>
+    <div class="text-center" *ngIf="rawData.length > 0">
+      <button class="btn btn-primary" type="submit" (click)="onSubmit()" [disabled]="!isFormValid()">Submit</button>
+      <button type="reset" class="btn btn-secondary" (click)="onReset()">Reset</button>
+    </div>
+  </div>
+<!--
+  class="text-muted"
+-->
+  <!-- Display Transformed Data -->
+
+
+</div>
+<!--<div class="container mt-5">
+  <h3>Upload and Map Excel Data</h3>
+
+  &lt;!&ndash; File Input &ndash;&gt;
+  <input type="file" (change)="onFileChange($event)" class="form-control mt-2" accept=".xls,.xlsx" />
+
+  &lt;!&ndash; Mapping Section &ndash;&gt;
+  <div *ngIf="predefinedFieldList.length > 0">
+    <h5 class="mt-4">Column Mapping</h5>
+    <div *ngFor="let header of predefinedFieldList" class="mb-3">
+      <label>{{ header }}</label>
+      <select class="form-select" [(ngModel)]="mappedHeaders[predefinedFields[header]]" (change)="onMappingChange()">
+        <option value="">&#45;&#45; Select Field &#45;&#45;</option>
+        <option *ngFor="let field of excelHeaders" [value]="field">{{ field }}</option>
+      </select>
+    </div>
+  </div>
+
+  &lt;!&ndash; Display Transformed Data &ndash;&gt;
+  <table class="table mt-3" *ngIf="transformedData.length > 0">
+    <thead>
+    <tr>
+      <th *ngFor="let key of predefinedFieldList">{{ key | titlecase }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let row of transformedData">
+      <td *ngFor="let key of predefinedFieldList">{{ row[predefinedFields[key]] || '-' }}</td>
+    </tr>
+    </tbody>
+  </table>
+</div>-->
+  <!--<h3>Upload and Process Excel File</h3>
+
+  &lt;!&ndash; File Input &ndash;&gt;
+  <input type="file" (change)="onFileChange($event)" class="form-control mt-2" accept=".xls,.xlsx" />
+
+  &lt;!&ndash; Display Data &ndash;&gt;
+  <table class="table mt-3" *ngIf="excelData.length > 0">
+    <thead>
+    <tr>
+      <th *ngFor="let key of columnHeaders">{{ key | titlecase }}</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let row of excelData">
+      <td *ngFor="let key of columnHeaders">{{ row[key] }}</td>
+    </tr>
+    </tbody>
+  </table>-->

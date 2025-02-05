@@ -1,0 +1,105 @@
+<div class="container mt-4">
+  <h2>Define Priorities</h2>
+
+  <!-- Add New -->
+  <div>
+    <h5 class="text-center">Add New Priority</h5>
+    <p>
+      Name: <input [(ngModel)]="newModel.name" required/>
+    </p>
+    <button (click)="addModel()">Add</button>
+  </div>
+  <h5 class="text-center">🖱️ Drag & Drop rows to update priority, keep most important on top</h5>
+  <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+    @for (model of models; track model) {
+      <div  (click)="selectModel(model)" class="example-box" cdkDrag >
+        <div *ngIf="selectedModel != null && model.id === selectedModel.id">
+          <span cdkDragHandle>☰</span>
+          <input [(ngModel)]="selectedModel.name" required/>
+        </div>
+        <div *ngIf="selectedModel == null || model.id !== selectedModel.id">
+          <span cdkDragHandle>☰</span>
+
+        {{model.name}}
+        </div>
+       <!-- <img *cdkDragPreview [src]="movie.poster" [alt]="movie.title">-->
+      </div>
+    }
+  </div>
+
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+  </div>
+
+
+  <!-- Selected Details -->
+  <div *ngIf="models.length>0">
+    <button (click)="updateModels()">Update</button>
+  </div>
+
+
+<!--  <button (click)="emitEvent()">Go Back</button>-->
+</div>
+
+
+<!--
+
+<div class="container mt-4">
+  <h2>Define Priorities</h2>
+  <h3 class="text-center">🖱️ Drag & Drop Table Rows, keep most important on top</h3>
+
+  <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+    @for (model of models; track model) {
+      <div  (click)="selectModel(model)" class="example-box" cdkDrag >
+        <div *ngIf="selectedModel != null && model.id === selectedModel.id">
+          <input [(ngModel)]="selectedModel.name" required/>
+        </div>
+        <div *ngIf="selectedModel == null || model.id !== selectedModel.id">
+          {{model.name}}
+        </div>
+        &lt;!&ndash; <img *cdkDragPreview [src]="movie.poster" [alt]="movie.title">&ndash;&gt;
+      </div>
+    }
+  </div>
+
+
+  &lt;!&ndash; Error Message &ndash;&gt;
+  <div *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+  </div>
+
+  &lt;!&ndash; List &ndash;&gt;
+  <ul>
+    <li *ngFor="let model of models" (click)="selectModel(model)">
+      {{ model.name }}
+      <button (click)="deleteModel(model.id); $event.stopPropagation()">Delete</button>
+    </li>
+  </ul>
+
+  &lt;!&ndash; Selected Details &ndash;&gt;
+  <div *ngIf="selectedModel">
+    <h3>Priority Details</h3>
+    <p>ID: {{ selectedModel.id }}</p>
+    <p>
+      Name: <input [(ngModel)]="selectedModel.name" required/>
+    </p>
+
+    <button (click)="updateModel(selectedModel)">Update</button>
+  </div>
+
+  &lt;!&ndash; Add New &ndash;&gt;
+  <div>
+    <h3>Add New Priority</h3>
+    <p>
+      Name: <input [(ngModel)]="newModel.name" required/>
+    </p>
+    <p>
+      Priority Level: <input [(ngModel)]="newModel.priorityLevel" required/>
+    </p>
+    <button (click)="addModel()">Add</button>
+  </div>
+  &lt;!&ndash;  <button (click)="emitEvent()">Go Back</button>&ndash;&gt;
+</div>
+-->

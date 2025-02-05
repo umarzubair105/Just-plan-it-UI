@@ -1,0 +1,183 @@
+<div class="container mt-5" xmlns="http://www.w3.org/1999/html">
+  <div class="card shadow-lg">
+    <div class="card-header bg-primary text-white text-center">
+      <h3>Company Setup</h3>
+    </div>
+    <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+      <div class="card-body">
+        <!-- Name -->
+
+        <div class="mb-3">
+          <label for="name" class="form-label">Company Name</label>
+          <input
+            type="text"
+            id="name"
+            class="form-control"
+            formControlName="name"
+            placeholder="Enter your company name"
+            [showErrors]="{ required: 'Company Name is required' }"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <input
+            type="text"
+            id="email"
+            class="form-control"
+            formControlName="email"
+            placeholder="Enter your email"
+            [showErrors]="{ required: 'Email is required', email: 'Email is not valid' }"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="resourceName" class="form-label">Your Name</label>
+          <input
+            type="text"
+            id="resourceName"
+            class="form-control"
+            formControlName="resourceName"
+            placeholder="Enter your name"
+            [showErrors]="{ required: 'Your Name is required' }"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="designation" class="form-label">Your Designation</label>
+          <input
+            type="text"
+            id="designation"
+            class="form-control"
+            formControlName="designation"
+            placeholder="Enter your designation name"
+            [showErrors]="{ required: 'Your designation is required' }"
+          />
+        </div>
+        <div class="mt-3">
+          <label for="countryId" class="form-label">Country</label>
+          <select
+            id="countryId"
+            class="form-select"
+            formControlName="countryId"
+            [showErrors]="{ required: 'Country is required' }"
+          >
+            <option value="" disabled selected>Select a country</option>
+            <option *ngFor="let m of countries" [value]="m.id">
+              {{ m.name }}
+            </option>
+          </select>
+          <!--(change)="onSelectChange($event)"-->
+
+        </div>
+
+        <!-- Submit Button -->
+        <div class="text-center">
+          <button class="btn btn-primary" type="submit">Submit</button>
+          <button type="reset" class="btn btn-secondary" >Reset</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+<!--<div class="container mat-elevation-z4" style="padding: 16px; max-width: 600px; margin: auto;">
+  <h2 mat-typography>Companies</h2>
+
+  &lt;!&ndash; Error Message &ndash;&gt;
+  <div *ngIf="errorMessage" class="error" style="color: red; margin-bottom: 16px;">
+    <mat-icon color="warn">error</mat-icon>
+    {{ errorMessage }}
+  </div>
+
+  &lt;!&ndash; Company List &ndash;&gt;
+  <mat-list>
+    <mat-list-item *ngFor="let company of companies" (click)="selectCompany(company)" style="cursor: pointer;">
+      <div mat-line>
+        {{ company.name }}  Sample: {{ company.sample }}
+        <button mat-mini-button color="warn" (click)="deleteCompany(company.id); $event.stopPropagation()">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </div>
+    </mat-list-item>
+  </mat-list>
+  <div *ngIf="selectedCompany" class="mat-elevation-z4" style="padding: 16px; margin-bottom: 16px; border-radius: 8px; background: #f9f9f9;">
+    <h3 mat-typography>Company Details</h3>
+    <p>
+      <strong>ID:</strong> {{ selectedCompany.id }}
+    </p>
+    <p>
+      <mat-form-field appearance="fill">
+        <mat-label>Company Name</mat-label>
+        <input matInput [(ngModel)]="selectedCompany.name" />
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-checkbox [(ngModel)]="selectedCompany.sample">Is Sample</mat-checkbox>
+    </p>
+    <button mat-raised-button color="primary" (click)="updateCompany(selectedCompany)">Update</button>
+  </div>
+
+  &lt;!&ndash; Add New Company &ndash;&gt;
+  <div class="mat-elevation-z4" style="padding: 16px; border-radius: 8px; background: #f9f9f9;">
+    <h3 mat-typography>Add New Company</h3>
+    <p>
+      <mat-form-field appearance="fill">
+        <mat-label>Company Name</mat-label>
+        <input matInput [(ngModel)]="newCompany.name" />
+      </mat-form-field>
+    </p>
+    <p>
+      <mat-checkbox [(ngModel)]="newCompany.sample">Is Sample</mat-checkbox>
+    </p>
+    <button mat-raised-button color="accent" (click)="addCompany()">Add Company</button>
+  </div>
+</div>-->
+<!--
+<mat-toolbar color="primary">
+  Angular Material Example
+</mat-toolbar>
+<div class="container">
+  <h2>Companies</h2>
+
+  &lt;!&ndash; Error Message &ndash;&gt;
+  <div *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+  </div>
+
+  &lt;!&ndash; Company List &ndash;&gt;
+  <ul>
+    <li *ngFor="let company of companies" (click)="selectCompany(company)">
+      {{ company.name }} (Sample: {{ company.sample }})
+      <button (click)="deleteCompany(company.id); $event.stopPropagation()">Delete</button>
+    </li>
+  </ul>
+
+  &lt;!&ndash; Selected Company Details &ndash;&gt;
+  <div *ngIf="selectedCompany">
+    <h3>Company Details</h3>
+    <p>ID: {{ selectedCompany.id }}</p>
+    <p>
+      Name: <input [(ngModel)]="selectedCompany.name" />
+    </p>
+    <p>
+      Is Sample:
+      <input type="checkbox" [(ngModel)]="selectedCompany.sample" />
+    </p>
+    <button (click)="updateCompany(selectedCompany)">Update</button>
+
+  &lt;!&ndash;  <app-section companyId="selectedCompany.id" (outputEvent)="onEventEmit($event)"></app-section>&ndash;&gt;
+  </div>
+
+  &lt;!&ndash; Add New Company &ndash;&gt;
+  <div>
+    <h3>Add New Company</h3>
+    <p>
+      Name: <input [(ngModel)]="newCompany.name" />
+    </p>
+    <p>
+      Is Sample:
+      <input type="checkbox" [(ngModel)]="newCompany.sample" />
+    </p>
+    <button (click)="addCompany()">Add Company</button>
+  </div>
+</div>
+
+
+-->

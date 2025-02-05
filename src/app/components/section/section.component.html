@@ -1,0 +1,41 @@
+
+<div class="container">
+  <h2>Sections for {{companyId}}</h2>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+  </div>
+
+  <!-- Section List -->
+  <ul>
+    <li *ngFor="let section of sections" (click)="selectSection(section)">
+      {{ section.name }}
+      <button (click)="deleteSection(section.id); $event.stopPropagation()">Delete</button>
+    </li>
+  </ul>
+
+  <!-- Selected Section Details -->
+  <div *ngIf="selectedSection">
+    <h3>Section Details</h3>
+    <p>ID: {{ selectedSection.id }}</p>
+    <p>
+      Name: <input [(ngModel)]="selectedSection.name" />
+    </p>
+
+    <button (click)="updateSection(selectedSection)">Update</button>
+  </div>
+
+  <!-- Add New Section -->
+  <div>
+    <h3>Add New Section</h3>
+    <p>
+      Name: <input [(ngModel)]="newSection.name" />
+    </p>
+    <p>
+      Name: <input [(ngModel)]="newSection.companyId" />
+    </p>
+    <button (click)="addSection()">Add Section</button>
+  </div>
+<!--  <button (click)="emitEvent()">Go Back</button>-->
+</div>
