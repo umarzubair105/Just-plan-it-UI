@@ -1,0 +1,80 @@
+<div class="container mt-5" xmlns="http://www.w3.org/1999/html">
+  <div class="card shadow-lg">
+    <div class="card-header bg-primary text-white text-center">
+      <h3>Mapping</h3>
+    </div>
+    <div class="card-body">
+      <div *ngFor="let source of sourceModels"  class="mb-3">
+        <label class="form-label">{{source.name}}</label>
+        <select class="form-select" [(ngModel)]="source.roleId" >
+          <option value="0" disabled>&#45;&#45; Select Role &#45;&#45;</option>
+          <option *ngFor="let target of targetModels" [value]="target.id">{{ target.name }}</option>
+        </select>
+      </div>
+    </div>
+    <div class="text-center">
+    <button (click)="updateModels()">Update</button>
+    </div>
+  </div>
+</div>
+
+
+<!--
+
+<div class="container mt-4">
+  <h2>Define Priorities</h2>
+  <h3 class="text-center">🖱️ Drag & Drop Table Rows, keep most important on top</h3>
+
+  <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+    @for (model of models; track model) {
+      <div  (click)="selectModel(model)" class="example-box" cdkDrag >
+        <div *ngIf="selectedModel != null && model.id === selectedModel.id">
+          <input [(ngModel)]="selectedModel.name" required/>
+        </div>
+        <div *ngIf="selectedModel == null || model.id !== selectedModel.id">
+          {{model.name}}
+        </div>
+        &lt;!&ndash; <img *cdkDragPreview [src]="movie.poster" [alt]="movie.title">&ndash;&gt;
+      </div>
+    }
+  </div>
+
+
+  &lt;!&ndash; Error Message &ndash;&gt;
+  <div *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+  </div>
+
+  &lt;!&ndash; List &ndash;&gt;
+  <ul>
+    <li *ngFor="let model of models" (click)="selectModel(model)">
+      {{ model.name }}
+      <button (click)="deleteModel(model.id); $event.stopPropagation()">Delete</button>
+    </li>
+  </ul>
+
+  &lt;!&ndash; Selected Details &ndash;&gt;
+  <div *ngIf="selectedModel">
+    <h3>Priority Details</h3>
+    <p>ID: {{ selectedModel.id }}</p>
+    <p>
+      Name: <input [(ngModel)]="selectedModel.name" required/>
+    </p>
+
+    <button (click)="updateModel(selectedModel)">Update</button>
+  </div>
+
+  &lt;!&ndash; Add New &ndash;&gt;
+  <div>
+    <h3>Add New Priority</h3>
+    <p>
+      Name: <input [(ngModel)]="newModel.name" required/>
+    </p>
+    <p>
+      Priority Level: <input [(ngModel)]="newModel.priorityLevel" required/>
+    </p>
+    <button (click)="addModel()">Add</button>
+  </div>
+  &lt;!&ndash;  <button (click)="emitEvent()">Go Back</button>&ndash;&gt;
+</div>
+-->

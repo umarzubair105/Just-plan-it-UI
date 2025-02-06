@@ -95,7 +95,7 @@ export class CompanyComponent implements OnInit {
           horizontalPosition: 'right',
           verticalPosition: 'top',
         });
-        this.router.navigate(['/resource', data.id]);
+        this.router.navigate(['/upload-resource', data.id]);
         //this.newCompany = { id: 0, name: '', sample: false };
       },
       error: (err) => {this.errorMessage = err; this.snackBar.open(err, 'Close', {

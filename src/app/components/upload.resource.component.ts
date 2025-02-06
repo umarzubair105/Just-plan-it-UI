@@ -32,7 +32,7 @@ import {ExcelService} from '../services/excel.service';
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
-  selector: 'app-upload-epic',
+  selector: 'app-upload-resource',
   standalone: true,
   imports: [FormsModule, CommonModule, HttpClientModule, SectionComponent,
     MatButtonModule, MatToolbarModule, MatInputModule,
@@ -41,12 +41,12 @@ import {ExcelService} from '../services/excel.service';
   ], // Include FormsModule here
   //template:`Hello`,
   //templateUrl: './company.component.html',
-  templateUrl: './upload.epic.component.html',
-  styleUrls: ['./upload.epic.component.css'],
+  templateUrl: './upload.resource.component.html',
+  styleUrls: ['./upload.resource.component.css'],
   providers:[CompanyService],
 
 })
-export class UploadEpicComponent implements OnInit {
+export class UploadResourceComponent implements OnInit {
   excelHeaders: string[] = []; // Headers from Excel
   rawData: any[] = []; // Raw Excel data
   excelHeadersUnmapped: string[] = [];
@@ -56,19 +56,17 @@ export class UploadEpicComponent implements OnInit {
   // Predefined field names in our system
   predefinedFields:string[] = [];//['description','component', 'version', 'priority:',
       //'requiredBy','valueGain','comments','risks'];
-  requiredFields:{ [key: string]: string } = {'title':'required'};
+  requiredFields:{ [key: string]: string } = {'email':'required','name':'required','designation':'required',};
   dateFormat: string = '';
   dateFormats:string[] = ['dd/MM/yyyy','dd-MM-yyyy', 'MM/dd/yyyy', 'MM-dd-yyyy']
   // Predefined field names in our system
-  predefinedFieldLabels:{ [key: string]: string } = {'title':'Deliverable/Epic/Story',
-    'details':'Details',
-    'component':'Component/Module', 'version':'Version', 'priority':'Priority',
-    'requiredBy':'Date Required By','valueGain':'Value Gain (Number)',
-    'comments':'Comments',
-    'risks':'Risks'};
+  predefinedFieldLabels:{ [key: string]: string } = {'email':'Email',
+    'name':'Name', 'designation':'Designation','mobileNumber':'Mobile Number',
+    'dateOfBirth':'Date of Birth','lead':'Lead'};
   roles: BaseModel[] = [];
   errorMessage: string = '';
   //companyId!: number;
+  companyId! : number;
   productId! : number;
   //addCompanySetup: AddCompany = { countryId:1, sampleCompanyId:1,name:'',email:'',firstName:'',secondName:'',lastName:'',designation:'' };
 
@@ -101,6 +99,7 @@ export class UploadEpicComponent implements OnInit {
     });
   }
   ngOnInit(): void {
+    this.companyId = Number(this.route.snapshot.paramMap.get('companyId'));
     this.productId = Number(this.route.snapshot.paramMap.get('productId'));
     console.log('Testing')
     //this.loadRules()
@@ -125,7 +124,7 @@ export class UploadEpicComponent implements OnInit {
     const allReqFilled  = Object.keys(this.requiredFields)
       .filter(reqField => {return !!this.mappedHeaders[reqField]===false}).length === 0;
     if (allReqFilled) {
-      if (!!this.mappedHeaders['requiredBy']) {
+      if (!!this.mappedHeaders['dateOfBirth']) {
         if (!!this.dateFormat) {
           return true;
         }
@@ -142,7 +141,7 @@ export class UploadEpicComponent implements OnInit {
   onSubmit() {
     //if ()
 
-    const epics: AddEpic[] = [];
+    const models: AddResource[] = [];
     //this.transformedData = tthis.rawData.map
     this.rawData.forEach(row => {
       let transformedRow: any = {};
@@ -153,13 +152,16 @@ export class UploadEpicComponent implements OnInit {
           transformedRow[mappedKey] = row[excelHeader];
         }
       });
-      transformedRow['productId'] = this.productId; // Hardcoding productId for now.
+      if (this.productId!=null) {
+        transformedRow['productId'] = this.productId; // Hardcoding productId for now.
+      }
+      transformedRow['companyId'] = this.companyId; // Hardcoding productId for now.
       transformedRow['dateFormat'] = this.dateFormat; // Hardcoding productId for now.
       //console.log('C');
-      epics.push(transformedRow);
+      models.push(transformedRow);
       //return transformedRow;
     });
-    this.companyService.addEpics(epics).subscribe({
+    this.companyService.addResources(models).subscribe({
       next: (data) => {
         // action: string = 'Close'
         this.snackBar.open(data[0].message, 'Close', {
@@ -167,7 +169,8 @@ export class UploadEpicComponent implements OnInit {
           horizontalPosition: 'right',
           verticalPosition: 'top',
         });
-        this.router.navigate(['/priority', 1]);
+        this.router.navigate(['/product', this.companyId]);
+        //this.router.navigate(['/product', this.companyId]);
         //this.newCompany = { id: 0, name: '', sample: false };
       },
       error: (err) => {this.errorMessage = err; this.snackBar.open(err, 'Close', {
@@ -215,35 +218,6 @@ export class UploadEpicComponent implements OnInit {
       .find(([key, value]) => value === searchValue);
     return entry ? entry[0] : 'Unmapped';
   }
-
-/*  onMappingChange() {
-    this.transformedData = this.rawData.map(row => {
-      let transformedRow: any = {};
-      Object.keys(this.mappedHeaders).forEach(excelHeader => {
-        const mappedKey = this.mappedHeaders[excelHeader]; // User-selected field
-        if (mappedKey) {
-          transformedRow[mappedKey] = row[excelHeader];
-        }
-      });
-      return transformedRow;
-    });
-  }*/
-
-/*  onFileChange(event: any) {
-    const file = event.target.files[0];
-    if (!file) return;
-
-    this.excelService.readExcelFile(file).then((data) => {
-      this.excelData = data;
-      this.excelHeaders = data.length > 0 ? Object.keys(data[0]) : [];
-
-      this.mappedData = mapJsonData
-
-    }).catch((error) => {
-      console.error('Error reading Excel file:', error);
-    });
-  }*/
-
 
 
 }

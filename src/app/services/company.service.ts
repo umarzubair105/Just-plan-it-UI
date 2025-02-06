@@ -17,6 +17,7 @@ export interface BaseModel {
   code: string;
 }
 
+
 export interface AddCompany {
   name: string;
   email: string;
@@ -35,13 +36,20 @@ export interface AddProduct {
 
 export interface AddResource {
   companyId: number;
+  productId?: number;
   email: string;
-  roleId: number
+  name?: string;
+  designation?: string;
+  mobileNumber?: string;
+  dateOfBirth?: string;
+  lead?: string;
+  dateFormat?: string;
 }
 
 export interface AddEpic {
   productId: number;
-  description: string;
+  title: string;
+  details: string;
   component: string;
   requiredBy: string;
   dateFormat: string;
@@ -55,6 +63,11 @@ export interface CommonResp {
   id: number;
   context: string;
   message: string;
+}
+
+export interface MapDesignation {
+  designationId: number;
+  roleId: number;
 }
 
 @Injectable({
@@ -78,6 +91,11 @@ export class CompanyService {
     );
   }
 
+  mapDesignation(model: MapDesignation): Observable<CommonResp> {
+    return this.http.post<CommonResp>(this.baseUrlComDashboard+'/map-designation', model).pipe(
+      catchError(this.handleError)
+    );
+  }
   addProduct(model: AddProduct): Observable<CommonResp> {
     console.log(model);
     //const { id, ...payload } = company;
@@ -96,6 +114,11 @@ export class CompanyService {
   }
   addEpics(models: AddEpic[]): Observable<CommonResp[]> {
     return this.http.post<CommonResp[]>(this.baseUrlComDashboard+'/add-epics', models).pipe(
+      catchError(this.handleError)
+    );
+  }
+  addResources(models: AddResource[]): Observable<CommonResp[]> {
+    return this.http.post<CommonResp[]>(this.baseUrlComDashboard+'/add-resources', models).pipe(
       catchError(this.handleError)
     );
   }

@@ -47,7 +47,7 @@ export class ResourceComponent implements OnInit {
   //newCompany: Company = { id: 0, name: '', sample: false };
   companyService = inject(CompanyService)
   //constructor(private companyService: CompanyService) {}
-  addResourceSetup: AddResource = { companyId:1, roleId:0,email:'' };
+  addResourceSetup: AddResource = { companyId:0, email:'' };
 
   myForm: FormGroup;
   constructor(private fb: FormBuilder, private snackBar: MatSnackBar,
