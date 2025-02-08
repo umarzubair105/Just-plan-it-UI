@@ -62,7 +62,6 @@ export class ProductComponent implements OnInit {
   myForm: FormGroup;
   constructor(private fb: FormBuilder, private snackBar: MatSnackBar,
               private route: ActivatedRoute,private router: Router) {
-    console.log('Construct')
     this.myForm = this.fb.group({
       name: ['', [Validators.required]],
       emailProductManager: ['', [Validators.required, Validators.email]],

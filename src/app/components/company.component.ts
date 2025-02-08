@@ -35,7 +35,7 @@ import {Router} from '@angular/router';
   //templateUrl: './company.component.html',
   templateUrl: './company.component.html',
   //styleUrls: ['./company.component.css'],
-  providers:[CompanyService],
+  //providers:[CompanyService],
 
 })
 export class CompanyComponent implements OnInit {

@@ -1,0 +1,43 @@
+<div class="container mt-5" xmlns="http://www.w3.org/1999/html">
+  <div class="card shadow-lg">
+    <div class="card-header bg-primary text-white text-center">
+      <h3>Login</h3>
+    </div>
+    <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+      <div class="card-body">
+        <div class="mb-3">
+          <label for="username" class="form-label">Email</label>
+          <input
+            type="text"
+            id="username"
+            class="form-control"
+            formControlName="username"
+            placeholder="Enter your email"
+            [showErrors]="{ required: 'Email is required', email: 'Email is not valid' }"
+          />
+        </div>
+        <div class="mb-3">
+          <label for="password" class="form-label">Password</label>
+          <input
+            type="password"
+            id="password"
+            class="form-control"
+            formControlName="password"
+            placeholder="Enter your password"
+            [showErrors]="{ required: 'Password is required' }"
+          />
+        </div>
+        <div *ngIf="errorMessage" class="error-message">
+          {{ errorMessage }}
+        </div>
+        <!-- Submit Button -->
+        <div class="text-center">
+          <button class="btn btn-primary" type="submit"
+                  [disabled]="this.myForm.invalid">Login</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+</div>
+

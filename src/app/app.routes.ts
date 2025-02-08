@@ -1,14 +1,18 @@
 import { Routes } from '@angular/router';
-import { AppComponent } from './app.component';
-import { CompanyComponent } from './components/company.component';
-
+import {AuthGuard} from './interceptor/auth.guard';
+//import { provideHttpClient, withInterceptors } from '@angular/common/http';
 export const routes: Routes = [
   //{ path: '', component: AppComponent },  // Default route (home)
  // { path: 'company', component: CompanyComponent },
+  // { path: 'admin', component: AdminComponent, canActivate: [RoleGuard], data: { role: 'ADMIN' } },
+  { path: 'login', loadComponent: ()=>import(
+      './components/login.component').then((m)=>m.LoginComponent)},
   { path: 'company', loadComponent: ()=>import(
-    './components/company.component').then((m)=>m.CompanyComponent) },
+    './components/company.component').then((m)=>m.CompanyComponent),
+    canActivate: [AuthGuard]},
   { path: 'resource/:companyId', loadComponent: ()=>import(
-      './components/resource.component').then((m)=>m.ResourceComponent) },
+      './components/resource.component').then((m)=>m.ResourceComponent),
+    canActivate: [AuthGuard]},
   { path: 'product/:companyId', loadComponent: ()=>import(
       './components/product.component').then((m)=>m.ProductComponent) },
   { path: 'upload-resource/:companyId', loadComponent: ()=>import(

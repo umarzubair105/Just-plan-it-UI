@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
@@ -77,9 +77,18 @@ export class CompanyService {
   private baseHost = 'http://localhost:8080'; // Base URL for the REST endpoint
   private baseUrl = 'http://localhost:8080/companies'; // Base URL for the REST endpoint
   private baseUrlComDashboard = 'http://localhost:8080/company-dashboard'; // Base URL for the REST endpoint
+  private http = inject(HttpClient);
+  //constructor(private http: HttpClient) {
+    //console.log('Testing Service')
+  //}
 
-  constructor(private http: HttpClient) {
-    console.log('Testing Service')
+  login(body: any): Observable<any> {
+    console.log(body);
+    //const { id, ...payload } = company;
+    //console.log(payload);
+    return this.http.post<any>('http://localhost:8080/api/auth/authenticate', body).pipe(
+      catchError(this.handleError)
+    );
   }
 
   addCompany(company: AddCompany): Observable<CommonResp> {
@@ -179,10 +188,10 @@ export class CompanyService {
     let errorMessage = 'An unknown error occurred!';
     if (error.error instanceof ErrorEvent) {
       // Client-side error
-      errorMessage = `Error: ${error.error.message}`;
+      errorMessage = `Error--: ${error.error.message}`;
     } else {
       // Server-side error
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+      errorMessage = `Error Code-----: ${error.status}\nMessage: ${error.message}`;
     }
     return throwError(errorMessage);
   }
