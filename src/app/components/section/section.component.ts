@@ -10,7 +10,6 @@ import { HttpClientModule } from '@angular/common/http';
   //template:`Hello`,
   templateUrl: './section.component.html',
   styleUrls: ['./section.component.css'],
-  providers:[SectionService]
 })
 export class SectionComponent implements OnInit {
 //  @Input() companyId:string = '';

@@ -12,6 +12,7 @@ import {
   CdkDrag,
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
+import {Utils} from '../utils/utils';
 @Component({
   selector: 'app-priority',
   standalone: true,
@@ -20,7 +21,6 @@ import {
   //template:`Hello`,
   templateUrl: './priority.component.html',
   styleUrls: ['./priority.component.css'],
-  providers:[PriorityService]
 })
 export class PriorityComponent implements OnInit {
 //  @Input() companyId:string = '';
@@ -37,8 +37,8 @@ export class PriorityComponent implements OnInit {
   resetModel: Priority = { id: 0, name: '', companyId: 0, priorityLevel: 0, active: true };
   newModel: Priority = this.resetModel;
   modelService = inject(PriorityService)
-  constructor(private fb: FormBuilder, private snackBar: MatSnackBar,
-              private route: ActivatedRoute,private router: Router) {}
+  constructor(private fb: FormBuilder, private utils: Utils,
+              private router: Router,private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.companyId = Number(this.route.snapshot.paramMap.get('companyId'));
@@ -63,7 +63,7 @@ export class PriorityComponent implements OnInit {
         this.models = data._embedded.priorities;
         this.totalModels = data.page.totalElements;
       },
-      error: (err) => {this.errorMessage = err;this.showMessage(err);},
+      error: (err) => {this.errorMessage = err;this.utils.showErrorMessage(err);},
     });
   }
 
@@ -78,10 +78,10 @@ export class PriorityComponent implements OnInit {
     this.modelService.create(this.newModel).subscribe({
       next: (data) => {
         this.models.push(data);
-        this.showMessage('Priority is added');
+        this.utils.showSuccessMessage('Priority is added');
         this.newModel =  this.resetModel;
       },
-      error: (err) => {this.errorMessage = err;this.showMessage(err);},
+      error: (err) => {this.errorMessage = err;this.utils.showErrorMessage(err);},
     });
   }
 
@@ -95,11 +95,11 @@ export class PriorityComponent implements OnInit {
           updatedModels++;
           this.selectedModel = null;
           if (updatedModels === this.models.length) {
-            this.showMessage('Priority is updated');
+            this.utils.showSuccessMessage('Priority is updated');
             this.loadModels();
           }
         },
-        error: (err) => {this.errorMessage = err;this.showMessage('Priority is not updated')}
+        error: (err) => {this.errorMessage = err;this.utils.showErrorMessage('Priority is not updated')}
       });
     }
 
@@ -109,11 +109,11 @@ export class PriorityComponent implements OnInit {
     if (model) {
       this.modelService.update(model.id, model).subscribe({
         next: () => {
-          this.showMessage('Priority is updated');
+          this.utils.showSuccessMessage('Priority is updated');
           this.loadModels();
           this.selectedModel = null;
         },
-        error: (err) => {this.errorMessage = err;this.showMessage(err);},
+        error: (err) => {this.errorMessage = err;this.utils.showErrorMessage(err);},
       });
     } else {
       console.error('Cannot update.');
@@ -123,17 +123,10 @@ export class PriorityComponent implements OnInit {
     this.modelService.delete(modelId).subscribe({
       next: () => {
         this.models = this.models.filter((c) => c.id !== modelId);
-        this.showMessage('Priority is added');},
+        this.utils.showSuccessMessage('Priority is added');},
 
-      error: (err) => {this.errorMessage = err;this.showMessage(err);},
+      error: (err) => {this.errorMessage = err;this.utils.showErrorMessage(err);},
     });
   }
 
-  showMessage(message: string): void {
-    this.snackBar.open(message, 'Close', {
-      duration: 3000, // 3 seconds
-      horizontalPosition: 'right',
-      verticalPosition: 'top',
-    });
-  }
 }

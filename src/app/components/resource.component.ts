@@ -20,6 +20,7 @@ import {MatIcon} from '@angular/material/icon';
 import { ShowErrorsDirective } from '../show-errors.directive';
 
 import {ActivatedRoute, Router} from '@angular/router';
+import {Utils} from '../utils/utils';
 
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -35,7 +36,7 @@ import {ActivatedRoute, Router} from '@angular/router';
   //templateUrl: './company.component.html',
   templateUrl: './resource.component.html',
   //styleUrls: ['./company.component.css'],
-  providers:[CompanyService],
+  //providers:[CompanyService],
 
 })
 export class ResourceComponent implements OnInit {
@@ -50,8 +51,8 @@ export class ResourceComponent implements OnInit {
   addResourceSetup: AddResource = { companyId:0, email:'' };
 
   myForm: FormGroup;
-  constructor(private fb: FormBuilder, private snackBar: MatSnackBar,
-              private route: ActivatedRoute,private router: Router) {
+  constructor(private fb: FormBuilder, private utils: Utils,
+              private router: Router, private route: ActivatedRoute) {
     console.log('Construct')
     this.myForm = this.fb.group({
       email: ['', [Validators.required]],
@@ -76,19 +77,11 @@ export class ResourceComponent implements OnInit {
       this.companyService.addResource(this.addResourceSetup).subscribe({
         next: (data) => {
           // action: string = 'Close'
-          this.snackBar.open(data[0].message, 'Close', {
-            duration: 3000, // 3 seconds
-            horizontalPosition: 'right',
-            verticalPosition: 'top',
-          });
+          this.utils.showSuccessMessage(data[0].message);
           this.router.navigate(['/product', this.companyId]);
           //this.newCompany = { id: 0, name: '', sample: false };
         },
-        error: (err) => {this.errorMessage = err; this.snackBar.open(err, 'Close', {
-          duration: 3000, // 3 seconds
-          horizontalPosition: 'right',
-          verticalPosition: 'top',
-        });},
+        error: (err) => {this.errorMessage = err;this.utils.showErrorMessage(err);},
       });
     } else {
       console.error('Form is invalid');

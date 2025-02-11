@@ -8,14 +8,20 @@ import {AuthService} from '../services/auth.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
 import { ShowErrorsDirective } from '../show-errors.directive';
 
+import { MatButtonModule } from '@angular/material/button';
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import {MatIcon} from '@angular/material/icon';
+
+
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [FormsModule, CommonModule, HttpClientModule, ReactiveFormsModule,
-    ShowErrorsDirective], // Include FormsModule here
+    ShowErrorsDirective,
+    MatButtonModule, MatIcon, MatInputModule, MatFormFieldModule], // Include FormsModule here
   templateUrl:'login.component.html',
-
-  providers: [CompanyService] // Include HttpClientModule here
+styleUrl:'common.css',
 })
 export class LoginComponent {
   errorMessage: string = '';
@@ -37,11 +43,12 @@ export class LoginComponent {
       console.log('Form Data:', this.myForm.value);
       this.companyService.login(this.myForm.value)
         .subscribe((resp: any) => {
-          this.authService.saveToken(resp.token);
-          this.router.navigate(['/company']); // Redirect to a secure page
+          this.authService.login(resp.token);
+          this.router.navigate(['/home']); // Redirect to a secure page
         },
         (error) => {
-          this.errorMessage = 'Invalid credentials. Please try again!';
+          console.log('Error:', error);
+          this.errorMessage = error;
         });
     }
   }

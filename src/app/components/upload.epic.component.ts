@@ -28,6 +28,7 @@ import {MatIcon} from '@angular/material/icon';
 import { ShowErrorsDirective } from '../show-errors.directive';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ExcelService} from '../services/excel.service';
+import {Utils} from '../utils/utils';
 
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -43,7 +44,6 @@ import {ExcelService} from '../services/excel.service';
   //templateUrl: './company.component.html',
   templateUrl: './upload.epic.component.html',
   styleUrls: ['./upload.epic.component.css'],
-  providers:[CompanyService],
 
 })
 export class UploadEpicComponent implements OnInit {
@@ -86,10 +86,10 @@ export class UploadEpicComponent implements OnInit {
   };*/
 
   myForm: FormGroup;
-  constructor(private fb: FormBuilder, private snackBar: MatSnackBar,
-              private route: ActivatedRoute,
+  constructor(private fb: FormBuilder, private utils: Utils,
               private router: Router,
-              private excelService: ExcelService) {
+              private excelService: ExcelService,
+              private route: ActivatedRoute) {
     console.log('Construct')
     this.predefinedFields = Object.keys(this.predefinedFieldLabels).filter(key => key!== 'id');
     this.myForm = this.fb.group({
@@ -102,11 +102,6 @@ export class UploadEpicComponent implements OnInit {
   }
   ngOnInit(): void {
     this.productId = Number(this.route.snapshot.paramMap.get('productId'));
-    console.log('Testing')
-    //this.loadRules()
-    //this.loadCompanies();
-
-
   }
 
   onFileChange(event: any) {
@@ -162,44 +157,12 @@ export class UploadEpicComponent implements OnInit {
     this.companyService.addEpics(epics).subscribe({
       next: (data) => {
         // action: string = 'Close'
-        this.snackBar.open(data[0].message, 'Close', {
-          duration: 3000, // 3 seconds
-          horizontalPosition: 'right',
-          verticalPosition: 'top',
-        });
+        this.utils.showSuccessMessage(data[0].message);
         this.router.navigate(['/priority', 1]);
         //this.newCompany = { id: 0, name: '', sample: false };
       },
-      error: (err) => {this.errorMessage = err; this.snackBar.open(err, 'Close', {
-        duration: 3000, // 3 seconds
-        horizontalPosition: 'right',
-        verticalPosition: 'top',
-      });},
+      error: (err) => {this.errorMessage = err; this.utils.showErrorMessage(err);},
     });
-    /*if (this.myForm.valid && this.companyId!=null) {
-      console.log('Form Data:', this.myForm.value);
-      this.addResourceSetup = this.myForm.value;
-      this.addResourceSetup.companyId = this.companyId; // Hardcoding companyId for now.
-      this.companyService.addResource(this.addResourceSetup).subscribe({
-        next: (data) => {
-          // action: string = 'Close'
-          this.snackBar.open(data[0].message, 'Close', {
-            duration: 3000, // 3 seconds
-            horizontalPosition: 'right',
-            verticalPosition: 'top',
-          });
-          this.router.navigate(['/product', this.companyId]);
-          //this.newCompany = { id: 0, name: '', sample: false };
-        },
-        error: (err) => {this.errorMessage = err; this.snackBar.open(err, 'Close', {
-          duration: 3000, // 3 seconds
-          horizontalPosition: 'right',
-          verticalPosition: 'top',
-        });},
-      });
-    } else {
-      console.error('Form is invalid');
-    }*/
   }
 
 

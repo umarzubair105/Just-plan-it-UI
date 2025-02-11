@@ -2,3 +2,15 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.form-label{margin-bottom:.1rem}
+
+.required-label {
+  color: red;
+  font-weight: bold;
+}
+
+.error-message {
+  color: red;
+  margin-top:.5rem;
+}

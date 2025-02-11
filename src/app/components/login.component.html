@@ -1,9 +1,13 @@
-<div class="container mt-5" xmlns="http://www.w3.org/1999/html">
-  <div class="card shadow-lg">
+
+<!-- Main Content -->
+
+<div class="container mt-1" text-center>
+  <div class="card shadow-lg ">
     <div class="card-header bg-primary text-white text-center">
       <h3>Login</h3>
     </div>
     <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+
       <div class="card-body">
         <div class="mb-3">
           <label for="username" class="form-label">Email</label>
@@ -30,14 +34,23 @@
         <div *ngIf="errorMessage" class="error-message">
           {{ errorMessage }}
         </div>
-        <!-- Submit Button -->
         <div class="text-center">
           <button class="btn btn-primary" type="submit"
                   [disabled]="this.myForm.invalid">Login</button>
+        </div>
+        <div class="text-center mt-3">
+          <a routerLink="/register">Don't have an account? Register</a>
+        </div>
+        <div class="text-center mt-3">
+          <a href="#" class="text-decoration-none">Forgot password?</a>
         </div>
       </div>
     </form>
   </div>
 
 </div>
+
+
+
+
 

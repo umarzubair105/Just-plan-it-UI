@@ -24,6 +24,7 @@ import {
   MatExpansionPanelHeader,
   MatExpansionPanelTitle
 } from '@angular/material/expansion';
+import {TopBarComponent} from './components/top-bar.component';
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet, CompanyComponent, SectionComponent,
@@ -31,7 +32,8 @@ import {
     MatCheckbox, FormsModule, MatIcon, MatSelect, MatOption, MatCard,
     MatCardHeader, MatCardActions, MatProgressSpinner, MatAccordion,
     MatExpansionPanel, MatExpansionPanelTitle, MatCardContent, MatCardSubtitle,
-  MatCardTitle, MatLabel, MatExpansionPanelHeader],//
+  MatCardTitle, MatLabel, MatExpansionPanelHeader,
+    TopBarComponent],//
 //  template: `<app-company></app-company>`,
   standalone: true,
   templateUrl: './app.component.html',

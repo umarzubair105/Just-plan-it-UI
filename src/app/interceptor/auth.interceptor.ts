@@ -4,6 +4,7 @@ import {AuthService} from '../services/auth.service';
 import {catchError} from 'rxjs/operators';
 import { throwError } from 'rxjs';
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  console.log('In filter');
   const authService = inject(AuthService);
   const token = authService.getToken(); // Retrieve the token from storage
   console.log('In filter'+token);

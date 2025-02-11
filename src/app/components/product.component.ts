@@ -27,6 +27,7 @@ import {MatList, MatListItem} from '@angular/material/list';
 import {MatIcon} from '@angular/material/icon';
 import { ShowErrorsDirective } from '../show-errors.directive';
 import {ActivatedRoute, Router} from '@angular/router';
+import {Utils} from '../utils/utils';
 
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -42,7 +43,6 @@ import {ActivatedRoute, Router} from '@angular/router';
   //templateUrl: './company.component.html',
   templateUrl: './product.component.html',
   //styleUrls: ['./company.component.css'],
-  providers:[CompanyService],
 
 })
 export class ProductComponent implements OnInit {
@@ -60,8 +60,8 @@ export class ProductComponent implements OnInit {
 
 
   myForm: FormGroup;
-  constructor(private fb: FormBuilder, private snackBar: MatSnackBar,
-              private route: ActivatedRoute,private router: Router) {
+  constructor(private fb: FormBuilder, private utils: Utils,
+              private router: Router, private route: ActivatedRoute) {
     this.myForm = this.fb.group({
       name: ['', [Validators.required]],
       emailProductManager: ['', [Validators.required, Validators.email]],
@@ -71,10 +71,8 @@ export class ProductComponent implements OnInit {
     });
   }
   ngOnInit(): void {
-    this.companyId = Number(this.route.snapshot.paramMap.get('companyId'));
-    console.log('Testing')
-    //this.loadRules()
-    //this.loadCompanies();
+    this.companyId =  Number(this.route.snapshot.paramMap.get("companyId"));
+    console.log('Testing:'+this.companyId)
   }
 
   onSubmit() {
@@ -85,19 +83,11 @@ export class ProductComponent implements OnInit {
       this.companyService.addProduct(this.addProductSetup).subscribe({
         next: (data) => {
           // action: string = 'Close'
-          this.snackBar.open(data.message, 'Close', {
-            duration: 3000, // 3 seconds
-            horizontalPosition: 'right',
-            verticalPosition: 'top',
-          });
+          this.utils.showSuccessMessage(data.message);
           this.productId = data.id;
           this.router.navigate(['/upload-epic', this.productId]);
         },
-        error: (err) => {this.errorMessage = err; this.snackBar.open(err, 'Close', {
-          duration: 3000, // 3 seconds
-          horizontalPosition: 'right',
-          verticalPosition: 'top',
-        });},
+        error: (err) => {this.errorMessage = err; this.utils.showErrorMessage(err);},
       });
     } else {
       console.error('Form is invalid');

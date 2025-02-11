@@ -23,6 +23,8 @@ export interface AddCompany {
   email: string;
   resourceName: string;
   designation: string;
+  mobileNumber: string;
+  password: string;
   sampleCompanyId: number;
   countryId: number
 }
@@ -136,6 +138,11 @@ export class CompanyService {
       catchError(this.handleError)
     );
   }
+  getMetadata(): Observable<any> {
+    return this.http.get<any>(this.baseHost+"/api/auth/metadata").pipe(
+      catchError(this.handleError)
+    );
+  }
   getRoles(companyId:number): Observable<PageResponse> {
     return this.http.get<PageResponse>(`${this.baseHost}/roles/search/findByCompanyIdAndActive?companyId=${companyId}&active=1`).pipe(
       catchError(this.handleError)
@@ -186,12 +193,15 @@ export class CompanyService {
   // Error handling
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An unknown error occurred!';
+    console.log(error);
     if (error.error instanceof ErrorEvent) {
       // Client-side error
       errorMessage = `Error--: ${error.error.message}`;
     } else {
       // Server-side error
-      errorMessage = `Error Code-----: ${error.status}\nMessage: ${error.message}`;
+      console.log(error.error);
+      errorMessage = error.error.message;
+      //errorMessage = `Error Code-----: ${error.status}\nMessage: ${error.message}`;
     }
     return throwError(errorMessage);
   }

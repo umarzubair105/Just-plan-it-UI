@@ -1,11 +1,42 @@
 import { Injectable } from '@angular/core';
+import {BehaviorSubject, Observable} from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private readonly TOKEN_KEY = 'jwt_token';  // Key used to store the JWT
+  private userNameSubject = new BehaviorSubject<string | null>(null);
+  userName$: Observable<string | null> = this.userNameSubject.asObservable();
 
+  constructor() {
+    // Load username from local storage when the app starts
+    const storedUser = localStorage.getItem('loggedUser');
+    if (storedUser) {
+      this.userNameSubject.next(storedUser);
+    }
+  }
+
+  // Call this method after user logs in
+  login(token: string) {
+    this.saveToken(token);
+    var decodedT = this.decodeToken(token);
+    var userName = decodedT.name;
+    localStorage.setItem('loggedUser', userName);
+    this.userNameSubject.next(userName);
+  }
+
+  // Call this method when user logs out
+  logout() {
+    this.clearToken();
+    localStorage.removeItem('loggedUser');
+    this.userNameSubject.next(null);
+  }
+
+  // Get the current logged-in user
+  getUserName(): string | null {
+    return localStorage.getItem('loggedUser');
+  }
   // Save JWT token in localStorage
   saveToken(token: string): void {
     localStorage.setItem(this.TOKEN_KEY, token);

@@ -8,7 +8,7 @@ import {FormGroup, FormControl, FormBuilder} from '@angular/forms';
 import {ReactiveFormsModule, Validators} from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatSnackBar } from '@angular/material/snack-bar';
+
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -20,6 +20,7 @@ import {MatIcon} from '@angular/material/icon';
 import { ShowErrorsDirective } from '../show-errors.directive';
 import {WizardService} from '../services/wizard/wizard.service';
 import {Router} from '@angular/router';
+import {Utils} from '../utils/utils';
 
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -29,22 +30,24 @@ import {Router} from '@angular/router';
   imports: [FormsModule, CommonModule, HttpClientModule, SectionComponent,
     MatButtonModule, MatToolbarModule, MatInputModule,
     MatCheckboxModule, MatFormFieldModule,
-    MatListItem, MatList, MatIcon,ReactiveFormsModule, ShowErrorsDirective
+    MatListItem, MatList, MatIcon,ReactiveFormsModule, ShowErrorsDirective,
   ], // Include FormsModule here
   //template:`Hello`,
   //templateUrl: './company.component.html',
   templateUrl: './company.component.html',
-  //styleUrls: ['./company.component.css'],
+  styleUrls: ['./common.css'],
   //providers:[CompanyService],
 
 })
 export class CompanyComponent implements OnInit {
   companies: Company[] = [];
+  sampleCompanies: Company[] = [];
   countries: BaseModel[] = [];
   totalCompanies : number = 0;
   selectedCompany: Company | null = null;
   errorMessage: string = '';
-  addCompanySetup: AddCompany = { countryId:1, sampleCompanyId:1,name:'',email:'',resourceName:'',designation:'' };
+  addCompanySetup: AddCompany = { countryId:0, sampleCompanyId:0,name:'',email:'',resourceName:'',designation:'',
+    mobileNumber:'', password:'' };
 
   newCompany: Company = { id: 0, name: '', sample: false };
   companyService = inject(CompanyService)
@@ -52,21 +55,26 @@ export class CompanyComponent implements OnInit {
   step1Data: any = {};
 
   myForm: FormGroup;
-  constructor(private fb: FormBuilder, private snackBar: MatSnackBar,
+  constructor(private fb: FormBuilder,
+              private util: Utils,
               private router: Router) {
     console.log('Construct')
     this.myForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       resourceName: new FormControl('', Validators.required),
+      designation: new FormControl('', Validators.required),
+      mobileNumber: new FormControl('', Validators.required),
       email: ['', [Validators.required, Validators.email]],
-      sampleCompanyId: [1],
-      countryId: [2, Validators.required],
+      sampleCompanyId: [0, Validators.required],
+      countryId: [0, Validators.required],
+      password: ['', Validators.required],
+      confirmPassword: ['', Validators.required],
 //      phone: ['', [Validators.required, Validators.pattern('^\\d{10}$')]], // 10-digit number
     });
   }
   ngOnInit(): void {
     console.log('Testing')
-    this.loadCountries()
+    this.loadMetadata()
     //this.loadCompanies();
   }
 
@@ -75,9 +83,15 @@ export class CompanyComponent implements OnInit {
  // }
   onSubmit() {
     if (this.myForm.valid) {
-      console.log('Form Data:', this.myForm.value);
-      this.addCompanySetup = this.myForm.value;
-      this.addNewCompanySetup();
+      if (this.myForm.value.password !== this.myForm.value.confirmPassword) {
+        this.errorMessage = "Password is not matching with Confirm Password";
+      } else {
+        this.errorMessage = '';
+        console.log('Form Data:', this.myForm.value);
+        this.addCompanySetup = this.myForm.value;
+        this.addNewCompanySetup();
+
+      }
     } else {
       console.error('Form is invalid');
     }
@@ -89,30 +103,32 @@ export class CompanyComponent implements OnInit {
       next: (data) => {
         // action: string = 'Close'
         //this.wizardService.setStepData('company', this.step1Data);
+        this.util.showSuccessMessage('Company is added successfully.');
+        this.companyService.login({username: this.myForm.value.email,
+          password: this.myForm.value.password,
+          companyCode: data.context}).pipe()
+          .subscribe((resp: any) => {
+              this.util.saveToken(resp.token);
+              this.router.navigate(['/upload-resource', data.id]);
+            },
+            (error) => {
+              this.errorMessage = error;
+            });
 
-        this.snackBar.open(data.message, 'Close', {
-          duration: 3000, // 3 seconds
-          horizontalPosition: 'right',
-          verticalPosition: 'top',
-        });
-        this.router.navigate(['/upload-resource', data.id]);
         //this.newCompany = { id: 0, name: '', sample: false };
       },
-      error: (err) => {this.errorMessage = err; this.snackBar.open(err, 'Close', {
-        duration: 3000, // 3 seconds
-        horizontalPosition: 'right',
-        verticalPosition: 'top',
-      });},
+      error: (err) => (this.errorMessage = err)
     });
   }
 
-  loadCountries(): void {
-    this.companyService.getAllCountries().subscribe({
+  loadMetadata(): void {
+    this.companyService.getMetadata().subscribe({
       next: (data) => {
         console.log(data);
-        this.countries = data._embedded.countries;
+        this.countries = data.countries;
+        this.sampleCompanies = data.sampleCompanies;
       },
-      error: (err) => (this.errorMessage = err),
+      error: (err) => (this.util.showErrorMessage(err)),
     });
   }
 
@@ -124,7 +140,7 @@ export class CompanyComponent implements OnInit {
         this.companies = data._embedded.companies;
         this.totalCompanies = data.page.totalElements;
         },
-      error: (err) => (this.errorMessage = err),
+      error: (err) => (this.util.showErrorMessage(err)),
     });
   }
 
@@ -140,7 +156,7 @@ export class CompanyComponent implements OnInit {
         this.companies.push(data);
         this.newCompany = { id: 0, name: '', sample: false };
       },
-      error: (err) => (this.errorMessage = err),
+      error: (err) => (this.util.showErrorMessage(err)),
     });
   }
   //!. ?.
@@ -153,7 +169,7 @@ export class CompanyComponent implements OnInit {
         this.loadCompanies();
         this.selectedCompany = null;
       },
-      error: (err) => (this.errorMessage = err),
+      error: (err) => (this.util.showErrorMessage(err)),
     });
     } else {
       console.error('Cannot update. Company is null.');
@@ -164,7 +180,7 @@ export class CompanyComponent implements OnInit {
   deleteCompany(companyId: number): void {
     this.companyService.deleteCompany(companyId).subscribe({
       next: () => (this.companies = this.companies.filter((c) => c.id !== companyId)),
-      error: (err) => (this.errorMessage = err),
+      error: (err) => (this.util.showErrorMessage(err)),
     });
   }
 

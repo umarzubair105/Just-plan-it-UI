@@ -15,6 +15,7 @@ import {
 import {RoleService, Role} from '../services/role.service';
 import {DesignationService, Designation} from '../services/designation.service';
 import {CompanyService, MapDesignation} from '../services/company.service';
+import {Utils} from '../utils/utils';
 @Component({
   selector: 'app-mapping',
   standalone: true,
@@ -39,8 +40,8 @@ export class MappingComponent implements OnInit {
   sourceService = inject(DesignationService)
   targetService = inject(RoleService)
   companyService = inject(CompanyService)
-  constructor(private fb: FormBuilder, private snackBar: MatSnackBar,
-              private route: ActivatedRoute,private router: Router) {}
+  constructor(private fb: FormBuilder, private utils: Utils,
+              private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
     this.companyId = Number(this.route.snapshot.paramMap.get('companyId'));
@@ -62,14 +63,14 @@ export class MappingComponent implements OnInit {
         console.log(data);
         this.sourceModels = data._embedded.designations;
       },
-      error: (err) => {this.errorMessage = err;this.showMessage(err);},
+      error: (err) => {this.errorMessage = err;this.utils.showSuccessMessage(err);},
     });
     this.targetService.getByCompanyId(this.companyId).subscribe({
       next: (data) => {
         console.log(data);
         this.targetModels = data._embedded.roles;
       },
-      error: (err) => {this.errorMessage = err;this.showMessage(err);},
+      error: (err) => {this.errorMessage = err;this.utils.showErrorMessage(err);},
     });
   }
 
@@ -80,11 +81,11 @@ export class MappingComponent implements OnInit {
         var mapM: MapDesignation = {designationId: source.id, roleId: source.roleId};
         this.companyService.mapDesignation(mapM).subscribe({
           next: () => {
-            this.showMessage('Updated successfully');
+            this.utils.showSuccessMessage('Updated successfully');
           },
           error: (err) => {
             this.errorMessage = err;
-            this.showMessage('Priority is not updated')
+            this.utils.showErrorMessage('Priority is not updated')
           }
         });
       }
@@ -93,11 +94,4 @@ export class MappingComponent implements OnInit {
 
 
 
-  showMessage(message: string): void {
-    this.snackBar.open(message, 'Close', {
-      duration: 3000, // 3 seconds
-      horizontalPosition: 'right',
-      verticalPosition: 'top',
-    });
-  }
 }
