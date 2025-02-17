@@ -23,8 +23,7 @@ import {Utils} from '../utils/utils';
     CdkDropList, CdkDrag, CdkDragPreview], // Include FormsModule here
   //template:`Hello`,
   templateUrl: './mapping.component.html',
-  styleUrls: ['./mapping.component.css'],
-  providers:[RoleService, DesignationService, CompanyService]
+  styleUrls: ['./mapping.component.css']
 })
 export class MappingComponent implements OnInit {
 //  @Input() companyId:string = '';
@@ -44,7 +43,8 @@ export class MappingComponent implements OnInit {
               private router: Router, private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.companyId = Number(this.route.snapshot.paramMap.get('companyId'));
+    this.companyId = this.utils.getCompanyId();
+    //Number(this.route.snapshot.paramMap.get('companyId'));
     this.loadModels();
   }
 

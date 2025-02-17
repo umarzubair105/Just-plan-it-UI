@@ -41,7 +41,8 @@ export class PriorityComponent implements OnInit {
               private router: Router,private route: ActivatedRoute) {}
 
   ngOnInit(): void {
-    this.companyId = Number(this.route.snapshot.paramMap.get('companyId'));
+    this.companyId = this.utils.getCompanyId();
+      //Number(this.route.snapshot.paramMap.get('companyId'));
     this.loadModels();
   }
 

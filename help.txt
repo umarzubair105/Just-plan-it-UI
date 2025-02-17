@@ -119,3 +119,11 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
          );
        }
      }
+
+
+      <small class="text-danger" *ngIf="leaveForm.get('employeeName')?.invalid && leaveForm.get('employeeName')?.touched">
+                     Name is required.
+                   </small>
+
+
+

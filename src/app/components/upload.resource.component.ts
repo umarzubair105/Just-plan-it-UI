@@ -70,8 +70,6 @@ export class UploadResourceComponent implements OnInit {
   //newCompany: Company = { id: 0, name: '', sample: false };
   companyService = inject(CompanyService)
   //constructor(private companyService: CompanyService) {}
-  addProductSetup: AddProduct = { companyId:0, name:'',
-    emailProductManager:'',emailProductOwner:'' };
 
 /*  private readonly COLUMN_MAPPING: { [key: string]: string } = {
     "Code": "cc",
@@ -96,7 +94,8 @@ export class UploadResourceComponent implements OnInit {
     });
   }
   ngOnInit(): void {
-    this.companyId = Number(this.route.snapshot.paramMap.get('companyId'));
+    this.companyId = this.utils.getCompanyId();
+      //Number(this.route.snapshot.paramMap.get('companyId'));
     this.productId = Number(this.route.snapshot.paramMap.get('productId'));
   }
 

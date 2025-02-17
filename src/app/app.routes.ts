@@ -29,6 +29,9 @@ export const routes: Routes = [
   { path: 'priority/:companyId', loadComponent: ()=>import(
       './components/priority.component').then((m)=>m.PriorityComponent),
     canActivate: [AuthGuard]},
+  { path: 'annual-leave', loadComponent: ()=>import(
+      './annual-leave/annual-leave.component').then((m)=>m.AnnualLeaveComponent),
+    canActivate: [AuthGuard]},
   { path: 'section', loadComponent: ()=>import(
       './components/section/section.component').then((m)=>m.SectionComponent),
     canActivate: [AuthGuard]},

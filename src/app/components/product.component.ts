@@ -1,33 +1,21 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {
-  CompanyService,
-  Company,
-  AddCompany,
-  CommonResp,
-  BaseModel,
-  AddResource,
-  AddProduct
-} from '../services/company.service';
-import { SectionComponent } from './section/section.component';
-import { FormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
-import {FormGroup, FormControl, FormBuilder} from '@angular/forms';
-import {ReactiveFormsModule, Validators} from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import {AddProduct, BaseModel, CompanyService} from '../services/company.service';
+import {SectionComponent} from './section/section.component';
+import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
+import {CommonModule} from '@angular/common';
+import {HttpClientModule} from '@angular/common/http';
 
-import { MatButtonModule } from '@angular/material/button';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatInputModule } from '@angular/material/input';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatCheckboxModule } from '@angular/material/checkbox';
+import {MatButtonModule} from '@angular/material/button';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import {MatInputModule} from '@angular/material/input';
+import {MatFormFieldModule} from '@angular/material/form-field';
+import {MatCheckboxModule} from '@angular/material/checkbox';
 import {MatList, MatListItem} from '@angular/material/list';
 import {MatIcon} from '@angular/material/icon';
-import { ShowErrorsDirective } from '../show-errors.directive';
+import {ShowErrorsDirective} from '../show-errors.directive';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Utils} from '../utils/utils';
+import {ReleaseIteration} from '../utils/helper';
 
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -52,12 +40,18 @@ export class ProductComponent implements OnInit {
   productId? : number;
   //addCompanySetup: AddCompany = { countryId:1, sampleCompanyId:1,name:'',email:'',firstName:'',secondName:'',lastName:'',designation:'' };
 
+  releaseIterations = Object.keys(ReleaseIteration)
+    .filter(key => isNaN(Number(key))) // Exclude numeric keys
+    .map((key) => ({
+      value: ReleaseIteration[key as keyof typeof ReleaseIteration], // Properly typed access
+      viewValue: key,
+    }));
+
   //newCompany: Company = { id: 0, name: '', sample: false };
   companyService = inject(CompanyService)
   //constructor(private companyService: CompanyService) {}
-  addProductSetup: AddProduct = { companyId:0, name:'',
-    emailProductManager:'',emailProductOwner:'' };
-
+  addProductSetup: AddProduct = {startDate: null, endDate: null, otherActivitiesPercentTime:10,
+     releaseIteration:ReleaseIteration.BI_WEEKLY, name:'', companyId:0, emailProductManager:'', emailProductOwner:''};
 
   myForm: FormGroup;
   constructor(private fb: FormBuilder, private utils: Utils,
@@ -66,12 +60,20 @@ export class ProductComponent implements OnInit {
       name: ['', [Validators.required]],
       emailProductManager: ['', [Validators.required, Validators.email]],
       emailProductOwner: ['', [Validators.required, Validators.email]],
+      otherActivitiesPercentTime: [10, [Validators.required,
+        Validators.pattern('^\\d+$'),
+        Validators.max(100), Validators.min(0)]],//,
+      releaseIteration: [ReleaseIteration.BI_WEEKLY],
+      startDate: ['', [Validators.required]],
+      endDate: [''],
+
 //      countryId: [2, Validators.required],
 //      phone: ['', [Validators.required, Validators.pattern('^\\d{10}$')]], // 10-digit number
     });
   }
   ngOnInit(): void {
-    this.companyId =  Number(this.route.snapshot.paramMap.get("companyId"));
+    this.companyId =  this.utils.getCompanyId();
+    //Number(this.route.snapshot.paramMap.get("companyId"));
     console.log('Testing:'+this.companyId)
   }
 

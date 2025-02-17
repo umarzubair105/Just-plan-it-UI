@@ -21,8 +21,10 @@ export class AuthService {
   login(token: string) {
     this.saveToken(token);
     var decodedT = this.decodeToken(token);
-    var userName = decodedT.name;
+    var userName = decodedT.userName;
     localStorage.setItem('loggedUser', userName);
+    localStorage.setItem('userId', decodedT.id);
+    localStorage.setItem('companyId', decodedT.companyId);
     this.userNameSubject.next(userName);
   }
 
@@ -36,6 +38,18 @@ export class AuthService {
   // Get the current logged-in user
   getUserName(): string | null {
     return localStorage.getItem('loggedUser');
+  }
+  getUserId(): number {
+    if (localStorage.getItem('userId'))
+      return Number(localStorage.getItem('userId'));
+    else
+      return 0;
+  }
+  getCompanyId(): number {
+    if (localStorage.getItem('companyId'))
+      return Number(localStorage.getItem('companyId'));
+    else
+      return 0;
   }
   // Save JWT token in localStorage
   saveToken(token: string): void {

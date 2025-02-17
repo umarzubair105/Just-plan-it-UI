@@ -62,7 +62,8 @@ export class ResourceComponent implements OnInit {
     });
   }
   ngOnInit(): void {
-    this.companyId = Number(this.route.snapshot.paramMap.get('companyId'));
+    this.companyId = this.utils.getCompanyId();
+      //Number(this.route.snapshot.paramMap.get('companyId'));
     console.log(this.companyId); // Output: 123
     console.log('Testing')
     this.loadRules()

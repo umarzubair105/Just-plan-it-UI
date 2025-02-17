@@ -44,6 +44,50 @@
           [showErrors]="{ required: 'Product Owner Email is required', email: 'Product Owner Email is not valid' }"
         />
       </div>
+      <div class="mb-3">
+        <label for="releaseIteration" class="form-label">Release Duration</label>
+        <label class="required-label">&nbsp;* </label>
+        <select id="releaseIteration"  formControlName="releaseIteration" class="form-control">
+          <option *ngFor="let releaseIteration of releaseIterations" [value]="releaseIteration.viewValue">
+            {{ releaseIteration.value }}
+          </option>
+        </select>
+      </div>
+      <div class="mb-3">
+        <label for="otherActivitiesPercentTime" class="form-label">Non Productive Time %</label>
+        <label class="required-label">&nbsp;* </label>
+        <input
+          type="text"
+          id="otherActivitiesPercentTime"
+          class="form-control"
+          formControlName="otherActivitiesPercentTime"
+          placeholder="Non Productive Time %"
+          [showErrors]="{ required: 'Non productive time is required', min:'Min value is 0',
+          max:'Max value is 100', pattern: 'Should be number only'}"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="startDate" class="form-label">First Working Date</label>
+        <label class="required-label">&nbsp;* </label>
+        <input
+          type="date"
+          id="startDate"
+          class="form-control"
+          formControlName="startDate"
+          placeholder="Enter first working date"
+          [showErrors]="{ required: 'First working date is required' }"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="endDate" class="form-label">Last Delivery Date</label>
+        <input
+          type="date"
+          id="endDate"
+          class="form-control"
+          formControlName="endDate"
+          placeholder="Last delivery date"
+        />
+      </div>
       <!-- Submit Button -->
       <div class="text-center">
         <button class="btn btn-primary" type="submit">Submit</button>

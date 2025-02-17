@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {PageResponse} from '../models/page.response';
+import {ReleaseIteration} from '../utils/helper';
 
 // Define the Company interface
 export interface Company {
@@ -33,7 +34,11 @@ export interface AddProduct {
   name: string;
   emailProductManager: string;
   emailProductOwner: string;
-  companyId: number
+  companyId: number;
+  otherActivitiesPercentTime: number;
+  releaseIteration: ReleaseIteration,
+  startDate: Date | null,
+  endDate: Date | null
 }
 
 export interface AddResource {

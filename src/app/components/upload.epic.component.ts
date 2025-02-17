@@ -75,8 +75,6 @@ export class UploadEpicComponent implements OnInit {
   //newCompany: Company = { id: 0, name: '', sample: false };
   companyService = inject(CompanyService)
   //constructor(private companyService: CompanyService) {}
-  addProductSetup: AddProduct = { companyId:0, name:'',
-    emailProductManager:'',emailProductOwner:'' };
 
 /*  private readonly COLUMN_MAPPING: { [key: string]: string } = {
     "Code": "cc",
@@ -158,7 +156,7 @@ export class UploadEpicComponent implements OnInit {
       next: (data) => {
         // action: string = 'Close'
         this.utils.showSuccessMessage(data[0].message);
-        this.router.navigate(['/priority', 1]);
+        this.router.navigate(['/priority', 0]);
         //this.newCompany = { id: 0, name: '', sample: false };
       },
       error: (err) => {this.errorMessage = err; this.utils.showErrorMessage(err);},
