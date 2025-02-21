@@ -30,7 +30,10 @@ export const routes: Routes = [
       './components/priority.component').then((m)=>m.PriorityComponent),
     canActivate: [AuthGuard]},
   { path: 'annual-leave', loadComponent: ()=>import(
-      './annual-leave/annual-leave.component').then((m)=>m.AnnualLeaveComponent),
+      './leaves/annual-leave.component').then((m)=>m.AnnualLeaveComponent),
+    canActivate: [AuthGuard]},
+  { path: 'company-calendar', loadComponent: ()=>import(
+      './leaves/company-calendar.component').then((m)=>m.CompanyCalendarComponent),
     canActivate: [AuthGuard]},
   { path: 'section', loadComponent: ()=>import(
       './components/section/section.component').then((m)=>m.SectionComponent),

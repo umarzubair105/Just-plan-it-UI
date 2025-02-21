@@ -1,7 +1,5 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { CompanyComponent } from './components/company.component';
-import {SectionComponent} from './components/section/section.component';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatFormField, MatLabel} from '@angular/material/form-field';
 import {MatRadioButton, MatRadioGroup} from '@angular/material/radio';
@@ -27,7 +25,7 @@ import {
 import {TopBarComponent} from './components/top-bar.component';
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet, CompanyComponent, SectionComponent,
+  imports: [RouterOutlet,
     MatToolbarModule, MatFormField, MatRadioButton, MatRadioGroup,
     MatCheckbox, FormsModule, MatIcon, MatSelect, MatOption, MatCard,
     MatCardHeader, MatCardActions, MatProgressSpinner, MatAccordion,

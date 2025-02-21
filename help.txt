@@ -147,3 +147,12 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 
 
 
+
+
+
+                   <li *ngFor="let day of weekDays" [ngClass]="{ 'weekend': isWeekend(day) }">
+                           {{ day }}
+                         </li>
+
+
+
