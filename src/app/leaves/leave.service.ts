@@ -20,19 +20,35 @@ export enum WorkingHourEnum {
   SPECIFIC_DATE = "SPECIFIC_DATE",
   WEEK_DAY = "WEEK_DAY",
 }
-export interface CompanyWorkingHour {
-  id: number;
-  description: string;
-  scope: WorkingHourEnum;
-  minutes: number;
-  active: boolean;
-  companyId: number;
-  dayOfWeek: string | null;
-  eventDate: Date | null;
-  startDate: Date | null;
-  endDate: Date | null;
-  recurring: boolean;
+export class CompanyWorkingHour {
+  public id: number = 0;
+  public description: string = '';
+  public scope: WorkingHourEnum = WorkingHourEnum.SPECIFIC_DATE;
+  public minutes: number = 0;
+  public active: boolean = true;
+  public companyId: number = 0;
+  public dayOfWeek: string | null = null;
+  public eventDate: Date | null = null;
+  public startDate: Date | null = null;
+  public endDate: Date | null = null;
+  public recurring: boolean = true;
 }
+//const obj = Object.assign(new CompanyWorkingHour(), { description: 'Morning Shift' });
+/*export class CompanyWorkingHour {
+  constructor(
+    public id: number = 0,
+    public description: string = '',
+    public scope: WorkingHourEnum = WorkingHourEnum.DEFAULT,
+    public minutes: number = 0,
+    public active: boolean = true,
+    public companyId: number = 0,
+    public dayOfWeek: string | null = null,
+    public eventDate: Date | null = null,
+    public startDate: Date | null = null,
+    public endDate: Date | null = null,
+    public recurring: boolean = false
+  ) {}
+}*/
 
 export enum EventTypeEnum {
   HOLIDAY,
@@ -40,15 +56,15 @@ export enum EventTypeEnum {
   MEETING,
   COMPANY_EVENT
 }
-export interface CompanyCalendar {
-  id: number;
-  eventName: string;
-  eventType: EventTypeEnum;
-  active: boolean;
-  companyId: number;
-  startDate: Date | null;
-  endDate: Date | null;
-  recurring: boolean;
+export class CompanyCalendar {
+  public id: number = 0;
+  public eventName: string = '';
+  public eventType: EventTypeEnum = EventTypeEnum.HOLIDAY;
+  public active: boolean = true;
+  public companyId: number = 0;
+  public startDate: Date | null = null;
+  public endDate: Date | null = null;
+  public recurring: boolean = true;
 }
 
 @Injectable({

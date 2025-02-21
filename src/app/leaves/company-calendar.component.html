@@ -20,9 +20,7 @@
     </ul>
   </div>
 
-  <button class="btn btn-primary mb-3" (click)="openModal(addWHTemplate)">Add Working Hour</button>
-
-  <!-- Leave List Table -->
+  <button class="btn btn-primary mb-3" (click)="openWDModal(addWHTemplate)">Add Working Hour</button>
   <table class="table table-bordered">
     <thead class="table-dark">
     <tr>
@@ -41,97 +39,168 @@
       <td>{{ wh.description }}</td>
       <td>{{ wh.scope }}</td>
       <td>{{ wh.minutes }}</td>
-      <td>{{ wh.dayOfWeek }}</td>
+      <td>{{ wh.dayOfWeek | titlecase }}</td>
       <td>{{ wh.eventDate }}</td>
       <td>{{ wh.startDate }}</td>
       <td>{{ wh.endDate }}</td>
       <td>
         <button class="btn btn-danger btn-sm" (click)="deleteCompanyWorkingHour(wh.id)"
          *ngIf="wh.scope !== WorkingHourEnum.DEFAULT">Delete</button>
-        <button class="btn btn-danger btn-sm" (click)="openModalEdit(addWHTemplate, wh.id)">Edit</button>
+        <button class="btn btn-danger btn-sm" (click)="openWDModalEdit(addWHTemplate, wh.id)">Edit</button>
       </td>
     </tr>
     </tbody>
   </table>
-</div>
-<ng-template #viewLeaveTemplate>
-  <div class="p-4 text-dark">
-    @if (selectedCompanyWorkingHour) {
-      <p>Description: {{ selectedCompanyWorkingHour.description }}</p>
-      <hr />
-      <p>Scope: {{ selectedCompanyWorkingHour.scope }}</p>
-      <hr />
-      <p>Minutes: {{ selectedCompanyWorkingHour.minutes }}</p>
-      <hr />
-      <p *ngIf="isDisplay('startDate',selectedCompanyWorkingHour.scope)" >End Date: {{ selectedCompanyWorkingHour.startDate }}</p>
-      <hr />
-      <p *ngIf="isDisplay('endDate',selectedCompanyWorkingHour.scope)" >End Date: {{ selectedCompanyWorkingHour.endDate }}</p>
-      <hr />
-      <p *ngIf="isDisplay('eventDate',selectedCompanyWorkingHour.scope)" >Event Date: {{ selectedCompanyWorkingHour.eventDate }}</p>
-      <p *ngIf="isDisplay('dayOfWeek',selectedCompanyWorkingHour.scope)" >Day of Week: {{ selectedCompanyWorkingHour.dayOfWeek }}</p>
+  <!--
+  <ng-template #viewLeaveTemplate>
+    <div class="p-4 text-dark">
+      @if (editCompanyWorkingHour) {
+        <p>Description: {{ editCompanyWorkingHour.description }}</p>
+        <hr />
+        <p>Scope: {{ editCompanyWorkingHour.scope }}</p>
+        <hr />
+        <p>Minutes: {{ editCompanyWorkingHour.minutes }}</p>
+        <hr />
+        <p *ngIf="isDisplay('startDate',editCompanyWorkingHour.scope)" >End Date: {{ editCompanyWorkingHour.startDate }}</p>
+        <hr />
+        <p *ngIf="isDisplay('endDate',editCompanyWorkingHour.scope)" >End Date: {{ editCompanyWorkingHour.endDate }}</p>
+        <hr />
+        <p *ngIf="isDisplay('eventDate',editCompanyWorkingHour.scope)" >Event Date: {{ editCompanyWorkingHour.eventDate }}</p>
+        <p *ngIf="isDisplay('dayOfWeek',editCompanyWorkingHour.scope)" >Day of Week: {{ editCompanyWorkingHour.dayOfWeek }}</p>
 
-    }@else{
-      <p>Working Hour does not exist</p>
-    }
-  </div>
-  <div class="modalButton mb-3">
-    <button (click)="closeModal()">close</button>
-  </div>
-</ng-template>
-<ng-template #addWHTemplate>
-  <div class="modal fade show d-block">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title">Add/Update Working Hour</h5>
-          <button type="button" class="btn-close" (click)="closeModal()"></button>
-        </div>
-        <div class="modal-body">
-          <form>
-            <div class="mb-3">
-              <label class="form-label">Description</label>
-              <input type="text" class="form-control" [(ngModel)]="newCompanyWorkingHour.description" name="description" required>
-            </div>
-            <div class="mb-3" *ngIf="newCompanyWorkingHour.scope !== WorkingHourEnum.DEFAULT">
-              <label class="form-label">Scope</label>
-              <select name="scope"  [(ngModel)]="newCompanyWorkingHour.scope" class="form-control">
-                <option *ngFor="let scope of workingHourScopes" [value]="scope.viewValue">
-                  {{ scope.value }}
-                </option>
-              </select>
-            </div>
-            <div class="mb-3">
-              <label class="form-label">Minutes</label>
-              <input type="text" class="form-control" [(ngModel)]="newCompanyWorkingHour.minutes" name="minutes" required>
-            </div>
-            <div class="mb-3" *ngIf="isDisplay('startDate',newCompanyWorkingHour.scope)">
-              <label class="form-label">Start Date</label>
-              <input type="date" class="form-control" [(ngModel)]="newCompanyWorkingHour.startDate" name="startDate" required>
-            </div>
-            <div class="mb-3" *ngIf="isDisplay('endDate',newCompanyWorkingHour.scope)">
-              <label class="form-label">End Date</label>
-              <input type="date" class="form-control" [(ngModel)]="newCompanyWorkingHour.endDate" name="endDate" required>
-            </div>
-            <div class="mb-3" *ngIf="isDisplay('eventDate',newCompanyWorkingHour.scope)">
-              <label class="form-label">Event Date</label>
-              <input type="date" class="form-control" [(ngModel)]="newCompanyWorkingHour.eventDate" name="eventDate" required>
-            </div>
-            <div class="mb-3" *ngIf="isDisplay('dayOfWeek',newCompanyWorkingHour.scope)">
-              <label class="form-label">Day of Week</label>
-              <select name="dayOfWeek"  [(ngModel)]="newCompanyWorkingHour.dayOfWeek" class="form-control">
-                <option *ngFor="let day of weekDays" [value]="day.toUpperCase()">
-                  {{ day | titlecase }}
-                </option>
-              </select>
-            </div>
-          </form>
-        </div>
-        <div class="modal-footer">
-          <button class="btn btn-secondary" (click)="closeModal()">Cancel</button>
-          <button class="btn btn-success" (click)="updateCompanyWorkingHour(newCompanyWorkingHour)" *ngIf="newCompanyWorkingHour.id>0">Update</button>
-          <button class="btn btn-success" (click)="addCompanyWorkingHour()" *ngIf="newCompanyWorkingHour.id===0">Add</button>
+      }@else{
+        <p>Working Hour does not exist</p>
+      }
+    </div>
+    <div class="modalButton mb-3">
+      <button (click)="closeModal()">close</button>
+    </div>
+  </ng-template>
+  -->
+  <ng-template #addWHTemplate>
+    <div class="modal fade show d-block">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add/Update Working Hour</h5>
+            <button type="button" class="btn-close" (click)="closeModal()"></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                <label class="form-label">Description</label>
+                <input type="text" class="form-control" [(ngModel)]="editCompanyWorkingHour.description" name="description" required>
+              </div>
+              <div class="mb-3" *ngIf="editCompanyWorkingHour.scope !== WorkingHourEnum.DEFAULT">
+                <label class="form-label">Scope</label>
+                <select name="scope"  [(ngModel)]="editCompanyWorkingHour.scope" class="form-control">
+                  <option *ngFor="let scope of workingHourScopes" [value]="scope.viewValue">
+                    {{ scope.value }}
+                  </option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Minutes</label>
+                <input type="text" class="form-control" [(ngModel)]="editCompanyWorkingHour.minutes" name="minutes" required>
+              </div>
+              <div class="mb-3" *ngIf="isDisplay('startDate',editCompanyWorkingHour.scope)">
+                <label class="form-label">Start Date</label>
+                <input type="date" class="form-control" [(ngModel)]="editCompanyWorkingHour.startDate" name="startDate" required>
+              </div>
+              <div class="mb-3" *ngIf="isDisplay('endDate',editCompanyWorkingHour.scope)">
+                <label class="form-label">End Date</label>
+                <input type="date" class="form-control" [(ngModel)]="editCompanyWorkingHour.endDate" name="endDate" required>
+              </div>
+              <div class="mb-3" *ngIf="isDisplay('eventDate',editCompanyWorkingHour.scope)">
+                <label class="form-label">Event Date</label>
+                <input type="date" class="form-control" [(ngModel)]="editCompanyWorkingHour.eventDate" name="eventDate" required>
+              </div>
+              <div class="mb-3" *ngIf="isDisplay('dayOfWeek',editCompanyWorkingHour.scope)">
+                <label class="form-label">Day of Week</label>
+                <select name="dayOfWeek"  [(ngModel)]="editCompanyWorkingHour.dayOfWeek" class="form-control">
+                  <option *ngFor="let day of weekDays" [value]="day.toUpperCase()">
+                    {{ day | titlecase }}
+                  </option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+            <button class="btn btn-success" (click)="updateCompanyWorkingHour()" *ngIf="editCompanyWorkingHour.id>0">Update</button>
+            <button class="btn btn-success" (click)="addCompanyWorkingHour()" *ngIf="editCompanyWorkingHour.id===0">Add</button>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</ng-template>
+  </ng-template>
+
+
+
+  <button class="btn btn-primary mb-3" (click)="openCCModal(addCCTemplate)">Add Company Calendar</button>
+  <table class="table table-bordered">
+    <thead class="table-dark">
+    <tr>
+      <th>Event</th>
+      <th>Type</th>
+      <th>Start Date</th>
+      <th>End Date</th>
+      <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr *ngFor="let wh of companyCalendars; ">
+      <td>{{ wh.eventName }}</td>
+      <td>{{ wh.eventType }}</td>
+      <td>{{ wh.startDate }}</td>
+      <td>{{ wh.endDate }}</td>
+      <td>
+        <button class="btn btn-danger btn-sm" (click)="deleteCompanyCalendar(wh.id)">Delete</button>
+        <button class="btn btn-danger btn-sm" (click)="openCCModalEdit(addCCTemplate, wh.id)">Edit</button>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <ng-template #addCCTemplate>
+    <div class="modal fade show d-block">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add/Update Company Calendar</h5>
+            <button type="button" class="btn-close" (click)="closeModal()"></button>
+          </div>
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                <label class="form-label">Event {{editCompanyCalendar.id}}</label>
+                <input type="text" class="form-control" [(ngModel)]="editCompanyCalendar.eventName" name="eventName" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Type</label>
+                <select name="eventType"  [(ngModel)]="editCompanyCalendar.eventType" class="form-control">
+                  <option *ngFor="let scope of eventTypes" [value]="scope.viewValue">
+                    {{ scope.value }}
+                  </option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">Start Date</label>
+                <input type="date" class="form-control" [(ngModel)]="editCompanyCalendar.startDate" name="startDate" required>
+              </div>
+              <div class="mb-3">
+                <label class="form-label">End Date</label>
+                <input type="date" class="form-control" [(ngModel)]="editCompanyCalendar.endDate" name="endDate" required>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+            <button class="btn btn-success" (click)="updateCompanyCalendar()" *ngIf="editCompanyCalendar.id>0">Update</button>
+            <button class="btn btn-success" (click)="addCompanyCalendar()" *ngIf="editCompanyCalendar.id===0">Add</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>

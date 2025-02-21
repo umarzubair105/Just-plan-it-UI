@@ -2,7 +2,14 @@ import {Component, inject, OnInit, TemplateRef} from '@angular/core';
 import {CommonModule, NgFor, NgIf} from '@angular/common'; // ✅ Use CommonModule
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
-import {CompanyWeekend, CompanyWorkingHour, LeaveService, WorkingHourEnum} from './leave.service';
+import {
+  CompanyCalendar,
+  CompanyWeekend,
+  CompanyWorkingHour,
+  EventTypeEnum,
+  LeaveService,
+  WorkingHourEnum
+} from './leave.service';
 import {Utils} from '../utils/utils';
 import {forkJoin, of, tap} from 'rxjs';
 import {ReleaseIteration} from '../utils/helper';
@@ -30,33 +37,30 @@ export class CompanyCalendarComponent  implements OnInit {
       viewValue: key,
     }));
   companyWorkingHours: CompanyWorkingHour[] = [];
-  selectedCompanyWorkingHour?: CompanyWorkingHour;
-  newCompanyWorkingHourTemp:CompanyWorkingHour = {
-    id: 0,
-    description: '',
-    scope: WorkingHourEnum.DATE_RANGE,
-    minutes: 0,
-    active: true,
-    companyId: 0,
-    dayOfWeek: null,
-    eventDate: null,
-    startDate: null,
-    endDate: null,
-    recurring: false
-  };
-  newCompanyWorkingHour:CompanyWorkingHour;
+  editCompanyWorkingHour!: CompanyWorkingHour;
+
+  eventTypes = Object.keys(EventTypeEnum)
+    .filter(key => isNaN(Number(key))) // Exclude numeric keys
+    .map((key) => ({
+      value: key, // Properly typed access
+      viewValue: key,
+    }));
+  companyCalendars: CompanyCalendar[] = [];
+  editCompanyCalendar!: CompanyCalendar;
+
 
   companyId:number;
   leaveService: LeaveService = inject(LeaveService);
   constructor(private modalService: BsModalService, private util: Utils) {
     this.companyId = this.util.getCompanyId();
     console.log('comid:'+this.companyId);
-    this.newCompanyWorkingHour = this.newCompanyWorkingHourTemp;
+    this.editCompanyWorkingHour = new CompanyWorkingHour();
   }
   ngOnInit(): void {
     console.log('Testing');
     this.loadWeekends();
     this.loadCompanyWorkingHours();
+    this.loadCompanyCalendars();
   }
 
   loadWeekends(): void {
@@ -124,13 +128,11 @@ export class CompanyCalendarComponent  implements OnInit {
   }
 
   // Helper method to return the correct API observable
-  updateCompanyWorkingHour(wd: CompanyWorkingHour) {
-      return this.leaveService.updateWorkingHour(wd.id, wd).subscribe({
+  updateCompanyWorkingHour() {
+      this.leaveService.updateWorkingHour(this.editCompanyWorkingHour.id,
+        this.editCompanyWorkingHour).subscribe({
         next: (data) => {
-          this.companyWorkingHours = this.companyWorkingHours.filter(wh => wh.id !== wd.id);
-          //this.companyWorkingHours.push({ ...data });
-          this.companyWorkingHours.unshift(data);
-          this.newCompanyWorkingHour = this.newCompanyWorkingHourTemp;
+          this.editCompanyWorkingHour = new CompanyWorkingHour();
           this.util.showSuccessMessage('Data is updated');
           this.closeModal();
         },
@@ -138,26 +140,31 @@ export class CompanyCalendarComponent  implements OnInit {
       });
   }
   deleteCompanyWorkingHour(id: number) {
-    return this.leaveService.deleteWorkingHour(id).subscribe({
-      next: (data) => {
-        this.util.showSuccessMessage('Data is deleted');
-        this.companyWorkingHours = this.companyWorkingHours.filter(wh => wh.id !== id);
-      },
-      error: (err) => (this.util.showErrorMessage(err)),
-    });
+    if (window.confirm("Are you sure you want to delete?")) {
+      var compCal = this.companyWorkingHours.find((x) => x.id === id);
+      if (compCal) {
+        compCal.active = false;
+        this.leaveService.updateWorkingHour(compCal.id,
+          compCal).subscribe({
+          next: (data) => {
+            this.util.showSuccessMessage('Data is deleted');
+            this.companyWorkingHours = this.companyWorkingHours.filter(wh => wh.id !== id);
+          },
+          error: (err) => (this.util.showErrorMessage(err)),
+        });
+      }
+    }
   }
 
   addCompanyWorkingHour() {
-      this.newCompanyWorkingHour.active=true;
-      this.newCompanyWorkingHour.recurring=true;
-      this.newCompanyWorkingHour.companyId = this.companyId;
-      return this.leaveService.createWorkingHour(this.newCompanyWorkingHour).subscribe({
+      this.editCompanyWorkingHour.active=true;
+      this.editCompanyWorkingHour.recurring=true;
+      this.editCompanyWorkingHour.companyId = this.companyId;
+      return this.leaveService.createWorkingHour(this.editCompanyWorkingHour).subscribe({
         next: (data) => {
           this.companyWorkingHours.unshift(data);
-          //this.companyWorkingHours.push({ ...data });
-          this.newCompanyWorkingHour = this.newCompanyWorkingHourTemp;
+          this.editCompanyWorkingHour = new CompanyWorkingHour();
           this.util.showSuccessMessage('Data is inserted.');
-          this.loadCompanyWorkingHours();
           this.closeModal();
         },
         error: (err) => (this.util.showErrorMessage(err)),
@@ -174,32 +181,91 @@ export class CompanyCalendarComponent  implements OnInit {
     }
     return false;
   }
+
+
   // Open modal
-  openModal(template: TemplateRef<any>) {
-    this.newCompanyWorkingHour = this.newCompanyWorkingHourTemp;
+  openWDModal(template: TemplateRef<any>) {
+    this.editCompanyWorkingHour = new CompanyWorkingHour();
     this.modalRef = this.modalService.show(template);
   }
-  openModalEdit(viewLeaveTemplate: TemplateRef<any>, id: number) {
-    console.log('openModalEdit:'+id);
+  openWDModalEdit(template: TemplateRef<any>, id: number) {
     if (id) {
-      this.selectedCompanyWorkingHour = this.companyWorkingHours.find((x) => x.id === id);
-      this.newCompanyWorkingHour.id = this.selectedCompanyWorkingHour?.id ?? 0
-      this.newCompanyWorkingHour.description = this.selectedCompanyWorkingHour?.description ?? '';
-      this.newCompanyWorkingHour.scope = this.selectedCompanyWorkingHour?.scope ?? WorkingHourEnum.SPECIFIC_DATE;
-      this.newCompanyWorkingHour.minutes = this.selectedCompanyWorkingHour?.minutes ?? 0;
-      this.newCompanyWorkingHour.eventDate = this.selectedCompanyWorkingHour?.eventDate ?? null;
-      this.newCompanyWorkingHour.startDate = this.selectedCompanyWorkingHour?.startDate ?? null;
-      this.newCompanyWorkingHour.endDate = this.selectedCompanyWorkingHour?.endDate ?? null;
-      this.newCompanyWorkingHour.dayOfWeek = this.selectedCompanyWorkingHour?.dayOfWeek ?? '';
-      this.newCompanyWorkingHour.recurring = this.selectedCompanyWorkingHour?.recurring ?? false;
-      this.newCompanyWorkingHour.companyId = this.selectedCompanyWorkingHour?.companyId ?? this.companyId;
-      this.newCompanyWorkingHour.active = this.selectedCompanyWorkingHour?.active ?? true;
-      this.modalRef = this.modalService.show(viewLeaveTemplate);
+      this.editCompanyWorkingHour = this.companyWorkingHours.find((x) => x.id === id)
+        ?? new CompanyWorkingHour();
+      this.modalRef = this.modalService.show(template);
     }
   }
   // Close modal
   closeModal() {
     this.modalRef?.hide();
+  }
+
+
+  loadCompanyCalendars(): void {
+    this.leaveService.getCompanyCalendarsByCompanyId(this.companyId).subscribe({
+      next: (data) => {
+        console.log(data);
+        this.companyCalendars = data._embedded.companyCalendars;
+      },
+      error: (err) => (this.util.showErrorMessage(err)),
+    });
+  }
+
+  // Helper method to return the correct API observable
+  updateCompanyCalendar() {
+    this.leaveService.updateCompanyCalendar(this.editCompanyCalendar.id,
+      this.editCompanyCalendar).subscribe({
+      next: (data) => {
+        this.editCompanyCalendar = new CompanyCalendar();
+        this.util.showSuccessMessage('Data is updated');
+        this.closeModal();
+      },
+      error: (err) => (this.util.showErrorMessage(err)),
+    });
+  }
+  deleteCompanyCalendar(id: number) {
+    if (window.confirm("Are you sure you want to delete?")) {
+      var compCal = this.companyCalendars.find((x) => x.id === id);
+      if (compCal) {
+        compCal.active = false;
+        this.leaveService.updateCompanyCalendar(compCal.id,
+          compCal).subscribe({
+          next: (data) => {
+            this.util.showSuccessMessage('Data is deleted');
+            this.companyCalendars = this.companyCalendars.filter(wh => wh.id !== id);
+          },
+          error: (err) => (this.util.showErrorMessage(err)),
+        });
+      }
+    }
+  }
+
+  addCompanyCalendar() {
+    this.editCompanyCalendar.active=true;
+    this.editCompanyCalendar.recurring=true;
+    this.editCompanyCalendar.companyId = this.companyId;
+    return this.leaveService.createCompanyCalendar(this.editCompanyCalendar).subscribe({
+      next: (data) => {
+        this.companyCalendars.unshift(data);
+        this.editCompanyCalendar = new CompanyCalendar();
+        this.util.showSuccessMessage('Data is inserted.');
+        this.closeModal();
+      },
+      error: (err) => (this.util.showErrorMessage(err)),
+    });
+  }
+
+  // Open modal
+  openCCModal(template: TemplateRef<any>) {
+    this.editCompanyCalendar = new CompanyCalendar();
+    this.modalRef = this.modalService.show(template);
+  }
+  openCCModalEdit(template: TemplateRef<any>, id: number) {
+    if (id) {
+      this.editCompanyCalendar = this.companyCalendars.find((x) => x.id === id)
+        ?? new CompanyCalendar();
+      this.modalRef = this.modalService.show(template);
+    }
   }
 
 
