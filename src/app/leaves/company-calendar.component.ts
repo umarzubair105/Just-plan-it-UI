@@ -9,7 +9,7 @@ import {
   EventTypeEnum,
   LeaveService,
   WorkingHourEnum
-} from './leave.service';
+} from '../services/leave.service';
 import {Utils} from '../utils/utils';
 import {forkJoin, of, tap} from 'rxjs';
 import {ReleaseIteration} from '../utils/helper';

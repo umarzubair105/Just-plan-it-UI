@@ -35,6 +35,9 @@ export const routes: Routes = [
   { path: 'company-calendar', loadComponent: ()=>import(
       './leaves/company-calendar.component').then((m)=>m.CompanyCalendarComponent),
     canActivate: [AuthGuard]},
+  { path: 'planning/:productId', loadComponent: ()=>import(
+      './planning/planning.component').then((m)=>m.PlanningComponent),
+    canActivate: [AuthGuard]},
   { path: 'section', loadComponent: ()=>import(
       './components/section/section.component').then((m)=>m.SectionComponent),
     canActivate: [AuthGuard]},
