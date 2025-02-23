@@ -1,0 +1,41 @@
+
+<div class="container">
+  <h2>SubComponents for {{companyId}}</h2>
+
+  <!-- Error Message -->
+  <div *ngIf="errorMessage" class="error">
+    {{ errorMessage }}
+  </div>
+
+  <!-- SubComponent List -->
+  <ul>
+    <li *ngFor="let subComponent of subComponents" (click)="selectSubComponent(subComponent)">
+      {{ subComponent.name }}
+      <button (click)="deleteSubComponent(subComponent.id); $event.stopPropagation()">Delete</button>
+    </li>
+  </ul>
+
+  <!-- Selected SubComponent Details -->
+  <div *ngIf="selectedSubComponent">
+    <h3>SubComponent Details</h3>
+    <p>ID: {{ selectedSubComponent.id }}</p>
+    <p>
+      Name: <input [(ngModel)]="selectedSubComponent.name" />
+    </p>
+
+    <button (click)="updateSubComponent(selectedSubComponent)">Update</button>
+  </div>
+
+  <!-- Add New SubComponent -->
+  <div>
+    <h3>Add New SubComponent</h3>
+    <p>
+      Name: <input [(ngModel)]="newSubComponent.name" />
+    </p>
+    <p>
+      Name: <input [(ngModel)]="newSubComponent.companyId" />
+    </p>
+    <button (click)="addSubComponent()">Add SubComponent</button>
+  </div>
+<!--  <button (click)="emitEvent()">Go Back</button>-->
+</div>

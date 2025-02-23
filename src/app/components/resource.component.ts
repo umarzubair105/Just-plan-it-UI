@@ -1,6 +1,6 @@
 import {Component, inject, Input, OnInit} from '@angular/core';
 import {CompanyService, Company, AddCompany, CommonResp, BaseModel, AddResource} from '../services/company.service';
-import { SectionComponent } from './section/section.component';
+import { SubComponentComponent } from './section/sub-component.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -27,7 +27,7 @@ import {Utils} from '../utils/utils';
 @Component({
   selector: 'app-resource',
   standalone: true,
-  imports: [FormsModule, CommonModule, HttpClientModule, SectionComponent,
+  imports: [FormsModule, CommonModule, HttpClientModule, SubComponentComponent,
     MatButtonModule, MatToolbarModule, MatInputModule,
     MatCheckboxModule, MatFormFieldModule,
     MatListItem, MatList, MatIcon,ReactiveFormsModule, ShowErrorsDirective

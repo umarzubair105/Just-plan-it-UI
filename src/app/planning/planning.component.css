@@ -1,17 +1,6 @@
-ul {
-  list-style: none;
-  padding: 0;
-}
-li {
-  padding: 10px;
-  margin: 5px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  display: inline-block;
-  width: 120px;
-}
-.weekend {
-  background-color: #ffcccc;
-  color: red;
-  font-weight: bold;
+ngx-datatable {
+  width: 100%;
+  height: auto;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+
 }

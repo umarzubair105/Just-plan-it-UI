@@ -1,6 +1,6 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {AddProduct, BaseModel, CompanyService} from '../services/company.service';
-import {SectionComponent} from './section/section.component';
+import {SubComponentComponent} from './section/sub-component.component';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {HttpClientModule} from '@angular/common/http';
@@ -22,7 +22,7 @@ import {ReleaseIteration} from '../utils/helper';
 @Component({
   selector: 'app-product',
   standalone: true,
-  imports: [FormsModule, CommonModule, HttpClientModule, SectionComponent,
+  imports: [FormsModule, CommonModule, HttpClientModule, SubComponentComponent,
     MatButtonModule, MatToolbarModule, MatInputModule,
     MatCheckboxModule, MatFormFieldModule,
     MatListItem, MatList, MatIcon,ReactiveFormsModule, ShowErrorsDirective

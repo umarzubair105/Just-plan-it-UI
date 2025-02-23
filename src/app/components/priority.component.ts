@@ -1,5 +1,5 @@
 import {Component, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
-import { Priority, PriorityService } from '../services/priority.service';
+import { PriorityService } from '../services/priority.service';
 import {FormBuilder, FormsModule} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
@@ -13,6 +13,7 @@ import {
   moveItemInArray,
 } from '@angular/cdk/drag-drop';
 import {Utils} from '../utils/utils';
+import {Priority} from '../models/basic';
 @Component({
   selector: 'app-priority',
   standalone: true,
@@ -34,7 +35,7 @@ export class PriorityComponent implements OnInit {
   totalModels : number = 0;
   selectedModel?: Priority | null = null;
   errorMessage: string = '';
-  resetModel: Priority = { id: 0, name: '', companyId: 0, priorityLevel: 0, active: true };
+  resetModel: Priority = new Priority();
   newModel: Priority = this.resetModel;
   modelService = inject(PriorityService)
   constructor(private fb: FormBuilder, private utils: Utils,

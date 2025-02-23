@@ -39,7 +39,7 @@ export const routes: Routes = [
       './planning/planning.component').then((m)=>m.PlanningComponent),
     canActivate: [AuthGuard]},
   { path: 'section', loadComponent: ()=>import(
-      './components/section/section.component').then((m)=>m.SectionComponent),
+      './components/section/sub-component.component').then((m)=>m.SubComponentComponent),
     canActivate: [AuthGuard]},
   { path: 'home', redirectTo: '' },  // Catch-all route (redirect to home for invalid URLs)
   { path: '*', redirectTo: '' }  // Catch-all route (redirect to home for invalid URLs)

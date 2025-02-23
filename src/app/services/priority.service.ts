@@ -3,15 +3,10 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {PageResponse} from '../models/page.response';
+import {Priority} from '../models/basic';
 
 // Define the interface
-export interface Priority {
-  id: number;
-  name: string;
-  active: boolean;
-  companyId: number;
-  priorityLevel: number;
-}
+
 
 
 @Injectable({

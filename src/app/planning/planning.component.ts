@@ -4,15 +4,18 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
 import {Utils} from '../utils/utils';
 import {ActivatedRoute} from '@angular/router';
-import {Epic, Release} from '../models/planning';
+import {Epic, EpicBean, Release} from '../models/planning';
 import {EpicService} from '../services/epic.service';
 import {Priority, SubComponent} from '../models/basic';
-
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import {PriorityService} from '../services/priority.service';
+import {SubComponentService} from '../services/sub-component.service';
 
 @Component({
   selector: 'app-planning',
   standalone: true,
-  imports: [CommonModule, NgIf, NgFor, FormsModule, ModalModule, ReactiveFormsModule], // ✅ NO BrowserAnimationsModule here!
+  imports: [CommonModule, NgIf, NgFor, FormsModule, ModalModule, ReactiveFormsModule,
+    NgxDatatableModule], // ✅ NO BrowserAnimationsModule here!
   templateUrl: './planning.component.html',
   styleUrl: './planning.component.css',
   providers: [BsModalService]
@@ -24,12 +27,22 @@ export class PlanningComponent implements OnInit {
   subComponents: SubComponent[] = [];
   releases: Release[] = [];
 
-  unplannedEpics: Epic[] = [];
-  editEpic: Epic = new Epic();
-
+  unplannedEpics: EpicBean[] = [];
+  editEpic: EpicBean = new EpicBean();
+  unplannedTabColumn = [
+    { prop: 'code', name: 'Code' },
+    { prop: 'title', name: 'Title' },
+    { prop: 'priorityId', name: 'Priority' },
+    { prop: 'valueGain', name: 'Value Gain' },
+    { prop: 'requiredBy', name: 'Required By' },
+  ];
   companyId:number;
   productId:number;
+
   epicService: EpicService = inject(EpicService);
+  priorityService = inject(PriorityService)
+  subComponentService = inject(SubComponentService)
+
   constructor(private readonly modalService: BsModalService, private readonly util: Utils, private readonly route: ActivatedRoute) {
     this.companyId = this.util.getCompanyId();
     this.productId = Number(this.route.snapshot.paramMap.get('productId'));
@@ -37,14 +50,37 @@ export class PlanningComponent implements OnInit {
   ngOnInit(): void {
     console.log('Testing');
     this.loadUnplannedEpics();
+    this.loadMetadata();
   }
 
 
-  loadUnplannedEpics(): void {
-    this.epicService.getUnplannedByProductId(this.productId).subscribe({
+  loadMetadata(): void {
+    this.priorityService.getByCompanyId(this.companyId).subscribe({
       next: (data) => {
         console.log(data);
-        this.unplannedEpics = data._embedded.epics;
+        this.priorities = data._embedded.priorities;
+        this.priorities.sort((a, b) => a.priorityLevel - b.priorityLevel);
+      },
+      error: (err) => (this.util.showErrorMessage(err)),
+    });
+    this.subComponentService.getByCompanyId(this.companyId).subscribe({
+      next: (data) => {
+        console.log(data);
+        this.subComponents = data._embedded.components;
+        this.subComponents.sort((a, b) => a.name.localeCompare(b.name));
+      },
+      error: (err) => (this.util.showErrorMessage(err)),
+    });
+  }
+
+
+
+
+  loadUnplannedEpics(): void {
+    this.epicService.getUnplannedEpicBeansByProductId(this.companyId, this.productId).subscribe({
+      next: (data) => {
+        console.log(data);
+        this.unplannedEpics = data;
       },
       error: (err) => (this.util.showErrorMessage(err)),
     });
@@ -55,7 +91,7 @@ export class PlanningComponent implements OnInit {
       this.epicService.update(this.editEpic.id,
         this.editEpic).subscribe({
         next: (data) => {
-          this.editEpic = new Epic();
+          this.editEpic = new EpicBean();
           this.util.showSuccessMessage('Data is updated');
           this.closeModal();
         },
@@ -81,8 +117,8 @@ export class PlanningComponent implements OnInit {
       this.editEpic.productId = this.productId;
       return this.epicService.create(this.editEpic).subscribe({
         next: (data) => {
-          this.unplannedEpics.push(data);
-          this.editEpic = new Epic();
+          //this.unplannedEpics.push(data);
+          this.editEpic = new EpicBean();
           this.util.showSuccessMessage('Data is inserted.');
           this.closeModal();
         },
@@ -94,13 +130,13 @@ export class PlanningComponent implements OnInit {
 
   // Open modal
   createEpicModal(template: TemplateRef<any>) {
-    this.editEpic = new Epic();
+    this.editEpic = new EpicBean();
     this.modalRef = this.modalService.show(template);
   }
   updateEpicModal(template: TemplateRef<any>, id: number) {
     if (id) {
       this.editEpic = this.unplannedEpics.find((x) => x.id === id)
-        ?? new Epic();
+        ?? new EpicBean();
       this.modalRef = this.modalService.show(template);
     }
   }

@@ -1,8 +1,28 @@
 <div class="container mt-4">
-  <h2>Company Calendar</h2>
+  <h2>Unplanned Epics</h2>
 
 
+  <ngx-datatable
+    [rows]="unplannedEpics"
+    [columnMode]="'force'"
+    [headerHeight]="50"
+    [footerHeight]="50"
+    [rowHeight]="'auto'"
+    [sorts]="[{ prop: 'priorityLevel', dir: 'asc' }]"
+    class="material">
 
+    <ngx-datatable-column name="Code" prop="code" [sortable]="true"></ngx-datatable-column>
+    <ngx-datatable-column name="Title">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <a (click)="updateEpicModal(editEpicTemplate,row.id)">{{ row.title }}</a>
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="Priority" prop="priorityLevel" [sortable]="true">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        {{ row.priorityName }}
+      </ng-template>
+    </ngx-datatable-column>
+  </ngx-datatable>
   <button class="btn btn-primary mb-3" (click)="createEpicModal(editEpicTemplate)">Add Epic</button>
 
 <!--

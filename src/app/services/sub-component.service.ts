@@ -4,19 +4,21 @@ import {Observable, throwError} from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {PageResponse} from '../models/page.response';
 import {Company} from './company.service';
-export interface Section {
-  id: number;
-  name: string;
-  companyId: number;
-}
+import {SubComponent} from '../models/basic';
+
 @Injectable({
   providedIn: 'root'
 })
-export class SectionService {
+export class SubComponentService {
   private baseUrl = 'http://localhost:8080/components'; // Base URL for the REST endpoint
 
   constructor(private http: HttpClient) {
     console.log('Testing Service')
+  }
+  getByCompanyId(companyId:number): Observable<PageResponse> {
+    return this.http.get<PageResponse>(`${this.baseUrl}/search/findByCompanyIdAndActiveIsTrue?companyId=${companyId}`).pipe(
+      catchError(this.handleError)
+    );
   }
 
   getAll(): Observable<PageResponse> {
@@ -24,19 +26,19 @@ export class SectionService {
       catchError(this.handleError)
     );
   }
-  getById(id: number): Observable<Section> {
-    return this.http.get<Section>(`${this.baseUrl}/${id}`).pipe(
+  getById(id: number): Observable<SubComponent> {
+    return this.http.get<SubComponent>(`${this.baseUrl}/${id}`).pipe(
       catchError(this.handleError)
     );
   }
-  create(model: Section): Observable<Section> {
+  create(model: SubComponent): Observable<SubComponent> {
     const { id, ...payload } = model;
-    return this.http.post<Section>(this.baseUrl, payload).pipe(
+    return this.http.post<SubComponent>(this.baseUrl, payload).pipe(
       catchError(this.handleError)
     );
   }
-  update(id: number, model: Section): Observable<Section> {
-    return this.http.put<Section>(`${this.baseUrl}/${id}`, model).pipe(
+  update(id: number, model: SubComponent): Observable<SubComponent> {
+    return this.http.put<SubComponent>(`${this.baseUrl}/${id}`, model).pipe(
       catchError(this.handleError)
     );
   }

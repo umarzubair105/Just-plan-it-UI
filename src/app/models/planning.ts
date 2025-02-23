@@ -1,4 +1,4 @@
-import {Basic} from './basic';
+import {Basic, Priority} from './basic';
 
 export enum ReleaseStatusEnum {
   INITIATED="INITIATED",
@@ -24,7 +24,14 @@ export class Epic extends Basic {
   public forcefullyAdded: boolean = true;
   public startDate: Date | null = null;
   public endDate: Date | null = null;
+}
 
+export class EpicBean extends Epic {
+  public priorityName: string | null = null;
+  public priorityLeve: number | null = null;
+  public componentName: number | null = null;
+  public raisedByResourceName: number | null = null;
+  public dependOnEpicCode: number | null = null;
 }
 
 export class Release extends Basic{

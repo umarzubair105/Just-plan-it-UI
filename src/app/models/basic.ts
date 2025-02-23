@@ -11,7 +11,7 @@ export class SubComponent extends Basic{
 export class Priority extends Basic{
   public name: string = '';
   public companyId: number = 0;
-  public priorityLevel: number = 0;
+  public priorityLevel: number = 20;
 }
 
 

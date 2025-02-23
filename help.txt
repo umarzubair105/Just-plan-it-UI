@@ -156,3 +156,31 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
 
 
 
+ <ngx-datatable
+    [rows]="unplannedEpics"
+    [columns]="unplannedTabColumn"
+    [columnMode]="'force'"
+    [headerHeight]="50"
+    [footerHeight]="50"
+    [rowHeight]="'auto'"
+    class="material">
+  </ngx-datatable>
+
+
+  <ngx-datatable
+    [rows]="rows"
+    [columnMode]="'force'"
+    class="material"
+    (activate)="onRowSelect($event)">
+
+    <ngx-datatable-column name="ID" prop="id"></ngx-datatable-column>
+    <ngx-datatable-column name="Name" prop="name"></ngx-datatable-column>
+    <ngx-datatable-column name="Email" prop="email"></ngx-datatable-column>
+
+  </ngx-datatable>
+
+  onRowSelect(event: any) {
+      if (event.type === 'click') {
+        this.router.navigate(['/profile', event.row.id]);
+      }
+    }
