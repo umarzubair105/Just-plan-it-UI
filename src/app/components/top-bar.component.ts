@@ -17,7 +17,9 @@ export class TopBarComponent implements OnInit {
               private utils: Utils) {}
 
   ngOnInit() {
+    console.log('TopBarComponent');
     this.authService.userName$.subscribe(name => {
+      console.log('TopBarComponent:'+name);
       this.userName = name;
     });
   }

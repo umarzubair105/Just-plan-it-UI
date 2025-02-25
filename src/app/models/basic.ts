@@ -6,7 +6,6 @@ export class Basic {
 export class SubComponent extends Basic{
   public name: string = '';
   public companyId: number = 0;
-
 }
 export class Priority extends Basic{
   public name: string = '';
@@ -14,6 +13,10 @@ export class Priority extends Basic{
   public priorityLevel: number = 20;
 }
 
+export class Role extends Basic{
+  public name: string = '';
+  public companyId: number = 0;
+}
 
 export class Resource extends Basic {
   public companyId: number = 0;

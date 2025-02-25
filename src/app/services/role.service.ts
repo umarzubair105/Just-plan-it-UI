@@ -3,13 +3,10 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {PageResponse} from '../models/page.response';
+import {Role} from '../models/basic';
 
 // Define the interface
 
-export interface Role {
-  id: number;
-  name: string;
-}
 
 
 @Injectable({

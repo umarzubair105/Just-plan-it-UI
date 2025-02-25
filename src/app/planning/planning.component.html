@@ -22,6 +22,13 @@
         {{ row.priorityName }}
       </ng-template>
     </ngx-datatable-column>
+    <ngx-datatable-column name="Actions">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <a (click)="updateEpicEstimateModal(editEpicEstimateTemplate,row.id)">Edit Estimate</a>
+      </ng-template>
+    </ngx-datatable-column>
+
+
   </ngx-datatable>
   <button class="btn btn-primary mb-3" (click)="createEpicModal(editEpicTemplate)">Add Epic</button>
 
@@ -59,7 +66,7 @@
               </div>
               <div class="mb-3">
                 <label class="form-label">Value Gain (In number)</label>
-                <input type="text" class="form-control" [(ngModel)]="editEpic.valueGain" name="valueGain" >
+                <input type="number" class="form-control" [(ngModel)]="editEpic.valueGain" name="valueGain" >
               </div>
               <div class="mb-3">
                 <label class="form-label">Risks</label>
@@ -83,6 +90,55 @@
             <button class="btn btn-secondary" (click)="closeModal()">Cancel</button>
             <button class="btn btn-success" (click)="updateEpic()" *ngIf="editEpic.id>0">Update</button>
             <button class="btn btn-success" (click)="createEpic()" *ngIf="editEpic.id===0">Add</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+
+
+
+  <ng-template #editEpicEstimateTemplate>
+    <div class="modal fade show d-block">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add/Update Epic Estimates</h5>
+            <button type="button" class="btn-close" (click)="closeModal()"></button>
+            <button type="button" (click)="addEpicEstimate()">Add More</button>
+
+          </div>
+          <div class="modal-body">
+            <table class="table table-bordered">
+              <thead class="table-dark">
+              <tr>
+                <th>Role</th>
+                <th>Hours</th>
+                <th>Resources</th>
+                <th>&nbsp;</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let epicEstimate of editEpicEstimates; let i = index">
+                <td>
+                  <select id="roleId-{{ i }}" [(ngModel)]="epicEstimate.roleId" required>
+                    <option *ngFor="let r of roles" [value]="r.id">
+                      {{ r.name }}
+                    </option>
+                  </select>
+                </td>
+                <td> <input id="hours-{{ i }}" [(ngModel)]="epicEstimate.hours" type="number" required/></td>
+                <td> <input id="resources-{{ i }}" [(ngModel)]="epicEstimate.resources" type="number" required/></td>
+                <td>
+                  <button class="btn btn-danger btn-sm" (click)="deleteEpicEstimate(epicEstimate.id)">Delete</button>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" (click)="closeModal()">Cancel</button>
+            <button class="btn btn-success" (click)="updateEpic()" *ngIf="editEpicEstimates.length>0">Update</button>
           </div>
         </div>
       </div>

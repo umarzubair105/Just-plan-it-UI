@@ -1,13 +1,13 @@
-import {HttpErrorResponse, HttpInterceptorFn} from '@angular/common/http';
+import {HttpErrorResponse, HttpEvent, HttpInterceptorFn, HttpResponse} from '@angular/common/http';
 import { inject } from '@angular/core';
 import {AuthService} from '../services/auth.service';
+import { Observable, tap,throwError } from 'rxjs';
 import {catchError} from 'rxjs/operators';
-import { throwError } from 'rxjs';
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  console.log('In filter');
+  console.log('authInterceptor In filter');
   const authService = inject(AuthService);
   const token = authService.getToken(); // Retrieve the token from storage
-  console.log('In filter'+token);
+  console.log('authInterceptor In filter'+token);
   if (token) {
     // Clone the request and add the Authorization header
     const clonedReq = req.clone({
@@ -18,10 +18,38 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
       //withCredentials: true
     });
     //return next(clonedReq);
+
     return next(clonedReq).pipe(
+      tap({
+        next: (event: HttpEvent<any>) => {
+          if (event instanceof HttpResponse) {
+            // Successful responses (status code 2xx)
+            console.log('Response Status:', event.status);
+            console.log('Response Body:', event.body);
+          }
+        },
+        error: (error: HttpErrorResponse) => {
+          if (error.status === 0) {
+            authService.logout();
+            // Handle status 0 (network or CORS error)
+            console.error('An error occurred:', error.error);
+            //alert('A network error occurred. Please check your connection or CORS settings or token is expired.');
+          } else {
+            // Handle other HTTP errors
+            console.error(
+              `Backend returned code ${error.status}, body was: `,
+              error.error
+            );
+          }
+          //return throwError(error);
+          //return throwError(() => new Error('Something bad happened; please try again later.'))
+        }
+      })
+    );
+/*    return next(clonedReq).pipe(
       catchError((error: HttpErrorResponse) => {
-        console.log('Error Sttaus:', error.status);
-        console.log('Error:', error);
+        console.log('authInterceptor Error Status:', error.status);
+        console.log('authInterceptor Error:', error);
         if (error.status === 401 || error.status === 403) {
           // Handle the error by redirecting to the login page
           authService.clearToken();
@@ -29,7 +57,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         }
         return throwError(error);
       })
-    );
+    );*/
   }
   return next(req);
 };

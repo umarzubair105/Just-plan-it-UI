@@ -184,3 +184,10 @@ import { CdkDragDrop, moveItemInArray, transferArrayItem } from '@angular/cdk/dr
         this.router.navigate(['/profile', event.row.id]);
       }
     }
+
+import { ChangeDetectorRef } from '@angular/core';
+constructor(private cdr: ChangeDetectorRef) {}
+addRow(newRow: any) {
+  this.rows = [...this.rows, newRow];
+  this.cdr.markForCheck();
+}

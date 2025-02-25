@@ -10,21 +10,24 @@ export class AuthService {
   userName$: Observable<string | null> = this.userNameSubject.asObservable();
 
   constructor() {
+    console.log('AuthService constructor');
     // Load username from local storage when the app starts
     const storedUser = localStorage.getItem('loggedUser');
     if (storedUser) {
       this.userNameSubject.next(storedUser);
     }
+    console.log('AuthService constructor:'+storedUser);
   }
 
   // Call this method after user logs in
   login(token: string) {
     this.saveToken(token);
     var decodedT = this.decodeToken(token);
-    var userName = decodedT.userName;
+    var userName = decodedT.name;
     localStorage.setItem('loggedUser', userName);
     localStorage.setItem('userId', decodedT.id);
     localStorage.setItem('companyId', decodedT.companyId);
+    console.log('AuthService login:'+userName);
     this.userNameSubject.next(userName);
   }
 

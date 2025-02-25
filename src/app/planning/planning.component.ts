@@ -4,12 +4,15 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
 import {Utils} from '../utils/utils';
 import {ActivatedRoute} from '@angular/router';
-import {Epic, EpicBean, Release} from '../models/planning';
+import {Epic, EpicBean, EpicEstimateBean, Release} from '../models/planning';
 import {EpicService} from '../services/epic.service';
-import {Priority, SubComponent} from '../models/basic';
+import {Priority, Role, SubComponent} from '../models/basic';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import {PriorityService} from '../services/priority.service';
 import {SubComponentService} from '../services/sub-component.service';
+import {RoleService} from '../services/role.service';
+import {EpicEstimateService} from '../services/epic-estimate.service';
+import {WorkingHourEnum} from '../services/leave.service';
 
 @Component({
   selector: 'app-planning',
@@ -26,22 +29,22 @@ export class PlanningComponent implements OnInit {
   priorities: Priority[] = [];
   subComponents: SubComponent[] = [];
   releases: Release[] = [];
+  roles: Role[] = [];
 
   unplannedEpics: EpicBean[] = [];
   editEpic: EpicBean = new EpicBean();
-  unplannedTabColumn = [
-    { prop: 'code', name: 'Code' },
-    { prop: 'title', name: 'Title' },
-    { prop: 'priorityId', name: 'Priority' },
-    { prop: 'valueGain', name: 'Value Gain' },
-    { prop: 'requiredBy', name: 'Required By' },
-  ];
+
+  editEpicEstimates: EpicEstimateBean[] = [];
+
+
   companyId:number;
   productId:number;
 
   epicService: EpicService = inject(EpicService);
+  epicEstimateService: EpicEstimateService = inject(EpicEstimateService);
   priorityService = inject(PriorityService)
   subComponentService = inject(SubComponentService)
+  roleService = inject(RoleService)
 
   constructor(private readonly modalService: BsModalService, private readonly util: Utils, private readonly route: ActivatedRoute) {
     this.companyId = this.util.getCompanyId();
@@ -57,7 +60,6 @@ export class PlanningComponent implements OnInit {
   loadMetadata(): void {
     this.priorityService.getByCompanyId(this.companyId).subscribe({
       next: (data) => {
-        console.log(data);
         this.priorities = data._embedded.priorities;
         this.priorities.sort((a, b) => a.priorityLevel - b.priorityLevel);
       },
@@ -65,9 +67,15 @@ export class PlanningComponent implements OnInit {
     });
     this.subComponentService.getByCompanyId(this.companyId).subscribe({
       next: (data) => {
-        console.log(data);
         this.subComponents = data._embedded.components;
         this.subComponents.sort((a, b) => a.name.localeCompare(b.name));
+      },
+      error: (err) => (this.util.showErrorMessage(err)),
+    });
+    this.roleService.getByCompanyId(this.companyId).subscribe({
+      next: (data) => {
+        this.roles = data._embedded.roles;
+        this.roles.sort((a, b) => a.name.localeCompare(b.name));
       },
       error: (err) => (this.util.showErrorMessage(err)),
     });
@@ -91,6 +99,13 @@ export class PlanningComponent implements OnInit {
       this.epicService.update(this.editEpic.id,
         this.editEpic).subscribe({
         next: (data) => {
+          const priority = this.priorities.find(p => p.id === data.priorityId)
+            ?? new Priority();
+          this.editEpic.priorityName = priority.name;
+          this.editEpic.priorityLeve = priority.priorityLevel;
+          const subComp = this.subComponents.find(p => p.id === data.componentId)
+            ?? new SubComponent();
+          this.editEpic.componentName = subComp.name;
           this.editEpic = new EpicBean();
           this.util.showSuccessMessage('Data is updated');
           this.closeModal();
@@ -114,10 +129,21 @@ export class PlanningComponent implements OnInit {
       this.editEpic.active=true;
       this.editEpic.forcefullyAdded=false;
       this.editEpic.code='EpicCode';
+      this.editEpic.releaseId=null;
       this.editEpic.productId = this.productId;
+      //this.editEpic.raisedByResourceId = this.au;
       return this.epicService.create(this.editEpic).subscribe({
         next: (data) => {
-          //this.unplannedEpics.push(data);
+          this.editEpic.id = data.id;
+          const priority = this.priorities.find(p => p.id === data.priorityId)
+            ?? new Priority();
+          this.editEpic.priorityName = priority.name;
+          this.editEpic.priorityLeve = priority.priorityLevel;
+          const subComp = this.subComponents.find(p => p.id === data.componentId)
+            ?? new SubComponent();
+          this.editEpic.componentName = subComp.name;
+          //this.unplannedEpics.push(this.editEpic);
+          this.unplannedEpics = [...this.unplannedEpics, this.editEpic];
           this.editEpic = new EpicBean();
           this.util.showSuccessMessage('Data is inserted.');
           this.closeModal();
@@ -144,4 +170,24 @@ export class PlanningComponent implements OnInit {
   closeModal() {
     this.modalRef?.hide();
   }
+
+
+
+  updateEpicEstimateModal(template: TemplateRef<any>, id: number) {
+    if (id) {
+      this.editEpic = this.unplannedEpics.find((x) => x.id === id)
+        ?? new EpicBean();
+      this.editEpicEstimates = this.editEpic.epicEstimates ?? [];
+      this.modalRef = this.modalService.show(template);
+    }
+  }
+
+  addEpicEstimate(): void {
+    this.editEpicEstimates.push(new EpicEstimateBean());
+  }
+  deleteEpicEstimate(index: number): void {
+    //this.editEpicEstimates.;
+  }
+
+  protected readonly WorkingHourEnum = WorkingHourEnum;
 }
