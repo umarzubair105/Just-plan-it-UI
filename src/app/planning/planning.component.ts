@@ -1,4 +1,4 @@
-import {Component, inject, OnInit, TemplateRef} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, OnInit, TemplateRef, ViewChild} from '@angular/core';
 import {CommonModule, NgFor, NgIf} from '@angular/common'; // ✅ Use CommonModule
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
@@ -13,12 +13,13 @@ import {SubComponentService} from '../services/sub-component.service';
 import {RoleService} from '../services/role.service';
 import {EpicEstimateService} from '../services/epic-estimate.service';
 import {WorkingHourEnum} from '../services/leave.service';
-
+import {EpicEstimateComponent} from './epic-estimate.component';
+import { MatDialog } from '@angular/material/dialog';
 @Component({
   selector: 'app-planning',
   standalone: true,
   imports: [CommonModule, NgIf, NgFor, FormsModule, ModalModule, ReactiveFormsModule,
-    NgxDatatableModule], // ✅ NO BrowserAnimationsModule here!
+    NgxDatatableModule, EpicEstimateComponent], // ✅ NO BrowserAnimationsModule here!
   templateUrl: './planning.component.html',
   styleUrl: './planning.component.css',
   providers: [BsModalService]
@@ -46,7 +47,9 @@ export class PlanningComponent implements OnInit {
   subComponentService = inject(SubComponentService)
   roleService = inject(RoleService)
 
-  constructor(private readonly modalService: BsModalService, private readonly util: Utils, private readonly route: ActivatedRoute) {
+  constructor(private readonly modalService: BsModalService, private readonly util: Utils, private readonly route: ActivatedRoute,
+              private cdr: ChangeDetectorRef,
+              public dialog: MatDialog) {
     this.companyId = this.util.getCompanyId();
     this.productId = Number(this.route.snapshot.paramMap.get('productId'));
   }
@@ -189,5 +192,19 @@ export class PlanningComponent implements OnInit {
     //this.editEpicEstimates.;
   }
 
+  openDialog(row: EpicBean): void {
+    const dialogRef = this.dialog.open(EpicEstimateComponent, {
+      width: '80%',
+      maxWidth: '90vw', // 90% of viewport width
+      height: '70%',
+      maxHeight: '80vh', // 80% of viewport height
+      data: { epicBean: row, roles: this.roles },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      // Handle the result here
+    });
+  }
   protected readonly WorkingHourEnum = WorkingHourEnum;
 }

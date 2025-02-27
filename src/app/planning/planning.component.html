@@ -23,8 +23,17 @@
       </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column name="Actions">
-      <ng-template let-row="row" ngx-datatable-cell-template>
+    <!--  <ng-template let-row="row" ngx-datatable-cell-template>
         <a (click)="updateEpicEstimateModal(editEpicEstimateTemplate,row.id)">Edit Estimate</a>
+      </ng-template>-->
+      <!--<ng-template let-row="row" ngx-datatable-cell-template>
+        <epic-estimate
+          [epicBean]="row"
+          (formSubmit)="handleFormSubmitEpicEstimate($event)"
+        ></epic-estimate>
+      </ng-template>-->
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <button (click)="openDialog(row)">Trigger Action</button>
       </ng-template>
     </ngx-datatable-column>
 

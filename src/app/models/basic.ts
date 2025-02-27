@@ -16,6 +16,7 @@ export class Priority extends Basic{
 export class Role extends Basic{
   public name: string = '';
   public companyId: number = 0;
+  public taskAssignable: boolean = false;
 }
 
 export class Resource extends Basic {

@@ -1,3 +1,16 @@
+<div class="d-flex flex-column min-vh-100">
+  <app-top-bar></app-top-bar>
+  <!-- Main Content -->
+  <main class="flex-fill">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white text-dark text-center py-3 mt-auto">
+    <p>&copy; 2025 My App. All rights reserved.</p>
+  </footer>
+</div>
+
 <!-- * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * -->
 <!-- * * * * * * * * * * * The content below * * * * * * * * * * * -->
 <!-- * * * * * * * * * * is only a placeholder * * * * * * * * * * -->
@@ -187,14 +200,7 @@
 
 <!-- Navbar -->
 
-<app-top-bar></app-top-bar>
-<router-outlet></router-outlet>
 
-
-<!-- Footer -->
-<footer class="bg-dark text-white text-center py-3 mt-5">
-  <p>&copy; 2025 My App. All rights reserved.</p>
-</footer>
 
 <!-- Bootstrap JS -->
 <!--

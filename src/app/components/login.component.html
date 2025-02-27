@@ -1,24 +1,28 @@
-
-<!-- Main Content -->
-
-<div class="container mt-1" text-center>
-  <div class="card shadow-lg ">
+<div class="container d-flex align-items-center justify-content-center min-vh-100">
+<!-- Card content -->
+  <div class="card shadow-lg">
     <div class="card-header bg-primary text-white text-center">
-      <h3>Login</h3>
+      <h3 class="mb-0">Login</h3>
     </div>
     <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
-
-      <div class="card-body">
+      <div class="card-body p-4">
+        <!-- Form fields -->
         <div class="mb-3">
           <label for="username" class="form-label">Email</label>
           <input
-            type="text"
+            type="email"
             id="username"
             class="form-control"
             formControlName="username"
             placeholder="Enter your email"
-            [showErrors]="{ required: 'Email is required', email: 'Email is not valid' }"
+            [ngClass]="{ 'is-invalid': myForm.get('username')?.invalid && myForm.get('username')?.touched }"
+
+            [showErrors]="{ required: 'Email is required', email: 'Please enter a valid email address' }"
           />
+<!--          <div *ngIf="myForm.get('username')?.invalid && myForm.get('username')?.touched" class="invalid-feedback">
+            <div *ngIf="myForm.get('username')?.errors?.['required']">Email is required.</div>
+            <div *ngIf="myForm.get('username')?.errors?.['email']">.</div>
+          </div>-->
         </div>
         <div class="mb-3">
           <label for="password" class="form-label">Password</label>
@@ -28,28 +32,26 @@
             class="form-control"
             formControlName="password"
             placeholder="Enter your password"
+            [ngClass]="{ 'is-invalid': myForm.get('password')?.invalid && myForm.get('password')?.touched }"
             [showErrors]="{ required: 'Password is required' }"
           />
         </div>
         <div *ngIf="errorMessage" class="error-message">
           {{ errorMessage }}
         </div>
-        <div class="text-center">
-          <button class="btn btn-primary" type="submit"
-                  [disabled]="this.myForm.invalid">Login</button>
-        </div>
-        <div class="text-center mt-3">
+      </div>
+      <div class="card-footer text-center">
+        <button class="btn btn-primary btn-block" type="submit" [disabled]="myForm.invalid">Login</button>
+        <div class="mt-3">
           <a routerLink="/register">Don't have an account? Register</a>
         </div>
-        <div class="text-center mt-3">
+        <div class="mt-2">
           <a href="#" class="text-decoration-none">Forgot password?</a>
         </div>
       </div>
     </form>
   </div>
-
 </div>
-
 
 
 

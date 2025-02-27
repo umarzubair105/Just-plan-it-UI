@@ -38,6 +38,9 @@ export const routes: Routes = [
   { path: 'planning/:productId', loadComponent: ()=>import(
       './planning/planning.component').then((m)=>m.PlanningComponent),
     canActivate: [AuthGuard]},
+  { path: 'epic-estimate', loadComponent: ()=>import(
+      './planning/epic-estimate.component').then((m)=>m.EpicEstimateComponent),
+    canActivate: [AuthGuard]},
   { path: 'section', loadComponent: ()=>import(
       './components/section/sub-component.component').then((m)=>m.SubComponentComponent),
     canActivate: [AuthGuard]},

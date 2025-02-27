@@ -35,7 +35,7 @@ export class ShowErrorsDirective implements OnInit, DoCheck {
 
   private createErrorElement(): void {
     this.errorElement = this.renderer.createElement('div');
-    this.renderer.addClass(this.errorElement, 'text-danger');
+    this.renderer.addClass(this.errorElement, 'invalid-feedback');//text-danger
     this.renderer.addClass(this.errorElement, 'mt-1');
     this.renderer.appendChild(this.el.nativeElement.parentElement, this.errorElement);
   }

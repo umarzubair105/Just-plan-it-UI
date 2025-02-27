@@ -1,6 +1,6 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
-import { Router } from '@angular/router';
+import {Router, RouterOutlet} from '@angular/router';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {CompanyService} from '../services/company.service';
@@ -19,7 +19,7 @@ import {MatIcon} from '@angular/material/icon';
   standalone: true,
   imports: [FormsModule, CommonModule, HttpClientModule, ReactiveFormsModule,
     ShowErrorsDirective,
-    MatButtonModule, MatIcon, MatInputModule, MatFormFieldModule], // Include FormsModule here
+    MatButtonModule, MatIcon, MatInputModule, MatFormFieldModule, RouterOutlet], // Include FormsModule here
   templateUrl:'login.component.html',
 styleUrl:'common.css',
 })
@@ -31,7 +31,7 @@ export class LoginComponent {
               private router: Router,private http: HttpClient,
               private authService: AuthService) {
     this.myForm = this.fb.group({
-      username: ['', [Validators.required]],
+      username: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required]],
     });
 

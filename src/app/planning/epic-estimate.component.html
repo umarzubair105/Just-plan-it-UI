@@ -1,0 +1,117 @@
+  <div class="container">
+    <div class="card shadow-lg">
+      <div class="card-header bg-primary text-white text-center">
+        <h3>Epic Estimate {{epicBean.title}}</h3>
+      </div>
+      <form (ngSubmit)="onNoClick()">
+        <table class="table table-bordered text-dark" >
+          <thead class="table-dark">
+          <tr>
+            <th>Role</th>
+            <th>Hours</th>
+            <th>Resources</th>
+            <th>Assigned To</th>
+            <th>&nbsp;</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let epicEstimate of epicEstimatBeans; let i = index">
+            <td>
+              {{ epicEstimate.roleName }}
+            </td>
+            <td> <input id="hours-{{ i }}" [(ngModel)]="epicEstimate.hours" type="number"
+                        name="hours"
+                        required class="form-control"/></td>
+            <td> <input id="resources-{{ i }}" [(ngModel)]="epicEstimate.resources" type="number"
+                        name="hours"
+                        required class="form-control"/></td>
+            <td>
+              {{ epicEstimate.resourceName }}
+            </td>
+            <td>
+              <button class="btn btn-danger btn-sm" (click)="deleteEpicEstimate(epicEstimate.id)">Delete</button>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+
+      </form>
+    </div>
+  </div>
+
+
+
+<!--
+
+
+        <div class="card-body">
+          @for (epicEstimate of epicEstimatBeans; track epicEstimate) {
+            <div class="row">
+              <div>
+                <label for="epicId" class="form-label">Epic ID:</label>
+                <input
+                  type="number"
+                  id="epicId"
+                  [(ngModel)]="epicEstimate.epicId"
+                  class="form-control"
+                  name="epicId"
+                  required
+                />
+              </div>
+              <div>
+                <label for="resources" class="form-label">Resources:</label>
+                <input
+                  type="number"
+                  id="resources"
+                  [(ngModel)]="epicEstimate.resources"
+                  class="form-control"
+                  name="resources"
+                  required
+                />
+              </div>
+              <div>
+                <label for="hours" class="form-label">Hours:</label>
+                <input
+                  type="number"
+                  id="hours"
+                  [(ngModel)]="epicEstimate.hours"
+                  class="form-control"
+                  name="hours"
+                  required
+                />
+              </div>
+              <div>
+                <label for="roleId" class="form-label">Role ID:</label>
+                <input
+                  type="number"
+                  id="roleId"
+                  [(ngModel)]="epicEstimate.roleId"
+                  class="form-control"
+                  name="roleId"
+                  required
+                />
+              </div>
+              <div>
+                <label for="resourceId" class="form-label">Resource ID:</label>
+                <input
+                  type="number"
+                  id="resourceId"
+                  [(ngModel)]="epicEstimate.resourceId"
+                  class="form-control"
+                  name="resourceId"
+                />
+              </div>
+              <div>
+                <label class="form-label">
+                  <input
+                    type="checkbox"
+                    [(ngModel)]="epicEstimate.changedManually"
+                    class="form-control"
+                    name="changedManually"
+                  />
+                  Changed Manually
+                </label>
+              </div>
+            </div>
+          }
+          -->
