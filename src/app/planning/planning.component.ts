@@ -42,7 +42,6 @@ export class PlanningComponent implements OnInit {
   productId:number;
 
   epicService: EpicService = inject(EpicService);
-  epicEstimateService: EpicEstimateService = inject(EpicEstimateService);
   priorityService = inject(PriorityService)
   subComponentService = inject(SubComponentService)
   roleService = inject(RoleService)
@@ -175,24 +174,17 @@ export class PlanningComponent implements OnInit {
   }
 
 
-
-  updateEpicEstimateModal(template: TemplateRef<any>, id: number) {
-    if (id) {
-      this.editEpic = this.unplannedEpics.find((x) => x.id === id)
-        ?? new EpicBean();
-      this.editEpicEstimates = this.editEpic.epicEstimates ?? [];
-      this.modalRef = this.modalService.show(template);
+  showEstimates(epicEstimates: EpicEstimateBean[]): string {
+    if (epicEstimates && epicEstimates.length > 0) {
+      return epicEstimates.filter(estimate=>estimate.hours>0)
+        .map(estimate => `${estimate.roleName}: ${estimate.hours} hrs
+      ${estimate.resources==1?``:`with ${estimate.resources} resources`}`).join('<br/>');
+    } else {
+      return 'No estimates';
     }
   }
-
-  addEpicEstimate(): void {
-    this.editEpicEstimates.push(new EpicEstimateBean());
-  }
-  deleteEpicEstimate(index: number): void {
-    //this.editEpicEstimates.;
-  }
-
-  openDialog(row: EpicBean): void {
+  openDialogForEstimates(row: EpicBean): void {
+    console.log("Planning estimates:"+row.estimates?.length);
     const dialogRef = this.dialog.open(EpicEstimateComponent, {
       width: '80%',
       maxWidth: '90vw', // 90% of viewport width
@@ -203,6 +195,9 @@ export class PlanningComponent implements OnInit {
 
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
+      if (result) {
+       row.estimates = result.estimates;
+      }
       // Handle the result here
     });
   }

@@ -37,8 +37,8 @@ export class EpicEstimateService {
 
   // Delete a record
   delete(id: number): Observable<any> {
-    const updatedFields = { active: false };
-    return this.http.patch(`${this.baseUrl}/${id}`, updatedFields).pipe(
+    //const updatedFields = { active: false };
+    return this.http.delete(`${this.baseUrl}/${id}`).pipe(
       catchError(handleError)
     );
   }

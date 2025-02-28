@@ -22,7 +22,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import {MatList, MatListItem} from '@angular/material/list';
 import {MatIcon} from '@angular/material/icon';
-import { ShowErrorsDirective } from '../show-errors.directive';
+import { ShowErrorsDirective } from '../directives/show-errors.directive';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ExcelService} from '../services/excel.service';
 import {Utils} from '../utils/utils';

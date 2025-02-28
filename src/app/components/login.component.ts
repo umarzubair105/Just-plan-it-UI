@@ -6,7 +6,7 @@ import {CommonModule} from '@angular/common';
 import {CompanyService} from '../services/company.service';
 import {AuthService} from '../services/auth.service';
 import {MatSnackBar} from '@angular/material/snack-bar';
-import { ShowErrorsDirective } from '../show-errors.directive';
+import { ShowErrorsDirective } from '../directives/show-errors.directive';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';

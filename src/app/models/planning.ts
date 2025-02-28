@@ -32,7 +32,7 @@ export class EpicBean extends Epic {
   public componentName: string | null = null;
   public raisedByResourceName: string | null = null;
   public dependOnEpicCode: string | null = null;
-  public epicEstimates: EpicEstimateBean[] | null = null;
+  public estimates: EpicEstimateBean[] | null = null;
 }
 
 export class Release extends Basic{
@@ -50,10 +50,7 @@ export class EpicEstimate extends Basic {
   public resources: number = 0;
   public hours: number = 0;
   public roleId: number = 0;
-  public resourceId: number | null = null;
-  public changedManually: boolean = false;
 }
 export class EpicEstimateBean extends EpicEstimate {
-  public resourceName: string | null = null;
   public roleName: string | null = null;
 }
