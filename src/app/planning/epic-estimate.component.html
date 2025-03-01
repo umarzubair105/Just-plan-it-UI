@@ -4,46 +4,51 @@
         <h3>Estimate for Epic: {{epicBean.title}}</h3>
       </div>
       <form  #userForm="ngForm" >
-        <table class="table table-bordered text-dark" >
-          <thead class="table-dark">
-          <tr>
-            <th>Role</th>
-            <th>Hours</th>
-            <th>Resources</th>
-            <th>Action</th>
-          </tr>
-          </thead>
-          <tbody>
-          <tr *ngFor="let epicEstimate of epicEstimatBeans; let i = index">
-            <td>
-              {{ epicEstimate.roleName }}
-            </td>
-            <td> <input id="hours-{{ i }}" [(ngModel)]="epicEstimate.hours" type="number"
-                        name="hours-{{ i }}"
-                        required class="form-control"
-                        min="0"
-                    #hours="ngModel"
-                        [ngClass]="{ 'is-invalid': hours.invalid && (hours.dirty || hours.touched) }"
-                        [showErrors]="{ required: 'Hours is required',min: 'Min value is 0', step:'Step' }"
-                    />
-            </td>
-            <td> <input id="resources-{{ i }}" [(ngModel)]="epicEstimate.resources" type="number"
-                        name="resources-{{ i }}"
-                        required class="form-control"
-                        min="1"
-                        #resources="ngModel"
-                        [ngClass]="{ 'is-invalid': resources.invalid && (resources.dirty || resources.touched) }"
-                        [showErrors]="{ required: 'Resources is required',min: 'Min value is 1', step:'Step' }"
-                        />
-            </td>
-            <td>
-              <button class="btn btn-danger btn-sm"  (click)="removeEpicEstimate(i)" [disabled]="epicEstimate.hours==0">Not Required</button>
-            </td>
-          </tr>
-          </tbody>
-        </table>
-        <button type="submit" class="btn btn-primary btn-sm" [disabled]="userForm.invalid" (click)="onSubmit(userForm)">Save</button>
-        <button type="submit" class="btn btn-secondary btn-sm" (click)="closeDialog()">Close</button>
+        <div class="card-body">
+
+          <table class="table table-bordered text-dark" >
+            <thead class="table-dark">
+            <tr>
+              <th>Role</th>
+              <th>Hours</th>
+              <th>Resources</th>
+              <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let epicEstimate of epicEstimatBeans; let i = index">
+              <td>
+                {{ epicEstimate.roleName }}
+              </td>
+              <td> <input id="hours-{{ i }}" [(ngModel)]="epicEstimate.hours" type="number"
+                          name="hours-{{ i }}"
+                          required class="form-control"
+                          min="0"
+                      #hours="ngModel"
+                          [ngClass]="{ 'is-invalid': hours.invalid && (hours.dirty || hours.touched) }"
+                          [showErrors]="{ required: 'Hours is required',min: 'Min value is 0', step:'Step' }"
+                      />
+              </td>
+              <td> <input id="resources-{{ i }}" [(ngModel)]="epicEstimate.resources" type="number"
+                          name="resources-{{ i }}"
+                          required class="form-control"
+                          min="1"
+                          #resources="ngModel"
+                          [ngClass]="{ 'is-invalid': resources.invalid && (resources.dirty || resources.touched) }"
+                          [showErrors]="{ required: 'Resources is required',min: 'Min value is 1', step:'Step' }"
+                          />
+              </td>
+              <td>
+                <button class="btn btn-danger btn-sm"  (click)="removeEpicEstimate(i)" [disabled]="epicEstimate.hours==0">Not Required</button>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="card-footer text-center">
+            <button type="submit" class="btn btn-primary btn-sm" [disabled]="userForm.invalid" (click)="onSubmit(userForm)">Save & Close</button>
+<!--            <button type="submit" class="btn btn-secondary btn-sm" (click)="closeDialog()">Close</button>-->
+          </div>
       </form>
     </div>
   </div>

@@ -14,7 +14,7 @@
     <ngx-datatable-column name="Code" prop="code" [sortable]="true"></ngx-datatable-column>
     <ngx-datatable-column name="Title">
       <ng-template let-row="row" ngx-datatable-cell-template>
-        <a (click)="updateEpicModal(editEpicTemplate,row.id)">{{ row.title }}</a>
+        <a (click)="openDialogForEpic(row)">{{ row.title }}</a>
       </ng-template>
     </ngx-datatable-column>
     <ngx-datatable-column name="Priority" prop="priorityLevel" [sortable]="true">
@@ -35,7 +35,7 @@
 
 
   </ngx-datatable>
-  <button class="btn btn-primary mb-3" (click)="createEpicModal(editEpicTemplate)">Add Epic</button>
+  <button class="btn btn-primary mb-3" (click)="openDialogForNewEpic()">Add Epic</button>
 
 <!--
         <button class="btn btn-danger btn-sm" (click)="deleteCompanyWorkingHour(wh.id)"

@@ -84,7 +84,6 @@ export class EpicEstimateComponent implements OnInit {
       const allSuccessful = results.every((result) => result !== null);
       if (allSuccessful) {
         this.util.showSuccessMessage('All data processed successfully.');
-        this.dialogRef.close();
       } else {
         this.util.showErrorMessage('Some data could not be processed.');
       }

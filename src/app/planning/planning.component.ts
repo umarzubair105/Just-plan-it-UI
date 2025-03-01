@@ -4,7 +4,7 @@ import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
 import {Utils} from '../utils/utils';
 import {ActivatedRoute} from '@angular/router';
-import {Epic, EpicBean, EpicEstimateBean, Release} from '../models/planning';
+import {Epic, EpicBean, EpicBeanCopyPasteUpdatedValues, EpicEstimateBean, Release} from '../models/planning';
 import {EpicService} from '../services/epic.service';
 import {Priority, Role, SubComponent} from '../models/basic';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
@@ -15,6 +15,7 @@ import {EpicEstimateService} from '../services/epic-estimate.service';
 import {WorkingHourEnum} from '../services/leave.service';
 import {EpicEstimateComponent} from './epic-estimate.component';
 import { MatDialog } from '@angular/material/dialog';
+import {EpicComponent} from './epic.component';
 @Component({
   selector: 'app-planning',
   standalone: true,
@@ -183,6 +184,42 @@ export class PlanningComponent implements OnInit {
       return 'No estimates';
     }
   }
+
+  openDialogForNewEpic():void {
+    let epic = new EpicBean();
+    epic.productId = this.productId;
+    epic.releaseId = null;
+    this.openDialogForEpic(epic);
+  }
+  openDialogForEpic(epic: EpicBean): void {
+    console.log("Planning epic:"+epic);
+    const dialogRef = this.dialog.open(EpicComponent, {
+      width: '80%',
+      maxWidth: '90vw', // 90% of viewport width
+      height: '70%',
+      maxHeight: '80vh', // 80% of viewport height
+      disableClose: true,
+      data: { epicBean: epic, priorities: this.priorities, subComponents: this.subComponents },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.epic && result.epic.id>0) {
+        console.log('The dialog was closed:'+result.epic.title);
+        let epic = result.epic;
+        console.log('The dialog was closed:'+epic.id);
+        console.log('The dialog was closed:'+this.unplannedEpics.filter(ep => ep.id === epic.id));
+        const index = this.unplannedEpics.findIndex(ep => ep.id === epic.id);
+        if (index!== -1) {
+          const exiting = this.unplannedEpics[index];
+          EpicBeanCopyPasteUpdatedValues(epic, exiting);
+        } else {
+          console.log('The dialog was closed adding in List:'+result.epic);
+          this.unplannedEpics = [...this.unplannedEpics, epic];
+        }
+      }
+      // Handle the result here
+    });
+  }
   openDialogForEstimates(row: EpicBean): void {
     console.log("Planning estimates:"+row.estimates?.length);
     const dialogRef = this.dialog.open(EpicEstimateComponent, {
@@ -190,6 +227,7 @@ export class PlanningComponent implements OnInit {
       maxWidth: '90vw', // 90% of viewport width
       height: '70%',
       maxHeight: '80vh', // 80% of viewport height
+      disableClose: true,
       data: { epicBean: row, roles: this.roles },
     });
 
@@ -202,4 +240,5 @@ export class PlanningComponent implements OnInit {
     });
   }
   protected readonly WorkingHourEnum = WorkingHourEnum;
+  protected readonly EpicBean = EpicBean;
 }
