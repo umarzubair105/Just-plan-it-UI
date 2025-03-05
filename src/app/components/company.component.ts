@@ -1,5 +1,5 @@
 import {Component, inject, OnInit} from '@angular/core';
-import {CompanyService, Company, AddCompany, CommonResp, BaseModel} from '../services/company.service';
+import {CompanyService, AddCompany, CommonResp, BaseModel} from '../services/company.service';
 import { SubComponentComponent } from './section/sub-component.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -21,6 +21,7 @@ import { ShowErrorsDirective } from '../directives/show-errors.directive';
 import {WizardService} from '../services/wizard/wizard.service';
 import {Router} from '@angular/router';
 import {Utils} from '../utils/utils';
+import {Company} from '../models/basic';
 
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -40,26 +41,22 @@ import {Utils} from '../utils/utils';
 
 })
 export class CompanyComponent implements OnInit {
-  companies: Company[] = [];
   sampleCompanies: Company[] = [];
   countries: BaseModel[] = [];
-  totalCompanies : number = 0;
-  selectedCompany: Company | null = null;
   errorMessage: string = '';
-  addCompanySetup: AddCompany = { countryId:0, sampleCompanyId:0,name:'',email:'',resourceName:'',designation:'',
-    mobileNumber:'', password:'' };
+  addCompany: AddCompany = new AddCompany();
 
-  newCompany: Company = { id: 0, name: '', sample: false };
+  //newCompany: Company = new Company();
   companyService = inject(CompanyService)
   //constructor(private companyService: CompanyService) {}
   step1Data: any = {};
 
-  myForm: FormGroup;
+  //myForm: FormGroup;
   constructor(private fb: FormBuilder,
               private util: Utils,
               private router: Router) {
     console.log('Construct')
-    this.myForm = this.fb.group({
+/*    this.myForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       resourceName: new FormControl('', Validators.required),
       designation: new FormControl('', Validators.required),
@@ -70,52 +67,42 @@ export class CompanyComponent implements OnInit {
       password: ['', Validators.required],
       confirmPassword: ['', Validators.required],
 //      phone: ['', [Validators.required, Validators.pattern('^\\d{10}$')]], // 10-digit number
-    });
+    });*/
   }
   ngOnInit(): void {
     console.log('Testing')
     this.loadMetadata()
-    //this.loadCompanies();
   }
 
  // goToNextStep() {
 //    this.router.navigate(['/resource']);
  // }
   onSubmit() {
-    if (this.myForm.valid) {
-      if (this.myForm.value.password !== this.myForm.value.confirmPassword) {
+      if (this.addCompany.password !== this.addCompany.confirmPassword) {
         this.errorMessage = "Password is not matching with Confirm Password";
       } else {
         this.errorMessage = '';
-        console.log('Form Data:', this.myForm.value);
-        this.addCompanySetup = this.myForm.value;
         this.addNewCompanySetup();
-
       }
-    } else {
-      console.error('Form is invalid');
-    }
   }
 
 
   addNewCompanySetup(): void {
-    this.companyService.addCompany(this.addCompanySetup).subscribe({
+    this.companyService.addCompany(this.addCompany).subscribe({
       next: (data) => {
         // action: string = 'Close'
         //this.wizardService.setStepData('company', this.step1Data);
         this.util.showSuccessMessage('Company is added successfully.');
-        this.companyService.login({username: this.myForm.value.email,
-          password: this.myForm.value.password,
+        this.companyService.login({username: this.addCompany.email,
+          password: this.addCompany.password,
           companyCode: data.context}).pipe()
           .subscribe((resp: any) => {
               this.util.saveToken(resp.token);
-              this.router.navigate(['/upload-resource', data.id]);
+              this.router.navigate(['/upload-resource']);
             },
             (error) => {
               this.errorMessage = error;
             });
-
-        //this.newCompany = { id: 0, name: '', sample: false };
       },
       error: (err) => (this.errorMessage = err)
     });
@@ -132,60 +119,4 @@ export class CompanyComponent implements OnInit {
     });
   }
 
-  // Load all companies
-  loadCompanies(): void {
-    this.companyService.getAllCompanies().subscribe({
-      next: (data) => {
-        console.log(data);
-        this.companies = data._embedded.companies;
-        this.totalCompanies = data.page.totalElements;
-        },
-      error: (err) => (this.util.showErrorMessage(err)),
-    });
-  }
-
-  // Select a company to view details
-  selectCompany(company: Company): void {
-    this.selectedCompany = company;
-  }
-
-  // Create a new company
-  addCompany(): void {
-    this.companyService.createCompany(this.newCompany).subscribe({
-      next: (data) => {
-        this.companies.push(data);
-        this.newCompany = { id: 0, name: '', sample: false };
-      },
-      error: (err) => (this.util.showErrorMessage(err)),
-    });
-  }
-  //!. ?.
-//const companyToUpdate = this.selectedCompany ?? { id: 0, name: '', isSample: false };
-  // Update a company
-  updateCompany(company: Company | null): void {
-    if (company) {
-    this.companyService.updateCompany(company.id, company).subscribe({
-      next: () => {
-        this.loadCompanies();
-        this.selectedCompany = null;
-      },
-      error: (err) => (this.util.showErrorMessage(err)),
-    });
-    } else {
-      console.error('Cannot update. Company is null.');
-    }
-  }
-
-  // Delete a company
-  deleteCompany(companyId: number): void {
-    this.companyService.deleteCompany(companyId).subscribe({
-      next: () => (this.companies = this.companies.filter((c) => c.id !== companyId)),
-      error: (err) => (this.util.showErrorMessage(err)),
-    });
-  }
-
-  onEventEmit(e: any){
-    alert('Hello in Company');
-    alert(e);
-  }
 }

@@ -77,3 +77,9 @@ export class EpicEstimate extends Basic {
 export class EpicEstimateBean extends EpicEstimate {
   public roleName: string | null = null;
 }
+
+
+export class Product extends Basic {
+  public companyId: number = 0;
+  public name: string = '';
+}

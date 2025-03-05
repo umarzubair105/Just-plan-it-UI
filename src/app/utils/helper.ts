@@ -1,5 +1,6 @@
 import {HttpErrorResponse} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
+import {AppConstants} from '../configuration/app.constants';
 
 
 export enum ReleaseIteration {
@@ -14,6 +15,10 @@ export enum ReleaseIteration {
 }
 export function formatDate(date: Date): string {
   return date.toISOString().split('T')[0];
+}
+
+export function isLoggedIn(): boolean {
+  return localStorage.getItem(AppConstants.TOKEN_KEY) !== null;
 }
 
 export function capitalizeFirstLetter(str: string): string {

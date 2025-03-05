@@ -3,7 +3,6 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {PageResponse} from '../models/page.response';
-import {Company} from './company.service';
 import {SubComponent} from '../models/basic';
 
 @Injectable({

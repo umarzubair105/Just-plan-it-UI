@@ -1,0 +1,12 @@
+.container {
+  max-width: 700px;
+  margin: auto;
+}
+
+h2, h3 {
+  text-align: center;
+}
+
+ngx-datatable {
+  margin-top: 20px;
+}

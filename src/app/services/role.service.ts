@@ -4,6 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {PageResponse} from '../models/page.response';
 import {Role} from '../models/basic';
+import {AppConstants} from '../configuration/app.constants';
 
 // Define the interface
 
@@ -13,7 +14,7 @@ import {Role} from '../models/basic';
   providedIn: 'root',
 })
 export class RoleService {
-  private baseUrl = 'http://localhost:8080/roles'; // Base URL for the REST endpoint
+  private baseUrl = AppConstants.API_URL+'/roles'; // Base URL for the REST endpoint
 
   constructor(private http: HttpClient) {
     console.log('Testing Service')

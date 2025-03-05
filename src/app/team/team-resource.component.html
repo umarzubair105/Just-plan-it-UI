@@ -1,0 +1,67 @@
+<div class="container mt-5" >
+  <div class="card shadow-lg">
+    <div class="card-header bg-primary text-white text-center">
+      <h3>Assign Role to Each Resource for this product</h3>
+    </div>
+    <div class="card-body">
+    <div class="table-container">
+  <ngx-datatable
+    [rows]="resources"
+    [columnMode]="'force'"
+    [headerHeight]="50"
+    [footerHeight]="50"
+    [scrollbarH]="true"
+    [rowHeight]="'auto'"
+    class="material"
+  >
+<!--
+    [style.width.px]="1000"
+-->
+
+    <!-- Static Resource Name Column -->
+    <ngx-datatable-column name="Resource" prop="name" maxWidth="100"  [frozenLeft]="true">
+    </ngx-datatable-column>
+    <!-- Dynamic Role Columns -->
+    <ngx-datatable-column *ngFor="let role of roles" [name]="role.name">
+     <!-- <ng-template ngx-datatable-header-template let-column="column">
+        <div class="header-wrap">{{ column.name }}</div>
+      </ng-template>-->
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <input
+          title="{{row.name}}"
+          type="radio"
+          name="role-{{ row.id }}"
+          [value]="role.id"
+          [(ngModel)]="selectedRoles[row.id]"
+          (change)="onRoleSelect(row.id, role.id)" />
+      </ng-template>
+    </ngx-datatable-column>
+    <ngx-datatable-column name="None">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+        <input
+          type="radio"
+          name="role-{{ row.id }}"
+          [value]="0"
+          [(ngModel)]="selectedRoles[row.id]"
+          (change)="onRoleSelect(row.id, 0)" />
+      </ng-template>
+    </ngx-datatable-column>
+
+
+  </ngx-datatable>
+    </div>
+  </div>
+  <div class="text-center">
+    <button class="btn btn-primary" type="submit" (click)="onSave()" [disabled]="!isAnyThingChanged">Save</button>
+  </div>
+  </div>
+</div>
+<!--
+  <h3 class="mt-4">Selected Roles:</h3>
+  <ul>
+    <li *ngFor="let rr of productResources">
+      Resource {{ rr.resourceId }} → Role {{ rr.roleId }}
+    </li>
+  </ul>
+</div>
+-->

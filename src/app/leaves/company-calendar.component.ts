@@ -13,6 +13,7 @@ import {
 import {Utils} from '../utils/utils';
 import {forkJoin, of, tap} from 'rxjs';
 import {ReleaseIteration} from '../utils/helper';
+import {Router} from '@angular/router';
 
 
 @Component({
@@ -51,7 +52,8 @@ export class CompanyCalendarComponent  implements OnInit {
 
   companyId:number;
   leaveService: LeaveService = inject(LeaveService);
-  constructor(private modalService: BsModalService, private util: Utils) {
+  constructor(private modalService: BsModalService, private util: Utils,
+              private router: Router,) {
     this.companyId = this.util.getCompanyId();
     console.log('comid:'+this.companyId);
     this.editCompanyWorkingHour = new CompanyWorkingHour();
@@ -101,6 +103,10 @@ export class CompanyCalendarComponent  implements OnInit {
         this.loadWeekends(); // Refresh the weekends list
       }
     });
+  }
+
+  next(){
+    this.router.navigate(['/product']);
   }
   // Helper method to return the correct API observable
   getUpdateObservable(wd: CompanyWeekend) {

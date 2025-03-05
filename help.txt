@@ -191,3 +191,24 @@ addRow(newRow: any) {
   this.rows = [...this.rows, newRow];
   this.cdr.markForCheck();
 }
+
+
+
+ // Define ngx-datatable columns
+    this.columns = [
+      { prop: 'productId', name: 'Product', cellTemplate: this.productCell },
+      { prop: 'resourceId', name: 'Resource', cellTemplate: this.resourceCell },
+      { prop: 'participationTime', name: 'Participation Time (hrs)' },
+    ];
+  }
+
+  onSubmit() {
+    if (this.productForm.valid) {
+      this.productResourceService.addProductResource(this.productForm.value);
+      this.productForm.reset();
+    }
+  }
+
+  productCell = (row: any) => {
+    return this.products.find(p => p.id === row.productId)?.name || 'N/A';
+  };

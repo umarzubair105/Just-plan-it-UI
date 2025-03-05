@@ -14,3 +14,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   color: red;
   margin-top:.5rem;
 }
+
+::ng-deep .ngx-datatable th {
+  white-space: normal !important;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-align: center; /* Optional: Center align headers */
+  min-width: 120px;
+}

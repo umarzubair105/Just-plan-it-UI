@@ -4,13 +4,10 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {PageResponse} from '../models/page.response';
 import {ReleaseIteration} from '../utils/helper';
+import {Company} from '../models/basic';
 
 // Define the Company interface
-export interface Company {
-  id: number;
-  name: string;
-  sample: boolean;
-}
+
 
 export interface BaseModel {
   id: number;
@@ -19,28 +16,30 @@ export interface BaseModel {
 }
 
 
-export interface AddCompany {
-  name: string;
-  email: string;
-  resourceName: string;
-  designation: string;
-  mobileNumber: string;
-  password: string;
-  sampleCompanyId: number;
-  countryId: number
+export class AddCompany {
+  name: string ='';
+  email: string ='';
+  resourceName: string = '';
+  designation: string='';
+  mobileNumber: string='';
+  password: string='';
+  confirmPassword: string='';
+  sampleCompanyId: number | null= null;
+  countryId: number | null= null;
 }
 
-export interface AddProduct {
-  name: string;
-  emailProductManager: string;
-  emailProductOwner: string;
-  companyId: number;
-  otherActivitiesPercentTime: number;
-  releaseIteration: ReleaseIteration,
-  startDate: Date | null,
-  endDate: Date | null
-}
 
+export class AddProduct {
+  name: string = '';
+  emailProductManager: string = '';
+  emailProductOwner: string = '';
+  code: string = '';
+  companyId: number|null=null;
+  otherActivitiesPercentTime: number=10;
+  releaseIteration: ReleaseIteration | null= null;
+  startDate: Date | null=null;
+  endDate: Date | null=null;
+}
 export interface AddResource {
   companyId: number;
   productId?: number;

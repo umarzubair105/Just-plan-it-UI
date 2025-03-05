@@ -3,7 +3,7 @@
     <div class="card-header bg-primary text-white text-center">
       <h3>Company Setup</h3>
     </div>
-    <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+    <form #useForm="ngForm" (ngSubmit)="onSubmit()">
       <div class="card-body">
         <!-- Name -->
         <div *ngIf="errorMessage" class="error-message">
@@ -16,21 +16,13 @@
             type="text"
             id="name"
             class="form-control"
-            formControlName="name"
+            name="name"
+            required
             placeholder="Enter your company name"
-            [showErrors]="{ required: 'Company Name is required' }"
-          />
-        </div>
-        <div class="mb-3">
-          <label for="email" class="form-label">Email</label>
-          <label class="required-label">&nbsp;* </label>
-          <input
-            type="text"
-            id="email"
-            class="form-control"
-            formControlName="email"
-            placeholder="Enter your email"
-            [showErrors]="{ required: 'Email is required', email: 'Email is not valid' }"
+            [(ngModel)]="addCompany.name"
+            #name="ngModel"
+            [ngClass]="{ 'is-invalid': name.invalid && (name.dirty || name.touched) }"
+            [showErrors]="{ required: 'Company Name is required'}"
           />
         </div>
         <div class="mb-3">
@@ -39,22 +31,46 @@
           <input
             type="text"
             id="resourceName"
+            name="resourceName"
+            required
             class="form-control"
-            formControlName="resourceName"
             placeholder="Enter your name"
+            [(ngModel)]="addCompany.resourceName"
+            #resourceName="ngModel"
+            [ngClass]="{ 'is-invalid': resourceName.invalid && (resourceName.dirty || resourceName.touched) }"
             [showErrors]="{ required: 'Your Name is required' }"
           />
         </div>
-
+        <div class="mb-3">
+          <label for="email" class="form-label">Email</label>
+          <label class="required-label">&nbsp;* </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            email
+            class="form-control"
+            placeholder="Enter your email"
+            [(ngModel)]="addCompany.email"
+            #email="ngModel"
+            [ngClass]="{ 'is-invalid': email.invalid && (email.dirty || email.touched) }"
+            [showErrors]="{ required: 'Email is required', email: 'Email is not valid' }"
+          />
+        </div>
         <div class="mb-3">
           <label for="designation" class="form-label">Your Designation</label>
           <label class="required-label">&nbsp;* </label>
           <input
             type="text"
             id="designation"
+            name="designation"
+            required
             class="form-control"
-            formControlName="designation"
             placeholder="Enter your designation name"
+            [(ngModel)]="addCompany.designation"
+            #designation="ngModel"
+            [ngClass]="{ 'is-invalid': designation.invalid && (designation.dirty || designation.touched) }"
             [showErrors]="{ required: 'Your designation is required' }"
           />
         </div>
@@ -63,8 +79,12 @@
           <label class="required-label">&nbsp;* </label>
           <select
             id="sampleCompanyId"
+            name="sampleCompanyId"
             class="form-select"
-            formControlName="sampleCompanyId"
+            required
+            [(ngModel)]="addCompany.sampleCompanyId"
+            #sampleCompanyId="ngModel"
+            [ngClass]="{ 'is-invalid': sampleCompanyId.invalid && (sampleCompanyId.dirty || sampleCompanyId.touched) }"
             [showErrors]="{ required: 'Industry is required' }"
           >
             <option value="" disabled selected>Select an industry</option>
@@ -78,8 +98,12 @@
           <label class="required-label">&nbsp;* </label>
           <select
             id="countryId"
+            name="countryId"
             class="form-select"
-            formControlName="countryId"
+            [(ngModel)]="addCompany.countryId"
+            required
+            #countryId="ngModel"
+            [ngClass]="{ 'is-invalid': countryId.invalid && (countryId.dirty || countryId.touched) }"
             [showErrors]="{ required: 'Country is required' }"
           >
             <option value="" disabled selected>Select a country</option>
@@ -88,154 +112,62 @@
             </option>
           </select>
         </div>
-        <div class="mb-3">
+        <div class="mt-3">
           <label for="mobileNumber" class="form-label">Mobile Number</label>
           <label class="required-label">&nbsp;* </label>
           <input
             type="text"
             id="mobileNumber"
+            name="mobileNumber"
             class="form-control"
-            formControlName="mobileNumber"
+            required
+            [(ngModel)]="addCompany.mobileNumber"
+            #mobileNumber="ngModel"
+            [ngClass]="{ 'is-invalid': mobileNumber.invalid && (mobileNumber.dirty || mobileNumber.touched) }"
             placeholder="Enter your mobile number"
             [showErrors]="{ required: 'Mobile Number is required' }"
           />
         </div>
-        <div class="mb-3">
+        <div class="mt-3">
           <label for="password" class="form-label">Password</label>
           <label class="required-label">&nbsp;* </label>
           <input
             autocomplete="false"
             type="password"
             id="password"
+            name="password"
             class="form-control"
-            formControlName="password"
             placeholder="Enter your password"
+            required
+            [(ngModel)]="addCompany.password"
+            #password="ngModel"
+            [ngClass]="{ 'is-invalid': password.invalid && (password.dirty || password.touched) }"
             [showErrors]="{ required: 'Password is required' }"
           />
         </div>
-        <div class="mb-3">
+        <div class="mt-3">
           <label for="confirmPassword" class="form-label">Confirm Password</label>
           <label class="required-label">&nbsp;* </label>
           <input
             autocomplete="false"
             type="password"
             id="confirmPassword"
+            name="confirmPassword"
             class="form-control"
-            formControlName="confirmPassword"
+            required
             placeholder="Enter your password again"
+            [(ngModel)]="addCompany.confirmPassword"
+            #confirmPassword="ngModel"
+            [ngClass]="{ 'is-invalid': confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched) }"
             [showErrors]="{ required: 'Confirm Password is required' }"
           />
         </div>
         <!-- Submit Button -->
         <div class="text-center">
-          <button class="btn btn-primary" type="submit">Submit</button>
+          <button class="btn btn-primary" type="submit" [disabled]="useForm.invalid" >Submit</button>
           <button type="reset" class="btn btn-secondary" >Reset</button>
         </div>
       </div>
     </form>
   </div>
 </div>
-<!--<div class="container mat-elevation-z4" style="padding: 16px; max-width: 600px; margin: auto;">
-  <h2 mat-typography>Companies</h2>
-
-  &lt;!&ndash; Error Message &ndash;&gt;
-  <div *ngIf="errorMessage" class="error" style="color: red; margin-bottom: 16px;">
-    <mat-icon color="warn">error</mat-icon>
-    {{ errorMessage }}
-  </div>
-
-  &lt;!&ndash; Company List &ndash;&gt;
-  <mat-list>
-    <mat-list-item *ngFor="let company of companies" (click)="selectCompany(company)" style="cursor: pointer;">
-      <div mat-line>
-        {{ company.name }}  Sample: {{ company.sample }}
-        <button mat-mini-button color="warn" (click)="deleteCompany(company.id); $event.stopPropagation()">
-          <mat-icon>delete</mat-icon>
-        </button>
-      </div>
-    </mat-list-item>
-  </mat-list>
-  <div *ngIf="selectedCompany" class="mat-elevation-z4" style="padding: 16px; margin-bottom: 16px; border-radius: 8px; background: #f9f9f9;">
-    <h3 mat-typography>Company Details</h3>
-    <p>
-      <strong>ID:</strong> {{ selectedCompany.id }}
-    </p>
-    <p>
-      <mat-form-field appearance="fill">
-        <mat-label>Company Name</mat-label>
-        <input matInput [(ngModel)]="selectedCompany.name" />
-      </mat-form-field>
-    </p>
-    <p>
-      <mat-checkbox [(ngModel)]="selectedCompany.sample">Is Sample</mat-checkbox>
-    </p>
-    <button mat-raised-button color="primary" (click)="updateCompany(selectedCompany)">Update</button>
-  </div>
-
-  &lt;!&ndash; Add New Company &ndash;&gt;
-  <div class="mat-elevation-z4" style="padding: 16px; border-radius: 8px; background: #f9f9f9;">
-    <h3 mat-typography>Add New Company</h3>
-    <p>
-      <mat-form-field appearance="fill">
-        <mat-label>Company Name</mat-label>
-        <input matInput [(ngModel)]="newCompany.name" />
-      </mat-form-field>
-    </p>
-    <p>
-      <mat-checkbox [(ngModel)]="newCompany.sample">Is Sample</mat-checkbox>
-    </p>
-    <button mat-raised-button color="accent" (click)="addCompany()">Add Company</button>
-  </div>
-</div>-->
-<!--
-<mat-toolbar color="primary">
-  Angular Material Example
-</mat-toolbar>
-<div class="container">
-  <h2>Companies</h2>
-
-  &lt;!&ndash; Error Message &ndash;&gt;
-  <div *ngIf="errorMessage" class="error">
-    {{ errorMessage }}
-  </div>
-
-  &lt;!&ndash; Company List &ndash;&gt;
-  <ul>
-    <li *ngFor="let company of companies" (click)="selectCompany(company)">
-      {{ company.name }} (Sample: {{ company.sample }})
-      <button (click)="deleteCompany(company.id); $event.stopPropagation()">Delete</button>
-    </li>
-  </ul>
-
-  &lt;!&ndash; Selected Company Details &ndash;&gt;
-  <div *ngIf="selectedCompany">
-    <h3>Company Details</h3>
-    <p>ID: {{ selectedCompany.id }}</p>
-    <p>
-      Name: <input [(ngModel)]="selectedCompany.name" />
-    </p>
-    <p>
-      Is Sample:
-      <input type="checkbox" [(ngModel)]="selectedCompany.sample" />
-    </p>
-    <button (click)="updateCompany(selectedCompany)">Update</button>
-
-  &lt;!&ndash;  <app-section companyId="selectedCompany.id" (outputEvent)="onEventEmit($event)"></app-section>&ndash;&gt;
-  </div>
-
-  &lt;!&ndash; Add New Company &ndash;&gt;
-  <div>
-    <h3>Add New Company</h3>
-    <p>
-      Name: <input [(ngModel)]="newCompany.name" />
-    </p>
-    <p>
-      Is Sample:
-      <input type="checkbox" [(ngModel)]="newCompany.sample" />
-    </p>
-    <button (click)="addCompany()">Add Company</button>
-  </div>
-</div>
-
-
--->

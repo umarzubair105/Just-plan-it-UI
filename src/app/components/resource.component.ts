@@ -1,5 +1,5 @@
 import {Component, inject, Input, OnInit} from '@angular/core';
-import {CompanyService, Company, AddCompany, CommonResp, BaseModel, AddResource} from '../services/company.service';
+import {CompanyService,  AddCompany, CommonResp, BaseModel, AddResource} from '../services/company.service';
 import { SubComponentComponent } from './section/sub-component.component';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';

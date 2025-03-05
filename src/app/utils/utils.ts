@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {AuthService} from '../services/auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {Company} from '../services/company.service';
 @Injectable({
   providedIn: 'root' // ✅ Available throughout the app
 })

@@ -44,7 +44,8 @@ export class LoginComponent {
       this.companyService.login(this.myForm.value)
         .subscribe((resp: any) => {
           this.authService.login(resp.token);
-          this.router.navigate(['/home']); // Redirect to a secure page
+            this.router.navigate(['/home']); // Redirect to a secure page
+            //window.location.reload(); // Reload to update isLoggedIn
         },
         (error) => {
           console.log('Error:', error);

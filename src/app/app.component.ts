@@ -23,6 +23,11 @@ import {
   MatExpansionPanelTitle
 } from '@angular/material/expansion';
 import {TopBarComponent} from './components/top-bar.component';
+import {SidebarComponent} from './components/sidebar.component';
+import {isLoggedIn} from './utils/helper';
+import {CommonModule} from '@angular/common';
+import {AppConstants} from './configuration/app.constants';
+import {MatSidenav, MatSidenavContainer, MatSidenavContent} from '@angular/material/sidenav';
 @Component({
   selector: 'app-root',
   imports: [RouterOutlet,
@@ -30,8 +35,8 @@ import {TopBarComponent} from './components/top-bar.component';
     MatCheckbox, FormsModule, MatIcon, MatSelect, MatOption, MatCard,
     MatCardHeader, MatCardActions, MatProgressSpinner, MatAccordion,
     MatExpansionPanel, MatExpansionPanelTitle, MatCardContent, MatCardSubtitle,
-  MatCardTitle, MatLabel, MatExpansionPanelHeader,
-    TopBarComponent],//
+    MatCardTitle, MatLabel, MatExpansionPanelHeader,
+    TopBarComponent, SidebarComponent, CommonModule, MatSidenavContainer, MatSidenavContent, MatSidenav],//
 //  template: `<app-company></app-company>`,
   standalone: true,
   templateUrl: './app.component.html',
@@ -39,9 +44,25 @@ import {TopBarComponent} from './components/top-bar.component';
 })
 export class AppComponent {
   title = 'my-plan';
+  isLoggedIn = false;//isLoggedIn();
+  isSidenavOpen: boolean = false;
+  constructor() {
+    this.checkLoginStatus();
+  }
+
+  checkLoginStatus() {
+    // Simulating login check from local storage or auth service
+    this.isLoggedIn =    localStorage.getItem(AppConstants.TOKEN_KEY) ? true : false;
+    this.isSidenavOpen = this.isLoggedIn; // Open sidenav only if logged in
+  }
+  toggleSidebar() {
+    this.isSidenavOpen = !this.isSidenavOpen;
+  }
 
   onEventEmit(e: any){
     alert('Hello in AppCompany');
     alert(e);
   }
+
+
 }

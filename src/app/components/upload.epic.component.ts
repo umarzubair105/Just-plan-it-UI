@@ -1,12 +1,8 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {
   CompanyService,
-  Company,
-  AddCompany,
-  CommonResp,
   BaseModel,
-  AddResource,
-  AddProduct, AddEpic
+  AddEpic
 } from '../services/company.service';
 import { SubComponentComponent } from './section/sub-component.component';
 import { FormsModule } from '@angular/forms';
@@ -156,7 +152,7 @@ export class UploadEpicComponent implements OnInit {
       next: (data) => {
         // action: string = 'Close'
         this.utils.showSuccessMessage(data[0].message);
-        this.router.navigate(['/priority', 0]);
+        this.router.navigate(['/team-resource', this.productId]);
         //this.newCompany = { id: 0, name: '', sample: false };
       },
       error: (err) => {this.errorMessage = err; this.utils.showErrorMessage(err);},

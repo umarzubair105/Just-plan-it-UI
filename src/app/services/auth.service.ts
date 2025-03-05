@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
+import {AppConstants} from '../configuration/app.constants';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  private readonly TOKEN_KEY = 'jwt_token';  // Key used to store the JWT
+  private readonly TOKEN_KEY = AppConstants.TOKEN_KEY;  // Key used to store the JWT
   private userNameSubject = new BehaviorSubject<string | null>(null);
   userName$: Observable<string | null> = this.userNameSubject.asObservable();
 
@@ -58,6 +59,7 @@ export class AuthService {
   saveToken(token: string): void {
     localStorage.setItem(this.TOKEN_KEY, token);
   }
+
 
   // Retrieve JWT token from localStorage
   getToken(): string | null {

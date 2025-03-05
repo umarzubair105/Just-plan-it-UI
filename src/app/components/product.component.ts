@@ -50,26 +50,11 @@ export class ProductComponent implements OnInit {
   //newCompany: Company = { id: 0, name: '', sample: false };
   companyService = inject(CompanyService)
   //constructor(private companyService: CompanyService) {}
-  addProductSetup: AddProduct = {startDate: null, endDate: null, otherActivitiesPercentTime:10,
-     releaseIteration:ReleaseIteration.BI_WEEKLY, name:'', companyId:0, emailProductManager:'', emailProductOwner:''};
+  addProduct: AddProduct = new AddProduct();
 
-  myForm: FormGroup;
-  constructor(private fb: FormBuilder, private utils: Utils,
+  constructor(private utils: Utils,
               private router: Router, private route: ActivatedRoute) {
-    this.myForm = this.fb.group({
-      name: ['', [Validators.required]],
-      emailProductManager: ['', [Validators.required, Validators.email]],
-      emailProductOwner: ['', [Validators.required, Validators.email]],
-      otherActivitiesPercentTime: [10, [Validators.required,
-        Validators.pattern('^\\d+$'),
-        Validators.max(100), Validators.min(0)]],//,
-      releaseIteration: [ReleaseIteration.BI_WEEKLY],
-      startDate: ['', [Validators.required]],
-      endDate: [''],
 
-//      countryId: [2, Validators.required],
-//      phone: ['', [Validators.required, Validators.pattern('^\\d{10}$')]], // 10-digit number
-    });
   }
   ngOnInit(): void {
     this.companyId =  this.utils.getCompanyId();
@@ -78,11 +63,8 @@ export class ProductComponent implements OnInit {
   }
 
   onSubmit() {
-    if (this.myForm.valid) {
-      console.log('Form Data:', this.myForm.value);
-      this.addProductSetup = this.myForm.value;
-      this.addProductSetup.companyId = this.companyId; // Hardcoding companyId for now.
-      this.companyService.addProduct(this.addProductSetup).subscribe({
+      this.addProduct.companyId = this.companyId; // Hardcoding companyId for now.
+      this.companyService.addProduct(this.addProduct).subscribe({
         next: (data) => {
           // action: string = 'Close'
           this.utils.showSuccessMessage(data.message);
@@ -91,10 +73,6 @@ export class ProductComponent implements OnInit {
         },
         error: (err) => {this.errorMessage = err; this.utils.showErrorMessage(err);},
       });
-    } else {
-      console.error('Form is invalid');
-    }
   }
-
 
 }

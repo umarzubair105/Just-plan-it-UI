@@ -3,7 +3,7 @@
     <div class="card-header bg-primary text-white text-center">
       <h3>Product Setup</h3>
     </div>
-    <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+    <form #useForm="ngForm" (ngSubmit)="onSubmit()">
     <div class="card-body">
       <div *ngIf="errorMessage" class="error-message">
         {{ errorMessage }}
@@ -15,20 +15,48 @@
           type="text"
           id="name"
           class="form-control"
-          formControlName="name"
+          name="name"
+          required
           placeholder="Enter your product name"
+          [(ngModel)]="addProduct.name"
+          #name="ngModel"
+          [ngClass]="{ 'is-invalid': name.invalid && (name.dirty || name.touched) }"
+
           [showErrors]="{ required: 'Product Name is required' }"
+        />
+      </div>
+      <div class="mb-3">
+        <label for="code" class="form-label">Product Code</label>
+        <label class="required-label">&nbsp;* </label>
+        <input
+          type="text"
+          id="code"
+          class="form-control"
+          name="code"
+          required
+          placeholder="Enter your product code"
+          [(ngModel)]="addProduct.code"
+          #code="ngModel"
+          [ngClass]="{ 'is-invalid': code.invalid && (code.dirty || code.touched) }"
+
+          [showErrors]="{ required: 'Product Code is required' }"
         />
       </div>
       <div class="mb-3">
         <label for="emailProductManager" class="form-label">Product Manager Email</label>
         <label class="required-label">&nbsp;* </label>
         <input
-          type="text"
+          type="email"
           id="emailProductManager"
           class="form-control"
-          formControlName="emailProductManager"
+          name="emailProductManager"
+          required
+          email
           placeholder="Enter Product Manager email"
+          [(ngModel)]="addProduct.emailProductManager"
+          #emailProductManager="ngModel"
+          [ngClass]="{ 'is-invalid': emailProductManager.invalid && (emailProductManager.dirty || name.touched) }"
+
           [showErrors]="{ required: 'Product Manager Email is required', email: 'Product Manager Email is not valid' }"
         />
       </div>
@@ -36,18 +64,28 @@
         <label for="emailProductOwner" class="form-label">Product Owner Email</label>
         <label class="required-label">&nbsp;* </label>
         <input
-          type="text"
+          type="email"
           id="emailProductOwner"
           class="form-control"
-          formControlName="emailProductOwner"
+          name="emailProductOwner"
+          required
+          email
           placeholder="Enter Product Owner email"
+          [(ngModel)]="addProduct.emailProductOwner"
+          #emailProductOwner="ngModel"
+          [ngClass]="{ 'is-invalid': emailProductOwner.invalid && (emailProductOwner.dirty || emailProductOwner.touched) }"
+
           [showErrors]="{ required: 'Product Owner Email is required', email: 'Product Owner Email is not valid' }"
         />
       </div>
       <div class="mb-3">
         <label for="releaseIteration" class="form-label">Release Duration</label>
         <label class="required-label">&nbsp;* </label>
-        <select id="releaseIteration"  formControlName="releaseIteration" class="form-control">
+        <select id="releaseIteration"  name="releaseIteration" class="form-control" required
+                [(ngModel)]="addProduct.releaseIteration"
+                #releaseIteration="ngModel"
+                [ngClass]="{ 'is-invalid': releaseIteration.invalid && (releaseIteration.dirty || releaseIteration.touched) }"
+        >
           <option *ngFor="let releaseIteration of releaseIterations" [value]="releaseIteration.viewValue">
             {{ releaseIteration.value }}
           </option>
@@ -60,8 +98,15 @@
           type="text"
           id="otherActivitiesPercentTime"
           class="form-control"
-          formControlName="otherActivitiesPercentTime"
+          name="otherActivitiesPercentTime"
           placeholder="Non Productive Time %"
+          min="0"
+          max="100"
+          required
+          [(ngModel)]="addProduct.otherActivitiesPercentTime"
+          #otherActivitiesPercentTime="ngModel"
+          [ngClass]="{ 'is-invalid': otherActivitiesPercentTime.invalid && (otherActivitiesPercentTime.dirty || otherActivitiesPercentTime.touched) }"
+
           [showErrors]="{ required: 'Non productive time is required', min:'Min value is 0',
           max:'Max value is 100', pattern: 'Should be number only'}"
         />
@@ -73,8 +118,13 @@
           type="date"
           id="startDate"
           class="form-control"
-          formControlName="startDate"
+          name="startDate"
+          required
           placeholder="Enter first working date"
+          [(ngModel)]="addProduct.startDate"
+          #startDate="ngModel"
+          [ngClass]="{ 'is-invalid': startDate.invalid && (startDate.dirty || startDate.touched) }"
+
           [showErrors]="{ required: 'First working date is required' }"
         />
       </div>
@@ -84,13 +134,13 @@
           type="date"
           id="endDate"
           class="form-control"
-          formControlName="endDate"
+          name="endDate"
           placeholder="Last delivery date"
         />
       </div>
       <!-- Submit Button -->
       <div class="text-center">
-        <button class="btn btn-primary" type="submit">Submit</button>
+        <button class="btn btn-primary" type="submit" [disabled]="useForm.invalid">Submit</button>
         <button type="reset" class="btn btn-secondary" >Reset</button>
       </div>
     </div>

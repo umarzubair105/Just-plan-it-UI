@@ -6,4 +6,5 @@ export const AppConstants = {
     ENABLE_NEW_DESIGN: true,
     ENABLE_EXPERIMENTAL_FEATURE: false,
   },
+  TOKEN_KEY: 'jwt_token'
 };

@@ -18,7 +18,7 @@ import {CompanyService, MapDesignation} from '../services/company.service';
 import {Utils} from '../utils/utils';
 import {Role} from '../models/basic';
 @Component({
-  selector: 'app-mapping',
+  selector: 'app-mapping-roles-designation',
   standalone: true,
   imports: [FormsModule, CommonModule, HttpClientModule,
     CdkDropList, CdkDrag, CdkDragPreview], // Include FormsModule here
@@ -83,10 +83,11 @@ export class MappingComponent implements OnInit {
         this.companyService.mapDesignation(mapM).subscribe({
           next: () => {
             this.utils.showSuccessMessage('Updated successfully');
+            this.router.navigate(['/company-calendar']);
           },
           error: (err) => {
             this.errorMessage = err;
-            this.utils.showErrorMessage('Priority is not updated')
+            this.utils.showErrorMessage('Mapping is not updated')
           }
         });
       }

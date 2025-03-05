@@ -1,12 +1,8 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {
   CompanyService,
-  Company,
-  AddCompany,
-  CommonResp,
   BaseModel,
   AddResource,
-  AddProduct, AddEpic
 } from '../services/company.service';
 import { SubComponentComponent } from './section/sub-component.component';
 import { FormsModule } from '@angular/forms';
@@ -156,7 +152,7 @@ export class UploadResourceComponent implements OnInit {
       next: (data) => {
         // action: string = 'Close'
         this.utils.showSuccessMessage(data[0].message);
-        this.router.navigate(['/product', this.companyId]);
+        this.router.navigate(['/mapping-roles-designation']);
         //this.router.navigate(['/product', this.companyId]);
         //this.newCompany = { id: 0, name: '', sample: false };
       },
