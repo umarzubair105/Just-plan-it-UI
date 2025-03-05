@@ -13,6 +13,7 @@ import {
 import {FormsModule} from '@angular/forms';
 import {NgFor, NgIf} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
+import {lastValueFrom} from 'rxjs';
 
 @Component({
   selector: 'app-team-resource',
@@ -78,36 +79,29 @@ export class TeamResourceComponent implements OnInit {
     });
   }
 
-  onSave(): void {
-    this.productResources.forEach((pr) => {
-      if (pr.id>0) {
-        if (pr.roleId==0) {
-          this.productResourceService.delete(pr.id).subscribe({
-            next: () => {
-              this.util.showSuccessMessage('Data is saved');
-            },
-            error: (err) => (this.util.showErrorMessage(err)),
-          });
-        } else {
-          this.productResourceService.update(pr.id, pr).subscribe({
-            next: () => {
-              this.util.showSuccessMessage('Data is saved');
-            },
-            error: (err) => (this.util.showErrorMessage(err)),
-          });
+
+  async onSave(): Promise<void> {
+    for (const pr of this.productResources) {
+      try {
+        if (pr.id > 0) {
+          if (pr.roleId === 0) {
+            await lastValueFrom(this.productResourceService.delete(pr.id));
+          } else {
+            await lastValueFrom(this.productResourceService.update(pr.id, pr));
+          }
+        } else if (pr.roleId > 0) {
+          const data = await lastValueFrom(this.productResourceService.create(pr));
+          pr.id = data.id;
         }
-      } else if (pr.roleId>0) {
-        this.productResourceService.create(pr).subscribe({
-          next: (data) => {
-            pr.id = data.id;
-            this.util.showSuccessMessage('Data is saved');
-          },
-          error: (err) => (this.util.showErrorMessage(err)),
-        });
+        this.util.showSuccessMessage('Data is saved');
+      } catch (err) {
+        console.log(err);
+        //this.util.showErrorMessage(err.toString());
       }
-    });
+    }
     this.router.navigate(['/product-resource', this.productId]);
   }
+
 
   onRoleSelect(resourceId: number, roleId: number): void {
     this.selectedRoles[resourceId] = roleId;

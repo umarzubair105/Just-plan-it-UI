@@ -14,12 +14,13 @@ import {Utils} from '../utils/utils';
 import {forkJoin, of, tap} from 'rxjs';
 import {ReleaseIteration} from '../utils/helper';
 import {Router} from '@angular/router';
+import {ShowErrorsDirective} from '../directives/show-errors.directive';
 
 
 @Component({
   selector: 'app-company-calendar',
   standalone: true,
-  imports: [CommonModule, NgIf, NgFor, FormsModule, ModalModule, ReactiveFormsModule], // ✅ NO BrowserAnimationsModule here!
+  imports: [CommonModule, NgIf, NgFor, FormsModule, ModalModule, ReactiveFormsModule, ShowErrorsDirective], // ✅ NO BrowserAnimationsModule here!
   templateUrl: './company-calendar.component.html',
   styleUrl: './company-calendar.component.css',
   providers: [BsModalService]

@@ -10,6 +10,7 @@ import {ProductService} from '../services/product.service';
 import {HttpParams} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
 import {NgForOf, NgIf} from '@angular/common';
+import {firstValueFrom} from 'rxjs';
 
 @Component({
   selector: 'app-product-resource',
@@ -171,19 +172,19 @@ export class ProductResourceComponent implements OnInit {
     //}
   }
 
-  onSave(): void {
-    this.productResources.filter(pr=>pr.resourceId>0 && pr.productId>0 && pr.id>0)
-      .forEach((pr) => {
-          this.productResourceService.updateSpecificFieldsPasses(pr.id,
-            {'participationPercentTime':pr.participationPercentTime}).subscribe({
-            next: () => {
-              this.util.showSuccessMessage('Data is saved');
-            },
-            error: (err) => (this.util.showErrorMessage(err)),
-          });
-    });
+  //convert following method service calls to sync
+  async onSave(): Promise<void> {
+    for (const pr of this.productResources.filter(pr => pr.resourceId > 0 && pr.productId > 0 && pr.id > 0)) {
+      try {
+        await firstValueFrom(this.productResourceService.updateSpecificFieldsPasses(pr.id,
+          { 'participationPercentTime': pr.participationPercentTime }));
+        this.util.showSuccessMessage('Data is saved');
+      } catch (err) {
+        console.log(err);
+        //this.util.showErrorMessage(err.toString());
+      }
+    }
     this.router.navigate(['/priority', this.productId]);
-
   }
 /*
   transformData() {
