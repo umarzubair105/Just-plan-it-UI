@@ -212,3 +212,13 @@ addRow(newRow: any) {
   productCell = (row: any) => {
     return this.products.find(p => p.id === row.productId)?.name || 'N/A';
   };
+
+
+<ng-container *ngIf="row.status$ | async as status">
+  <a (click)="updateStatus(row.id, LeaveStatus.APPROVED)" title="Approve"
+     *ngIf="status === LeaveStatus.PENDING">
+    <i class="bi bi-hand-thumbs-up"></i>
+  </a>
+</ng-container>
+
+public leaveStatuses = Object.keys(LeaveStatus);

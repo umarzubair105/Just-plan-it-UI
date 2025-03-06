@@ -19,6 +19,9 @@ export class Utils {
   getCompanyId():number{
     return this.authService.getCompanyId();
   }
+  getLoggedResourceId():number{
+    return this.authService.getUserId();
+  }
   setProductId(productId: number) {
     localStorage.setItem('productId', productId.toString());
   }

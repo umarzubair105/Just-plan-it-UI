@@ -42,8 +42,8 @@ export const routes: Routes = [
   { path: 'epic-estimate', loadComponent: ()=>import(
       './planning/epic-estimate.component').then((m)=>m.EpicEstimateComponent),
     canActivate: [AuthGuard]},
-  { path: 'annual-leave', loadComponent: ()=>import(
-      './leaves/annual-leave.component').then((m)=>m.AnnualLeaveComponent),
+  { path: 'resource-leave/:resourceId', loadComponent: ()=>import(
+      './leaves/resource.leave.component').then((m)=>m.ResourceLeaveComponent),
     canActivate: [AuthGuard]},
   { path: 'resource', loadComponent: ()=>import(
       './components/resource.component').then((m)=>m.ResourceComponent),

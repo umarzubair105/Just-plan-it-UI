@@ -63,3 +63,23 @@ export class ProductResourceBean extends ProductResource {
   public resourceName: string = '';
 }
 
+export enum LeaveStatus {
+  PENDING="PENDING", APPROVED="APPROVED", REJECTED="REJECTED"
+}
+export enum LeaveType {
+  SICK_LEAVE, CASUAL_LEAVE, ANNUAL_LEAVE, COMPENSATION_LEAVE,
+  SHORT_LEAVE
+}
+export class ResourceLeave extends Basic {
+  public resourceId: number = 0;
+  public approvedBy: number = 0;
+  public startDate: Date | null = null;
+  public endDate: Date | null = null;
+  public days: number = 0;
+  public status: LeaveStatus = LeaveStatus.PENDING;
+  public leaveType: LeaveType = LeaveType.CASUAL_LEAVE;
+  public reason: string = '';
+  public approvedAt: Date | null = null;
+}
+
+

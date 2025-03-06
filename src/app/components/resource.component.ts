@@ -21,6 +21,10 @@ import { ShowErrorsDirective } from '../directives/show-errors.directive';
 
 import {ActivatedRoute, Router} from '@angular/router';
 import {Utils} from '../utils/utils';
+import {LeaveStatus, Resource, Role} from '../models/basic';
+import {ResourceService} from '../services/resource.service';
+import {RoleService} from '../services/role.service';
+import {DataTableColumnCellDirective, DataTableColumnDirective, DatatableComponent} from '@swimlane/ngx-datatable';
 
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -30,7 +34,7 @@ import {Utils} from '../utils/utils';
   imports: [FormsModule, CommonModule, HttpClientModule, SubComponentComponent,
     MatButtonModule, MatToolbarModule, MatInputModule,
     MatCheckboxModule, MatFormFieldModule,
-    MatListItem, MatList, MatIcon,ReactiveFormsModule, ShowErrorsDirective
+    MatListItem, MatList, MatIcon, ReactiveFormsModule, ShowErrorsDirective, DataTableColumnCellDirective, DataTableColumnDirective, DatatableComponent
   ], // Include FormsModule here
   //template:`Hello`,
   //templateUrl: './company.component.html',
@@ -40,19 +44,22 @@ import {Utils} from '../utils/utils';
 
 })
 export class ResourceComponent implements OnInit {
-  roles: BaseModel[] = [];
+  roles: Role[] = [];
   errorMessage: string = '';
   companyId!: number;
   //addCompanySetup: AddCompany = { countryId:1, sampleCompanyId:1,name:'',email:'',firstName:'',secondName:'',lastName:'',designation:'' };
 
   //newCompany: Company = { id: 0, name: '', sample: false };
-  companyService = inject(CompanyService)
+  companyService = inject(CompanyService);
+  resourceService = inject(ResourceService);
+  roleService = inject(RoleService);
   //constructor(private companyService: CompanyService) {}
   addResourceSetup: AddResource = { companyId:0, email:'' };
+  resources: Resource[] = [];
 
   myForm: FormGroup;
-  constructor(private fb: FormBuilder, private utils: Utils,
-              private router: Router, private route: ActivatedRoute) {
+  constructor(private readonly fb: FormBuilder, private readonly utils: Utils,
+              private readonly router: Router, private readonly route: ActivatedRoute) {
     console.log('Construct')
     this.myForm = this.fb.group({
       email: ['', [Validators.required]],
@@ -66,7 +73,8 @@ export class ResourceComponent implements OnInit {
       //Number(this.route.snapshot.paramMap.get('companyId'));
     console.log(this.companyId); // Output: 123
     console.log('Testing')
-    this.loadRules()
+    this.loadRoles();
+    this.loadResources();
     //this.loadCompanies();
   }
 
@@ -90,8 +98,8 @@ export class ResourceComponent implements OnInit {
   }
 
 
-  loadRules(): void {
-    this.companyService.getRoles(this.companyId).subscribe({
+  loadRoles(): void {
+    this.roleService.getByCompanyId(this.companyId).subscribe({
       next: (data) => {
         this.roles = data._embedded.roles;
       },
@@ -99,4 +107,14 @@ export class ResourceComponent implements OnInit {
     });
   }
 
+  loadResources(): void {
+    this.resourceService.getByCompanyId(this.companyId).subscribe({
+      next: (data) => {
+        this.resources = data._embedded.resources;
+      },
+      error: (err) => (this.errorMessage = err),
+    });
+  }
+
+  protected readonly LeaveStatus = LeaveStatus;
 }
