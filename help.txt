@@ -1,3 +1,6 @@
+On Epic Estimate, just show roles which are defined in ProductResource.
+
+
 Optimize Performance
 Use lazy loading for modules to reduce the initial bundle size.
 
@@ -222,3 +225,15 @@ addRow(newRow: any) {
 </ng-container>
 
 public leaveStatuses = Object.keys(LeaveStatus);
+
+
+<label [ngClass]="{'admin-label': isAdmin, 'user-label': isUser}">
+  {{ dynamicLabel }}
+</label>
+
+
+{
+  "ITEM_COUNT": "You have {{count}} items in your cart."
+}
+
+<p>{{ 'ITEM_COUNT' | translate: { count: itemCount } }}</p>

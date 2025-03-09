@@ -1,7 +1,7 @@
 <div class="container mt-4">
   <div class="card shadow-lg">
     <div class="card-header bg-primary text-white text-center">
-      <h3>Leaves</h3>
+      <h3>Leaves for {{resource!.name}}</h3>
     </div>
     <div class="card-body">
       <div class="table-container">
@@ -24,18 +24,18 @@
     <ngx-datatable-column name="Action">
       <ng-template let-row="row" ngx-datatable-cell-template>
         <a (click)="openModalEdit(editLeave, row.id)" title="Update">
-          <i class="bi bi-pencil"></i>
+          <i class="bi bi-pencil action-icon"></i>
         </a>
         <a (click)="delete(row.id)" title="Delete">
-          <i class="bi bi-trash"></i>
+          <i class="bi bi-trash action-icon"></i>
         </a>
         <a (click)="updateStatus(row.id, LeaveStatus.APPROVED)" title="Approve"
         *ngIf="row.status===LeaveStatus.PENDING && resourceId!==loggedUserId">
-          <i class="bi bi-hand-thumbs-up"></i>
+          <i class="bi bi-hand-thumbs-up action-icon"></i>
         </a>
         <a (click)="updateStatus(row.id, LeaveStatus.REJECTED)" title="Reject"
            *ngIf="row.status===LeaveStatus.PENDING  && resourceId!==loggedUserId">
-          <i class="bi bi-hand-thumbs-down"></i>
+          <i class="bi bi-hand-thumbs-down action-icon"></i>
         </a>
 
       </ng-template>
@@ -44,8 +44,8 @@
       </div>
     </div>
     <div class="text-center">
-  <button class="btn btn-primary mb-3" (click)="openModal(editLeave)">Apply Leave</button>
-
+      <button class="btn btn-primary mb-3" (click)="openModal(editLeave)">Apply Leave</button>
+      <button class="btn btn-secondary btn-sm" (click)="closeDialog()">Close</button>
     </div>
   </div>
   <ng-template #editLeave>

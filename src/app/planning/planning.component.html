@@ -1,41 +1,142 @@
-<div class="container mt-4">
-  <h2>Unplanned Epics</h2>
+<div class="container mt-2">
+  <h2>Planning</h2>
+
+  <div class="col-md-12">
+    <div class="row" >
+      <div class="card">
+        <div class="card-body">
+          <h5 class="card-title">Epics awaiting awaiting estimates and go ahead</h5>
+          <div class="row">
+            <div class="col-md-8">
+              <ngx-datatable
+                [rows]="unplannedEpics"
+                [columnMode]="'force'"
+                [headerHeight]="50"
+                [footerHeight]="50"
+                [rowHeight]="'auto'"
+                [sorts]="[{ prop: 'priorityLevel', dir: 'asc' }]"
+                class="material">
+
+                <ngx-datatable-column name="Code" prop="code" [sortable]="true"></ngx-datatable-column>
+                <ngx-datatable-column name="Title" prop="title"></ngx-datatable-column>
+                <ngx-datatable-column name="Priority" prop="priorityLevel" [sortable]="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.priorityName }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Estimates" prop="estimates">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <a (click)="openDialogForEstimates(row)" title="Change Estimates"><div [innerHTML]="showEstimates(row.estimates)"></div></a>
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Actions">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <a (click)="planEpic(row.id)" title="Make it part of release plan"
+                       *ngIf="row.estimates && row.estimates.length > 0">
+                      <i class="bi bi-play action-icon"></i>
+                    </a>
+                    <a (click)="openDialogForEstimates(row)" title="Change Estimates">
+                      <i class="bi bi-bucket action-icon"></i>
+                    </a>
+                    <a (click)="openDialogForEpic(row)" title="Edit">
+                      <i class="bi bi-pencil-square action-icon"></i>
+                    </a>
+                    <a (click)="deleteEpic(row.id)" title="Delete">
+                      <i class="bi bi-trash action-icon"></i>
+                    </a>
+                  </ng-template>
+                </ngx-datatable-column>
 
 
-  <ngx-datatable
-    [rows]="unplannedEpics"
-    [columnMode]="'force'"
-    [headerHeight]="50"
-    [footerHeight]="50"
-    [rowHeight]="'auto'"
-    [sorts]="[{ prop: 'priorityLevel', dir: 'asc' }]"
-    class="material">
+              </ngx-datatable>
+              <button class="btn btn-primary mb-3" (click)="openDialogForNewEpic()">Add Epic</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
-    <ngx-datatable-column name="Code" prop="code" [sortable]="true"></ngx-datatable-column>
-    <ngx-datatable-column name="Title">
-      <ng-template let-row="row" ngx-datatable-cell-template>
-        <a (click)="openDialogForEpic(row)">{{ row.title }}</a>
-      </ng-template>
-    </ngx-datatable-column>
-    <ngx-datatable-column name="Priority" prop="priorityLevel" [sortable]="true">
-      <ng-template let-row="row" ngx-datatable-cell-template>
-        {{ row.priorityName }}
-      </ng-template>
-    </ngx-datatable-column>
-    <ngx-datatable-column name="Estimates" prop="estimates">
-      <ng-template let-row="row" ngx-datatable-cell-template>
-        <a (click)="openDialogForEstimates(row)" title="Change Estimates"><div [innerHTML]="showEstimates(row.estimates)"></div></a>
-      </ng-template>
-    </ngx-datatable-column>
-    <ngx-datatable-column name="Actions">
-      <ng-template let-row="row" ngx-datatable-cell-template>
-        &nbsp;
-      </ng-template>
-    </ngx-datatable-column>
+      <div class="row release" *ngFor="let releaseDetail of releases" >
+        <div class="card">
+          <div class="card-header">
+            <ul class="horizontal-list">
+              <li>Release: {{releaseDetail.release?.name}}</li>
+              <li>Start Date: {{releaseDetail.release?.startDate}}</li>
+              <li>End Date: {{releaseDetail.release?.endDate}}</li>
+              <li>Working Days: {{releaseDetail.release?.workingDays}}</li>
+              <li>Status: {{releaseDetail.release?.status}}</li>
+            </ul>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Epics</h5>
+            <div class="row">
+              <div class="col-md-8">
+                <ngx-datatable
+                  [rows]="releaseDetail.epics"
+                  [columnMode]="'force'"
+                  [headerHeight]="50"
+                  [footerHeight]="50"
+                  [rowHeight]="'auto'"
+                  [sorts]="[{ prop: 'priorityLevel', dir: 'asc' }]"
+                  class="material">
 
-
-  </ngx-datatable>
-  <button class="btn btn-primary mb-3" (click)="openDialogForNewEpic()">Add Epic</button>
+                  <ngx-datatable-column name="Code" prop="code" [sortable]="true"></ngx-datatable-column>
+                  <ngx-datatable-column name="Title" prop="title"></ngx-datatable-column>
+                  <ngx-datatable-column name="Priority" prop="priorityLevel" [sortable]="true">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      {{ row.priorityName }}
+                    </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-column name="Assignment" >
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <a (click)="openDialogForEstimates(row)" title="Change Estimates"><div [innerHTML]="showAssignments(row.assignments)"></div></a>
+                    </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-column name="Actions">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <a (click)="planEpic(row.id)" title="Make it part of release plan"
+                         *ngIf="row.estimates && row.estimates.length > 0">
+                        <i class="bi bi-play action-icon"></i>
+                      </a>
+                      <a (click)="openDialogForEstimates(row)" title="Change Estimates">
+                        <i class="bi bi-bucket action-icon"></i>
+                      </a>
+                      <a (click)="openDialogForEpic(row)" title="Edit">
+                        <i class="bi bi-pencil-square action-icon"></i>
+                      </a>
+                      <a (click)="deleteEpic(row.id)" title="Delete">
+                        <i class="bi bi-trash action-icon"></i>
+                      </a>
+                    </ng-template>
+                  </ngx-datatable-column>
+                </ngx-datatable>
+              </div>
+              <div class="col-md-4">
+                <ngx-datatable
+                  [rows]="releaseDetail.resourceCaps"
+                  [columnMode]="'force'"
+                  [headerHeight]="50"
+                  [footerHeight]="50"
+                  [rowHeight]="'auto'"
+                  class="material">
+                  <ngx-datatable-column name="Resource" prop="resourceName"></ngx-datatable-column>
+                  <ngx-datatable-column name="Time Assigned">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      {{ row.prodBasedAssignedTime }}
+                    </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-column name="Remaining Assignable Time">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      {{ row.prodBasedAssignableTime - row.prodBasedAssignedTime }}
+                    </ng-template>
+                  </ngx-datatable-column>
+                </ngx-datatable>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
 <!--
         <button class="btn btn-danger btn-sm" (click)="deleteCompanyWorkingHour(wh.id)"

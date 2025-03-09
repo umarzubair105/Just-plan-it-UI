@@ -25,6 +25,9 @@ import {LeaveStatus, Resource, Role} from '../models/basic';
 import {ResourceService} from '../services/resource.service';
 import {RoleService} from '../services/role.service';
 import {DataTableColumnCellDirective, DataTableColumnDirective, DatatableComponent} from '@swimlane/ngx-datatable';
+import {EpicEstimateComponent} from '../planning/epic-estimate.component';
+import {MatDialog} from '@angular/material/dialog';
+import {ResourceLeaveComponent} from '../leaves/resource.leave.component';
 
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -59,7 +62,8 @@ export class ResourceComponent implements OnInit {
 
   myForm: FormGroup;
   constructor(private readonly fb: FormBuilder, private readonly utils: Utils,
-              private readonly router: Router, private readonly route: ActivatedRoute) {
+              private readonly router: Router, private readonly route: ActivatedRoute,
+              public dialog: MatDialog) {
     console.log('Construct')
     this.myForm = this.fb.group({
       email: ['', [Validators.required]],
@@ -115,6 +119,22 @@ export class ResourceComponent implements OnInit {
       error: (err) => (this.errorMessage = err),
     });
   }
+  openDialogForLeaves(resource: Resource): void {
+    const dialogRef = this.dialog.open(ResourceLeaveComponent, {
+      width: '80%',
+      maxWidth: '90vw', // 90% of viewport width
+      height: '70%',
+      maxHeight: '80vh', // 80% of viewport height
+      disableClose: true,
+      data: { resource: resource },
+    });
 
-  protected readonly LeaveStatus = LeaveStatus;
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      if (result) {
+        //row.estimates = result.estimates;
+      }
+      // Handle the result here
+    });
+  }
 }

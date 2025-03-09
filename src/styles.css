@@ -14,7 +14,11 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   color: red;
   margin-top:.5rem;
 }
-
+.action-icon {
+  font-size: 1.2rem;
+  color: #007bff;
+  margin-right: 5px;
+}
 ::ng-deep .ngx-datatable th {
   white-space: normal !important;
   word-wrap: break-word;

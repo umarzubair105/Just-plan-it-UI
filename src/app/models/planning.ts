@@ -56,6 +56,7 @@ export class EpicBean extends Epic {
   public raisedByResourceName: string | null = null;
   public dependOnEpicCode: string | null = null;
   public estimates: EpicEstimateBean[] | null = null;
+  public assignments: EpicAssignmentBean[] | null = null;
 }
 
 export class Release extends Basic{
@@ -77,9 +78,40 @@ export class EpicEstimate extends Basic {
 export class EpicEstimateBean extends EpicEstimate {
   public roleName: string | null = null;
 }
-
-
+export class EpicAssignment extends Basic {
+  public epicId: number = 0;
+  public resourceId: number = 0;
+  public hours: number = 0;
+  public roleId: number = 0;
+}
+export class EpicAssignmentBean extends EpicAssignment {
+  public roleName: string | null = null;
+  public resourceName: string | null = null;
+}
 export class Product extends Basic {
   public companyId: number = 0;
   public name: string = '';
+}
+
+export class ScheduleEpic {
+  public epicId: number = 0;
+  public releaseToAddIn: Release | null = null;
+}
+
+export class ReleaseDetailBean {
+  public release: Release | null = null;
+  public resourceCaps: ResourceCapInRelease[] = [];
+  public epics: EpicBean[] = [];
+}
+
+export class ResourceCapInRelease {
+  public roleId: number =0;
+  public roleName: string | null=null;
+  public resourceId: number =0;
+  public resourceName: string | null=null;
+  public workingDays: number =0;
+  public availableTime: number =0;
+  public prodBasedAssignableTime: number =0;
+  public prodBasedAssignedTime: number =0;
+  public prodBasedExtraTime: number =0;
 }

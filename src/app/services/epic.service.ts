@@ -5,7 +5,7 @@ import { catchError } from 'rxjs/operators';
 import {PageResponse} from '../models/page.response';
 import {AppConstants} from '../configuration/app.constants';
 import {handleError} from '../utils/helper';
-import {Epic, EpicBean, ReleaseStatusEnum} from '../models/planning';
+import {Epic, EpicBean, ReleaseStatusEnum, ScheduleEpic} from '../models/planning';
 
 // Def
 
@@ -15,7 +15,6 @@ import {Epic, EpicBean, ReleaseStatusEnum} from '../models/planning';
 })
 export class EpicService {
   private readonly baseUrl = AppConstants.API_URL+'/epics'; // Base URL for the REST endpoint
-  private readonly planningDashboardUrl = AppConstants.API_URL+'/planning-dashboard'; // Base URL for the REST endpoint
 
   constructor(private readonly http: HttpClient) {}
 
@@ -27,15 +26,7 @@ export class EpicService {
       catchError(handleError)
     );
   }
-  getUnplannedEpicBeansByProductId(companyId:number,productId:number): Observable<EpicBean[]> {
-    let params = new HttpParams();
-    params = params.append('companyId', companyId);
-    params = params.append('productId', productId);
-    return this.http.get<EpicBean[]>(`${this.planningDashboardUrl}/findUnplannedEpics`,
-      { params }).pipe(
-      catchError(handleError)
-    );
-  }
+
   getByReleaseId(releaseId:number): Observable<PageResponse> {
     let params = new HttpParams();
     params = params.append('releaseId', releaseId);
@@ -44,6 +35,7 @@ export class EpicService {
       catchError(handleError)
     );
   }
+
   // Get by ID
 
   create(model: Epic): Observable<Epic> {

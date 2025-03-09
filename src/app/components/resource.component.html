@@ -21,6 +21,7 @@
           <ngx-datatable-column name="Date of Birth" prop="dateOfBirth" [sortable]="true"></ngx-datatable-column>
           <ngx-datatable-column name="Action">
             <ng-template let-row="row" ngx-datatable-cell-template>
+              <a (click)="openDialogForLeaves(row)" title="Leaves">Leaves</a>
 
               <!--<a (click)="openModalEdit(editLeave, row.id)" title="Update">
                 <i class="bi bi-pencil"></i>

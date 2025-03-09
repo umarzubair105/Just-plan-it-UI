@@ -27,12 +27,17 @@ export function capitalizeFirstLetter(str: string): string {
 
 export function handleError(error: HttpErrorResponse): Observable<never> {
   let errorMessage = 'An unknown error occurred!';
+  console.error('>>>>>');
+  console.error(error);
   if (error.error instanceof ErrorEvent) {
-  // Client-side error
-  errorMessage = `Error: ${error.error.message}`;
-} else {
-  // Server-side error
-  errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-}
-return throwError(errorMessage);
+    // Client-side error
+    errorMessage = `Error: ${error.error.message}`;
+  } else  if (error.error && error.error.message) {
+    // Client-side error
+    errorMessage = `Error: ${error.error.message}`;
+  } else {
+    // Server-side error
+    errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+  }
+  return throwError(errorMessage);
 }

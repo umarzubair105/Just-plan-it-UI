@@ -45,6 +45,9 @@ export const routes: Routes = [
   { path: 'resource-leave/:resourceId', loadComponent: ()=>import(
       './leaves/resource.leave.component').then((m)=>m.ResourceLeaveComponent),
     canActivate: [AuthGuard]},
+  { path: 'planned-release/:productId', loadComponent: ()=>import(
+      './planning/release.component').then((m)=>m.ReleaseComponent),
+    canActivate: [AuthGuard]},
   { path: 'resource', loadComponent: ()=>import(
       './components/resource.component').then((m)=>m.ResourceComponent),
     canActivate: [AuthGuard]},

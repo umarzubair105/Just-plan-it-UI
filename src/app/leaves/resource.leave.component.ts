@@ -2,7 +2,7 @@ import {Component, Inject, OnInit, TemplateRef} from '@angular/core';
 import {CommonModule, NgFor, NgIf} from '@angular/common'; // ✅ Use CommonModule
 import {FormsModule} from '@angular/forms';
 import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
-import {LeaveStatus, LeaveType, ResourceLeave} from '../models/basic';
+import {LeaveStatus, LeaveType, Resource, ResourceLeave} from '../models/basic';
 import {ResourceLeaveService} from '../services/resource.leave.service';
 import {Utils} from '../utils/utils';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -25,6 +25,7 @@ export class ResourceLeaveComponent  implements OnInit {
   companyId: number;
   resourceId: number;
   loggedUserId: number = 0;
+  resource: Resource = new Resource();
 
   leaveTypes = Object.keys(LeaveType)
     .filter(key => isNaN(Number(key))) // Exclude numeric keys
@@ -43,11 +44,19 @@ export class ResourceLeaveComponent  implements OnInit {
   constructor(private modalService: BsModalService,
               private resourceLeaveService: ResourceLeaveService,private util: Utils,
               private router: Router,private route: ActivatedRoute,
+
+              public dialogRef: MatDialogRef<ResourceLeaveComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any,
 ) {
     this.companyId = this.util.getCompanyId();
-    this.resourceId = Number(this.route.snapshot.paramMap.get('resourceId'));
-    if (!this.resourceId || this.resourceId==0) {
-      this.resourceId = util.getLoggedResourceId();
+    if (data && data.resource) {
+      this.resourceId = data.resource.id;
+      this.resource = data.resource;
+    } else {
+      this.resourceId = Number(this.route.snapshot.paramMap.get('resourceId'));
+      if (!this.resourceId || this.resourceId == 0) {
+        this.resourceId = util.getLoggedResourceId();
+      }
     }
     this.loggedUserId = util.getLoggedResourceId();
   }
@@ -127,7 +136,11 @@ export class ResourceLeaveComponent  implements OnInit {
       error: (err) => (this.util.showErrorMessage(err)),
     });
   }
-
+  closeDialog(): void {
+    let result = {};
+    console.log('Closing with:'+result);
+    this.dialogRef.close(result);
+  }
   openModal(template: TemplateRef<any>) {
     this.leave = new ResourceLeave();
     this.modalRef = this.modalService.show(template);

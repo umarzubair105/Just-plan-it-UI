@@ -25,25 +25,24 @@ import { MatDialog } from '@angular/material/dialog';
 import {EpicComponent} from './epic.component';
 import {PlanningDashboardService} from '../services/planning-dashboard.service';
 @Component({
-  selector: 'app-planning',
+  selector: 'app-planned-release',
   standalone: true,
   imports: [CommonModule, NgIf, NgFor, FormsModule, ModalModule, ReactiveFormsModule,
     NgxDatatableModule, EpicEstimateComponent], // ✅ NO BrowserAnimationsModule here!
-  templateUrl: './planning.component.html',
-  styleUrl: './planning.component.css',
+  templateUrl: './release.component.html',
+  styleUrl: './release.component.css',
   providers: [BsModalService]
 })
-export class PlanningComponent implements OnInit {
+export class ReleaseComponent implements OnInit {
   modalRef?: BsModalRef;
 
   priorities: Priority[] = [];
   subComponents: SubComponent[] = [];
+  releases: ReleaseDetailBean[] = [];
   roles: Role[] = [];
 
   unplannedEpics: EpicBean[] = [];
   editEpic: EpicBean = new EpicBean();
-
-  releases: ReleaseDetailBean[] = [];
 
   editEpicEstimates: EpicEstimateBean[] = [];
 
@@ -65,7 +64,6 @@ export class PlanningComponent implements OnInit {
   }
   ngOnInit(): void {
     console.log('Testing');
-    this.loadUnplannedEpics();
     this.loadUnplannedReleases();
     this.loadMetadata();
   }
@@ -95,22 +93,14 @@ export class PlanningComponent implements OnInit {
     });
   }
 
+
+
+
   loadUnplannedReleases(): void {
     this.planningService.getUnplannedReleasesByProductId(this.productId).subscribe({
       next: (data) => {
         console.log(data);
         this.releases = data;
-      },
-      error: (err) => (this.util.showErrorMessage(err)),
-    });
-  }
-
-
-  loadUnplannedEpics(): void {
-    this.planningService.getUnplannedEpicBeansByProductId(this.companyId, this.productId).subscribe({
-      next: (data) => {
-        console.log(data);
-        this.unplannedEpics = data;
       },
       error: (err) => (this.util.showErrorMessage(err)),
     });
@@ -164,33 +154,6 @@ export class PlanningComponent implements OnInit {
     }
   }
 
-  createEpic() {
-      this.editEpic.active=true;
-      this.editEpic.forcefullyAdded=false;
-      this.editEpic.code='EpicCode';
-      this.editEpic.releaseId=null;
-      this.editEpic.productId = this.productId;
-      //this.editEpic.raisedByResourceId = this.au;
-      return this.epicService.create(this.editEpic).subscribe({
-        next: (data) => {
-          this.editEpic.id = data.id;
-          const priority = this.priorities.find(p => p.id === data.priorityId)
-            ?? new Priority();
-          this.editEpic.priorityName = priority.name;
-          this.editEpic.priorityLeve = priority.priorityLevel;
-          const subComp = this.subComponents.find(p => p.id === data.componentId)
-            ?? new SubComponent();
-          this.editEpic.componentName = subComp.name;
-          //this.unplannedEpics.push(this.editEpic);
-          this.unplannedEpics = [...this.unplannedEpics, this.editEpic];
-          this.editEpic = new EpicBean();
-          this.util.showSuccessMessage('Data is inserted.');
-          this.closeModal();
-        },
-        error: (err) => (this.util.showErrorMessage(err)),
-      });
-  }
-
 
 
   // Open modal
@@ -211,15 +174,6 @@ export class PlanningComponent implements OnInit {
   }
 
 
-  showEstimates(epicEstimates: EpicEstimateBean[]): string {
-    if (epicEstimates && epicEstimates.length > 0) {
-      return epicEstimates.filter(estimate=>estimate.hours>0)
-        .map(estimate => `${estimate.roleName}: ${estimate.hours} hrs
-      ${estimate.resources==1?``:`with ${estimate.resources} resources`}`).join('<br/>');
-    } else {
-      return 'Provide estimates';
-    }
-  }
   showAssignments(assignments: EpicAssignmentBean[]): string {
     if (assignments && assignments.length > 0) {
       return assignments.map(estimate => `${estimate.resourceName}: ${estimate.hours} hrs`).join('<br/>');
@@ -227,6 +181,7 @@ export class PlanningComponent implements OnInit {
       return 'Missing';
     }
   }
+
   openDialogForNewEpic():void {
     let epic = new EpicBean();
     epic.productId = this.productId;
