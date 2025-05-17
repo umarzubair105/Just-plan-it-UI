@@ -36,6 +36,32 @@ export class PlanningDashboardService {
     );
   }
 
+  getPlannedReleasesByProductId(productId:number): Observable<ReleaseDetailBean[]> {
+    let params = new HttpParams();
+    params = params.append('productId', productId);
+    return this.http.get<ReleaseDetailBean[]>(`${this.baseUrl}/findPlannedReleasesByProductId`,
+      { params }).pipe(
+      catchError(handleError)
+    );
+  }
+  getStartedReleasesByProductId(productId:number): Observable<ReleaseDetailBean[]> {
+    let params = new HttpParams();
+    params = params.append('productId', productId);
+    return this.http.get<ReleaseDetailBean[]>(`${this.baseUrl}/findStartedReleasesByProductId`,
+      { params }).pipe(
+      catchError(handleError)
+    );
+  }
+
+  getOldReleasesByProductId(productId:number): Observable<ReleaseDetailBean[]> {
+    let params = new HttpParams();
+    params = params.append('productId', productId);
+    return this.http.get<ReleaseDetailBean[]>(`${this.baseUrl}/findOldReleasesByProductId`,
+      { params }).pipe(
+      catchError(handleError)
+    );
+  }
+
   planEpic(id: number): Observable<ScheduleEpic> {
     let params = new HttpParams();
     params = params.append('epicId', id);

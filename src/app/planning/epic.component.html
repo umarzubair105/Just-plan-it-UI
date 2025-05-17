@@ -5,20 +5,20 @@
       </div>
       <form  #userForm="ngForm" >
         <div class="card-body">
-          <div class="mb-3">
-            <label for="title" class="form-label" >Title</label><label class="required-label">&nbsp;* </label>
+          <div class="form-floating mb-3 mt-3">
             <input type="text" class="form-control" [(ngModel)]="epicBean.title" name="title" id="title"
                    required
                    #title="ngModel"
                    [ngClass]="{ 'is-invalid': title.invalid && (title.dirty || title.touched) }"
                    [showErrors]="{ required: 'Title is required' }">
+            <label for="title">Title*</label>
           </div>
-          <div class="mb-3">
+
+          <div class="form-floating mb-3 mt-3">
+            <textarea class="form-control" [(ngModel)]="epicBean.details" name="details" id="details" #details="ngModel"></textarea>
             <label for="details" class="form-label">Details</label>
-            <textarea class="form-control" [(ngModel)]="epicBean.details" name="details" id="details" #hours="ngModel"></textarea>
           </div>
-          <div class="mb-3">
-            <label for="priorityId" class="form-label">Priority</label><label class="required-label">&nbsp;* </label>
+          <div class="form-floating mb-3 mt-3">
             <select name="priorityId"  [(ngModel)]="epicBean.priorityId" class="form-control" required id="priorityId"
                     #priorityId="ngModel"
                     [ngClass]="{ 'is-invalid': priorityId.invalid && (priorityId.dirty || priorityId.touched) }"
@@ -30,28 +30,31 @@
               </option>
 
             </select>
+            <label for="priorityId" class="form-label">Priority*</label>
           </div>
-          <div class="mb-3">
-            <label for="valueGain" class="form-label">Value Gain (In number)</label>
+          <div class="form-floating mb-3 mt-3">
             <input type="number" class="form-control" [(ngModel)]="epicBean.valueGain" name="valueGain" id="valueGain"
                    #valueGain="ngModel"
-                   >
+                   placeholder="Enter value gain"
+            >
+            <label for="valueGain" class="form-label">Value Gain (In number)</label>
+
           </div>
-          <div class="mb-3">
-            <label for="risks" class="form-label">Risks</label>
+          <div class="form-floating mb-3 mt-3">
             <textarea class="form-control" [(ngModel)]="epicBean.risks" name="risks" id="risks" #risks="ngModel"></textarea>
+            <label for="risks" class="form-label">Risks</label>
           </div>
-          <div class="mb-3">
-            <label for="requiredBy" class="form-label">Required By</label>
+          <div class="form-floating mb-3 mt-3">
             <input type="date" class="form-control" [(ngModel)]="epicBean.requiredBy" id="requiredBy" name="requiredBy" #requiredBy="ngModel">
+            <label for="requiredBy" class="form-label">Required By</label>
           </div>
-          <div class="mb-3">
-            <label for="componentId" class="form-label">Component</label>
+          <div class="form-floating mb-3 mt-3">
             <select id="componentId" name="componentId"  [(ngModel)]="epicBean.componentId" class="form-control" #componentId="ngModel">
               <option *ngFor="let m of subComponents" [value]="m.id">
                 {{ m.name }}
               </option>
             </select>
+            <label for="componentId" class="form-label">Component</label>
           </div>
         </div>
         <div class="card-footer text-center">

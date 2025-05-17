@@ -30,11 +30,11 @@ import {ReleaseService} from '../services/release.service';
   standalone: true,
   imports: [CommonModule, NgIf, NgFor, FormsModule, ModalModule, ReactiveFormsModule,
     NgxDatatableModule, EpicEstimateComponent, RouterLink], // ✅ NO BrowserAnimationsModule here!
-  templateUrl: './planning.component.html',
-  styleUrl: './planning.component.css',
+  templateUrl: './planned.component.html',
+  styleUrl: './planned.component.css',
   providers: [BsModalService]
 })
-export class PlanningComponent implements OnInit {
+export class PlannedComponent implements OnInit {
   modalRef?: BsModalRef;
 
   priorities: Priority[] = [];
@@ -68,9 +68,8 @@ export class PlanningComponent implements OnInit {
   }
   ngOnInit(): void {
     console.log('Testing');
-    this.loadUnplannedEpics();
-    this.loadUnplannedReleases();
     this.loadMetadata();
+    this.loadPlannedReleases();
     this.route.fragment.subscribe(fragment => {
       if (fragment) {
         const element = document.getElementById(fragment);
@@ -106,20 +105,31 @@ export class PlanningComponent implements OnInit {
       error: (err) => (this.util.showErrorMessage(err)),
     });
   }
-  planRelease(releaseDetail: ReleaseDetailBean) {
-    console.log('Planning it:'+releaseDetail.release?.name);
+  unplanRelease(releaseDetail: ReleaseDetailBean) {
     if (releaseDetail.release) {
-      this.releaseService.updateSpecificFieldsPasses(releaseDetail.release.id, {status: ReleaseStatusEnum.PLANNED}).subscribe({
+      this.releaseService.updateSpecificFieldsPasses(releaseDetail.release.id, {status: ReleaseStatusEnum.INITIATED}).subscribe({
         next: (data) => {
-          this.util.showSuccessMessage('Release is planned.');
+          this.util.showSuccessMessage('Release is un planned.');
           this.releases = this.releases.filter(wh => wh.release?.id !== releaseDetail.release?.id);
         },
         error: (err) => (this.util.showErrorMessage(err)),
       });
     }
   }
-  loadUnplannedReleases(): void {
-    this.planningService.getUnplannedReleasesByProductId(this.productId).subscribe({
+
+  startRelease(releaseDetail: ReleaseDetailBean) {
+    if (releaseDetail.release) {
+      this.releaseService.updateSpecificFieldsPasses(releaseDetail.release.id, {status: ReleaseStatusEnum.STARTED}).subscribe({
+        next: (data) => {
+          this.util.showSuccessMessage('Release is started to work upon.');
+          this.releases = this.releases.filter(wh => wh.release?.id !== releaseDetail.release?.id);
+        },
+        error: (err) => (this.util.showErrorMessage(err)),
+      });
+    }
+  }
+  loadPlannedReleases(): void {
+    this.planningService.getPlannedReleasesByProductId(this.productId).subscribe({
       next: (data) => {
         console.log(data);
         this.releases = data;
@@ -129,45 +139,6 @@ export class PlanningComponent implements OnInit {
   }
 
 
-  loadUnplannedEpics(): void {
-    this.planningService.getUnplannedEpicBeansByProductId(this.companyId, this.productId).subscribe({
-      next: (data) => {
-        console.log(data);
-        this.unplannedEpics = data;
-      },
-      error: (err) => (this.util.showErrorMessage(err)),
-    });
-  }
-  // Helper method to return the correct API observable
-  updateEpic() {
-      this.epicService.update(this.editEpic.id,
-        this.editEpic).subscribe({
-        next: (data) => {
-          const priority = this.priorities.find(p => p.id === data.priorityId)
-            ?? new Priority();
-          this.editEpic.priorityName = priority.name;
-          this.editEpic.priorityLevel = priority.priorityLevel;
-          const subComp = this.subComponents.find(p => p.id === data.componentId)
-            ?? new SubComponent();
-          this.editEpic.componentName = subComp.name;
-          this.editEpic = new EpicBean();
-          this.util.showSuccessMessage('Data is updated');
-          this.closeModal();
-        },
-        error: (err) => (this.util.showErrorMessage(err)),
-      });
-  }
-  deleteEpic(id: number) {
-    if (window.confirm("Are you sure you want to delete?")) {
-        this.epicService.delete(id).subscribe({
-          next: (data) => {
-            this.util.showSuccessMessage('Data is deleted');
-            this.unplannedEpics = this.unplannedEpics.filter(wh => wh.id !== id);
-          },
-          error: (err) => (this.util.showErrorMessage(err)),
-        });
-    }
-  }
   changePriorityToLower(epic:EpicBean) {
     const priority = this.priorities.find(p=>p.priorityLevel>epic.priorityLevel);
     if (priority) {
@@ -212,64 +183,7 @@ export class PlanningComponent implements OnInit {
     this.rowIndex = this.rowIndex +1;
     return this.rowIndex % 2 === 0 ? 'even-row' : 'odd-row';
   }
-  planEpic(id: number) {
-    if (window.confirm("Are you sure you want to plan it?")) {
-      this.planningService.planEpic(id).subscribe({
-        next: (data) => {
-          if (data.releaseToAddIn) {
-            this.util.showSuccessMessage(`It is planned in release ${data.releaseToAddIn.name} starting from ${data.releaseToAddIn.startDate}.`);
-            this.unplannedEpics = this.unplannedEpics.filter(wh => wh.id !== id);
-          }
-        },
-        error: (err) => {
-          console.info('---------------------');
-          console.error(err);
-          this.util.showErrorMessage(err);},
-      });
-    }
-  }
 
-  createEpic() {
-      this.editEpic.active=true;
-      this.editEpic.forcefullyAdded=false;
-      this.editEpic.code='EpicCode';
-      this.editEpic.releaseId=null;
-      this.editEpic.productId = this.productId;
-      //this.editEpic.raisedByResourceId = this.au;
-      return this.epicService.create(this.editEpic).subscribe({
-        next: (data) => {
-          this.editEpic.id = data.id;
-          const priority = this.priorities.find(p => p.id === data.priorityId)
-            ?? new Priority();
-          this.editEpic.priorityName = priority.name;
-          this.editEpic.priorityLevel = priority.priorityLevel;
-          const subComp = this.subComponents.find(p => p.id === data.componentId)
-            ?? new SubComponent();
-          this.editEpic.componentName = subComp.name;
-          //this.unplannedEpics.push(this.editEpic);
-          this.unplannedEpics = [...this.unplannedEpics, this.editEpic];
-          this.editEpic = new EpicBean();
-          this.util.showSuccessMessage('Data is inserted.');
-          this.closeModal();
-        },
-        error: (err) => (this.util.showErrorMessage(err)),
-      });
-  }
-
-
-
-  // Open modal
-  createEpicModal(template: TemplateRef<any>) {
-    this.editEpic = new EpicBean();
-    this.modalRef = this.modalService.show(template);
-  }
-  updateEpicModal(template: TemplateRef<any>, id: number) {
-    if (id) {
-      this.editEpic = this.unplannedEpics.find((x) => x.id === id)
-        ?? new EpicBean();
-      this.modalRef = this.modalService.show(template);
-    }
-  }
   // Close modal
   closeModal() {
     this.modalRef?.hide();
@@ -292,60 +206,7 @@ export class PlanningComponent implements OnInit {
       return 'Missing';
     }
   }
-  openDialogForNewEpic():void {
-    let epic = new EpicBean();
-    epic.productId = this.productId;
-    epic.releaseId = null;
-    this.openDialogForEpic(epic);
-  }
-  openDialogForEpic(epic: EpicBean): void {
-    console.log("Planning epic:"+epic);
-    const dialogRef = this.dialog.open(EpicComponent, {
-      width: '80%',
-      maxWidth: '90vw', // 90% of viewport width
-      height: '70%',
-      maxHeight: '80vh', // 80% of viewport height
-      disableClose: true,
-      data: { epicBean: epic, priorities: this.priorities, subComponents: this.subComponents },
-    });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result && result.epic && result.epic.id>0) {
-        console.log('The dialog was closed:'+result.epic.title);
-        let epic = result.epic;
-        console.log('The dialog was closed:'+epic.id);
-        console.log('The dialog was closed:'+this.unplannedEpics.filter(ep => ep.id === epic.id));
-        const index = this.unplannedEpics.findIndex(ep => ep.id === epic.id);
-        if (index!== -1) {
-          const exiting = this.unplannedEpics[index];
-          EpicBeanCopyPasteUpdatedValues(epic, exiting);
-        } else {
-          console.log('The dialog was closed adding in List:'+result.epic);
-          this.unplannedEpics = [...this.unplannedEpics, epic];
-        }
-      }
-      // Handle the result here
-    });
-  }
-  openDialogForEstimates(row: EpicBean): void {
-    console.log("Planning estimates:"+row.estimates?.length);
-    const dialogRef = this.dialog.open(EpicEstimateComponent, {
-      width: '80%',
-      maxWidth: '90vw', // 90% of viewport width
-      height: '70%',
-      maxHeight: '80vh', // 80% of viewport height
-      disableClose: true,
-      data: { epicBean: row, roles: this.roles },
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      if (result) {
-       row.estimates = result.estimates;
-      }
-      // Handle the result here
-    });
-  }
   protected readonly WorkingHourEnum = WorkingHourEnum;
   protected readonly EpicBean = EpicBean;
 }

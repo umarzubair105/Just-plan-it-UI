@@ -114,7 +114,7 @@ export class ReleaseComponent implements OnInit {
           const priority = this.priorities.find(p => p.id === data.priorityId)
             ?? new Priority();
           this.editEpic.priorityName = priority.name;
-          this.editEpic.priorityLeve = priority.priorityLevel;
+          this.editEpic.priorityLevel = priority.priorityLevel;
           const subComp = this.subComponents.find(p => p.id === data.componentId)
             ?? new SubComponent();
           this.editEpic.componentName = subComp.name;

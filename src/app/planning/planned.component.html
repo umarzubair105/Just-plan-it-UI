@@ -1,0 +1,114 @@
+<div class="container mt-2">
+  <h2>Planned Releases</h2>
+  <ul class="horizontal-list">
+    <li *ngFor="let releaseDetailLink of releases;let i = index">
+      <ng-container *ngIf="i>0">
+        <a [routerLink]="[]" [fragment]="'plannedRelease'+i">
+          {{releaseDetailLink.release?.name}}</a>
+      </ng-container>
+    </li>
+  </ul>
+  <div class="col-md-12" >
+
+    <div class="row release" *ngFor="let releaseDetail of releases;let i = index" [id]="'plannedRelease'+i">
+      <div class="card">
+        <div class="card-header">
+          <ul class="horizontal-list">
+            <li>Release: {{releaseDetail.release?.name}}</li>
+            <li>Start Date: {{releaseDetail.release?.startDate}}</li>
+            <li>End Date: {{releaseDetail.release?.endDate}}</li>
+            <li>Working Days: {{releaseDetail.release?.workingDays}}</li>
+            <li>Status: {{releaseDetail.release?.status}}</li>
+            <li>
+              <a (click)="startRelease(releaseDetail)" title="Start working on release">
+                <i class="bi bi-clipboard-check action-icon"></i>
+              </a>
+            </li>
+            <li>
+              <a (click)="unplanRelease(releaseDetail)" title="Un plan the release">
+                <i class="bi bi-clipboard-check action-icon"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+        <div class="card-body">
+          <h5 class="card-title">Epics</h5>
+          <div class="row">
+            <div class="col-md-8 table-responsive">
+              <ngx-datatable
+                class="bootstrap-table table-striped table-bordered table-hover"
+                [rows]="releaseDetail.epics"
+                [columnMode]="'force'"
+                [headerHeight]="50"
+                [footerHeight]="50"
+                [rowHeight]="'auto'"
+                [sorts]="[{ prop: 'priorityLevel', dir: 'asc' }]"
+                [rowClass]="getRowClass"
+                >
+
+                <ngx-datatable-column name="Code" prop="code" [sortable]="true"></ngx-datatable-column>
+                <ngx-datatable-column name="Title" prop="title"></ngx-datatable-column>
+                <ngx-datatable-column name="Priority" prop="priorityLevel" [sortable]="true">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{row.priorityName}}
+                    <a (click)="changePriorityToUpper(row)" title="Move it to higher priority"
+                       *ngIf="showChangePriorityToUpper(row)">
+                      <i class="bi bi-arrow-up-short action-icon"></i>
+                    </a>
+                    <a (click)="changePriorityToLower(row)" title="Move it to lower priority"
+                       *ngIf="showChangePriorityToLower(row)">
+                      <i class="bi bi-arrow-down-short action-icon"></i>
+                    </a>
+
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Assignment" >
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <div [innerHTML]="showAssignments(row.assignments)"></div>
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Actions">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                  </ng-template>
+                </ngx-datatable-column>
+              </ngx-datatable>
+            </div>
+            <div class="col-md-4">
+              <ngx-datatable
+                [rows]="releaseDetail.resourceCaps"
+                [columnMode]="'force'"
+                [headerHeight]="50"
+                [footerHeight]="50"
+                [rowHeight]="'auto'"
+                class="material">
+                <ngx-datatable-column name="Resource" prop="resourceName"></ngx-datatable-column>
+                <ngx-datatable-column name="Time Assigned">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.prodBasedAssignedTime }}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Remaining Assignable Time">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.prodBasedAssignableTime - row.prodBasedAssignedTime }}
+                  </ng-template>
+                </ngx-datatable-column>
+              </ngx-datatable>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ul class="horizontal-list">
+        <li *ngFor="let releaseDetailLink of releases;let j = index">
+          <ng-container *ngIf="j<i || j>i+1">
+            <a [routerLink]="[]" [fragment]="'plannedRelease'+j">
+              {{releaseDetailLink.release?.name}}</a>
+          </ng-container>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+
+
+
+</div>

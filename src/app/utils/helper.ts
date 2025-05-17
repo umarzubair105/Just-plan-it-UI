@@ -41,3 +41,10 @@ export function handleError(error: HttpErrorResponse): Observable<never> {
   }
   return throwError(errorMessage);
 }
+
+export function getLocalDate(): Date {
+  const today = new Date();
+  // Create YYYY-MM-DD string in local time
+  const localDateString = today.toISOString().split('T')[0];
+  return new Date(localDateString);
+}

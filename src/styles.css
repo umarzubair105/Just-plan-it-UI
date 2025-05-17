@@ -26,3 +26,47 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   text-align: center; /* Optional: Center align headers */
   min-width: 120px;
 }
+
+
+
+.bootstrap-table {
+  font-size: 14px;
+  text-align: left;
+}
+
+/* Style ngx-datatable header */
+.bootstrap-table .datatable-header {
+  background-color: #343a40;
+  color: white;
+  font-weight: bold;
+}
+
+/* Style ngx-datatable rows */
+/*
+.bootstrap-table .datatable-body-row {
+  transition: background-color 0.3s;
+}
+*/
+
+
+
+
+
+.even-row {
+  background-color: #f2f2f2 !important;
+}
+
+.odd-row {
+  background-color: #ffffff !important;
+}
+/* Style action icons */
+.action-icon {
+  cursor: pointer;
+  margin-left: 5px;
+  color: #007bff;
+  transition: color 0.3s;
+}
+
+.action-icon:hover {
+  color: #0056b3;
+}

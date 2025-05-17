@@ -11,19 +11,11 @@ import {ReleaseStatusEnum} from '../models/planning';
 @Injectable({
   providedIn: 'root',
 })
-export class ReleaseService {
-  private readonly baseUrl = AppConstants.API_URL+'/releases'; // Base URL for the REST endpoint
+export class EpicAssignmentService {
+  private readonly baseUrl = AppConstants.API_URL+'/epicAssignments'; // Base URL for the REST endpoint
   constructor(private http: HttpClient) {}
 
-  getByProductIdAndStatuses(productId:number, status: ReleaseStatusEnum[]): Observable<PageResponse> {
-    let params = new HttpParams();
-    params = params.append('productId', productId);
-    status.forEach(s => params = params.append('status', s));
-    return this.http.get<PageResponse>(`${this.baseUrl}/search/findByProductIdAndStatusInAndActiveIsTrueOrderByStartDateAsc`,
-      { params }).pipe(
-      catchError(handleError)
-    );
-  }
+
   updateSpecificFieldsPasses(id: number, fieldsToUpdate: Partial<{}>): Observable<any> {
     return this.http.patch(`${this.baseUrl}/${id}`, fieldsToUpdate).pipe(
       catchError(handleError)

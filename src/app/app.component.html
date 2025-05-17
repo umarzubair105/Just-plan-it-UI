@@ -1,21 +1,24 @@
 <div class="d-flex flex-column min-vh-100">
+  <app-top-bar></app-top-bar>
+  <router-outlet></router-outlet>
 
-<mat-sidenav-container class="example-container bg-white text-dark">
+
+<!--<mat-sidenav-container class="example-container bg-white text-dark">
   <mat-sidenav #sidenav mode="side" [opened]="isSidenavOpen">
-    <!-- Sidebar Content -->
+    &lt;!&ndash; Sidebar Content &ndash;&gt;
     <app-sidebar></app-sidebar>
   </mat-sidenav>
 
   <mat-sidenav-content>
     <app-top-bar></app-top-bar>
 
-    <!-- Show toggle button only if user is logged in -->
+    &lt;!&ndash; Show toggle button only if user is logged in &ndash;&gt;
     <button *ngIf="isLoggedIn" mat-button (click)="toggleSidebar()">Toggle Sidebar</button>
     <main class="flex-fill">
     <router-outlet></router-outlet>
     </main>
   </mat-sidenav-content>
-</mat-sidenav-container>
+</mat-sidenav-container>-->
 </div>
 <!--
   <app-top-bar></app-top-bar>

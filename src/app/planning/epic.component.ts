@@ -77,7 +77,7 @@ export class EpicComponent implements OnInit {
     const priority = this.priorities.find(p => p.id === data.priorityId)
       ?? new Priority();
     this.epicBean.priorityName = priority.name;
-    this.epicBean.priorityLeve = priority.priorityLevel;
+    this.epicBean.priorityLevel = priority.priorityLevel;
     const subComp = this.subComponents.find(p => p.id === data.componentId)
       ?? new SubComponent();
     this.epicBean.componentName = subComp.name;

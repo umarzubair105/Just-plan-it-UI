@@ -1,6 +1,7 @@
-import { Routes } from '@angular/router';
+import {RouterModule, Routes} from '@angular/router';
 import {AuthGuard} from './interceptor/auth.guard';
 import {TeamResourceComponent} from './team/team-resource.component';
+import {NgModule} from '@angular/core';
 //import { provideHttpClient, withInterceptors } from '@angular/common/http';
 export const routes: Routes = [
   //{ path: '', component: AppComponent },  // Default route (home)
@@ -39,6 +40,12 @@ export const routes: Routes = [
   { path: 'planning/:productId', loadComponent: ()=>import(
       './planning/planning.component').then((m)=>m.PlanningComponent),
     canActivate: [AuthGuard]},
+  { path: 'planned/:productId', loadComponent: ()=>import(
+      './planning/planned.component').then((m)=>m.PlannedComponent),
+    canActivate: [AuthGuard]},
+  { path: 'execution/:productId', loadComponent: ()=>import(
+      './execution/execution.component').then((m)=>m.ExecutionComponent),
+    canActivate: [AuthGuard]},
   { path: 'epic-estimate', loadComponent: ()=>import(
       './planning/epic-estimate.component').then((m)=>m.EpicEstimateComponent),
     canActivate: [AuthGuard]},
@@ -59,3 +66,15 @@ export const routes: Routes = [
 
   //{ path: '', redirectTo: '/step1', pathMatch: 'full' }, // Default route
 ];
+
+
+/*@NgModule({
+  imports: [
+    RouterModule.forRoot(routes, {
+      anchorScrolling: 'enabled', // Enables anchor (fragment) scrolling
+      //scrollPositionRestoration: 'enabled', // Restores scroll position on navigation
+    }),
+  ],
+  exports: [RouterModule],
+})
+export class AppRoutingModule {}*/

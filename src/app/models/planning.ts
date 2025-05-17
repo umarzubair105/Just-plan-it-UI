@@ -7,6 +7,15 @@ export enum ReleaseStatusEnum {
   COMPLETED="COMPLETED",
   OVERDUE="OVERDUE"
 }
+export enum EpicAssignmentStatusEnum {
+  OPEN="OPEN",
+  STARTED="STARTED",
+  ON_HOLD="ON_HOLD",
+  COMPLETED="COMPLETED",
+  OVERDUE="OVERDUE"
+}
+
+
 export class Epic extends Basic {
   public productId: number = 0;
   public code: string = '';
@@ -33,7 +42,7 @@ export function EpicBeanCopyPasteUpdatedValues(source: EpicBean, target: EpicBea
   target.valueGain = source.valueGain;
   target.priorityName = source.priorityName;
   target.priorityId = source.priorityId;
-  target.priorityLeve = source.priorityLeve;
+  target.priorityLevel = source.priorityLevel;
   target.raisedByResourceId = source.raisedByResourceId;
   target.raisedByResourceName = source.raisedByResourceName;
   target.dependOnEpicCode = source.dependOnEpicCode;
@@ -51,7 +60,7 @@ export function EpicBeanCopyPasteUpdatedValues(source: EpicBean, target: EpicBea
 }
 export class EpicBean extends Epic {
   public priorityName: string | null = null;
-  public priorityLeve: number | null = null;
+  public priorityLevel: number = 0;
   public componentName: string | null = null;
   public raisedByResourceName: string | null = null;
   public dependOnEpicCode: string | null = null;
@@ -83,10 +92,22 @@ export class EpicAssignment extends Basic {
   public resourceId: number = 0;
   public hours: number = 0;
   public roleId: number = 0;
+  public status: EpicAssignmentStatusEnum = EpicAssignmentStatusEnum.OPEN;
 }
 export class EpicAssignmentBean extends EpicAssignment {
   public roleName: string | null = null;
   public resourceName: string | null = null;
+  public minutesLogged: number = 0;
+
+}
+
+export class TimeLogging extends Basic {
+  public epicId: number = 0;
+  public resourceId: number = 0;
+  public releaseId: number = 0;
+  public minutes: number = 0;
+  public loggedForDate: Date | null = null;
+  public comments: string | null = null;
 }
 export class Product extends Basic {
   public companyId: number = 0;
@@ -114,4 +135,5 @@ export class ResourceCapInRelease {
   public prodBasedAssignableTime: number =0;
   public prodBasedAssignedTime: number =0;
   public prodBasedExtraTime: number =0;
+  public loggedTime: number =0;
 }
