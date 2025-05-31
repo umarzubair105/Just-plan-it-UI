@@ -62,6 +62,15 @@ export class PlanningDashboardService {
     );
   }
 
+  getReleaseDetailByReleaseId(releaseId: number): Observable<ReleaseDetailBean> {
+    let params = new HttpParams();
+    params = params.append('releaseId', releaseId);
+    return this.http.get<ReleaseDetailBean>(`${this.baseUrl}/findReleaseDetailByReleaseId`,
+      { params }).pipe(
+      catchError(handleError)
+    );
+  }
+
   planEpic(id: number): Observable<ScheduleEpic> {
     let params = new HttpParams();
     params = params.append('epicId', id);

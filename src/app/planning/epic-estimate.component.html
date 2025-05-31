@@ -10,7 +10,7 @@
             <thead class="table-dark">
             <tr>
               <th>Role</th>
-              <th>Hours</th>
+              <th>Estimate</th>
               <th>Resources</th>
               <th>Action</th>
             </tr>
@@ -20,13 +20,12 @@
               <td>
                 {{ epicEstimate.roleName }}
               </td>
-              <td> <input id="hours-{{ i }}" [(ngModel)]="epicEstimate.hours" type="number"
-                          name="hours-{{ i }}"
-                          required class="form-control"
-                          min="0"
-                      #hours="ngModel"
-                          [ngClass]="{ 'is-invalid': hours.invalid && (hours.dirty || hours.touched) }"
-                          [showErrors]="{ required: 'Hours is required',min: 'Min value is 0', step:'Step' }"
+              <td> <input id="estimateStr-{{ i }}" [(ngModel)]="epicEstimate.estimateStr" type="text"
+                          name="estimateStr-{{ i }}"
+                          class="form-control"
+                      #estimateStr="ngModel"
+                          [ngClass]="{ 'is-invalid': estimateStr.invalid && (estimateStr.dirty || estimateStr.touched) }"
+                          [showErrors]="{ required: 'Estimate is required', step:'Step' }"
                       />
               </td>
               <td> <input id="resources-{{ i }}" [(ngModel)]="epicEstimate.resources" type="number"
@@ -39,7 +38,7 @@
                           />
               </td>
               <td>
-                <button class="btn btn-danger btn-sm"  (click)="removeEpicEstimate(i)" [disabled]="epicEstimate.hours==0">Not Required</button>
+                <button class="btn btn-danger btn-sm"  (click)="removeEpicEstimate(i)" [disabled]="epicEstimate.estimateStr==''">Not Required</button>
               </td>
             </tr>
             </tbody>

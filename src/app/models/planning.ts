@@ -1,4 +1,4 @@
-import {Basic, Priority} from './basic';
+import {Audit, Basic, Priority} from './basic';
 
 export enum ReleaseStatusEnum {
   INITIATED="INITIATED",
@@ -14,7 +14,15 @@ export enum EpicAssignmentStatusEnum {
   COMPLETED="COMPLETED",
   OVERDUE="OVERDUE"
 }
-
+export enum EpicDetailType {
+  COMMENT="COMMENT",
+  ATTACHED_FILE="ATTACHED_FILE",
+  REFERENCE="REFERENCE"
+}
+export enum EpicLinkType {
+  RELATED_TO="RELATED_TO",
+  DEPEND_ON="DEPEND_ON"
+}
 
 export class Epic extends Basic {
   public productId: number = 0;
@@ -81,8 +89,9 @@ export class Release extends Basic{
 export class EpicEstimate extends Basic {
   public epicId: number = 0;
   public resources: number = 0;
-  public hours: number = 0;
+  public estimate: number = 0;
   public roleId: number = 0;
+  public estimateStr: string = '';
 }
 export class EpicEstimateBean extends EpicEstimate {
   public roleName: string | null = null;
@@ -90,7 +99,7 @@ export class EpicEstimateBean extends EpicEstimate {
 export class EpicAssignment extends Basic {
   public epicId: number = 0;
   public resourceId: number = 0;
-  public hours: number = 0;
+  public estimate: number = 0;
   public roleId: number = 0;
   public status: EpicAssignmentStatusEnum = EpicAssignmentStatusEnum.OPEN;
 }
@@ -136,4 +145,16 @@ export class ResourceCapInRelease {
   public prodBasedAssignedTime: number =0;
   public prodBasedExtraTime: number =0;
   public loggedTime: number =0;
+}
+export class EpicDetail extends Audit {
+  public epicId: number = 0;
+  public name: string = '';
+  public details: string = '';
+  public detailType: EpicDetailType = EpicDetailType.COMMENT;
+}
+export class EpicLink extends Audit {
+  public epicId: number = 0;
+  public linkedEpicId: number = 0;
+  public details: string = '';
+  public linkType: EpicLinkType = EpicLinkType.RELATED_TO;
 }

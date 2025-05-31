@@ -25,11 +25,13 @@ import { MatDialog } from '@angular/material/dialog';
 import {EpicComponent} from './epic.component';
 import {PlanningDashboardService} from '../services/planning-dashboard.service';
 import {ReleaseService} from '../services/release.service';
+import {transformToDhM} from '../utils/helper';
+import {DecimalToTimePipe} from '../pipes/decimal.to.time';
 @Component({
   selector: 'app-planning',
   standalone: true,
   imports: [CommonModule, NgIf, NgFor, FormsModule, ModalModule, ReactiveFormsModule,
-    NgxDatatableModule, EpicEstimateComponent, RouterLink], // ✅ NO BrowserAnimationsModule here!
+    NgxDatatableModule, EpicEstimateComponent, RouterLink, DecimalToTimePipe], // ✅ NO BrowserAnimationsModule here!
   templateUrl: './planning.component.html',
   styleUrl: './planning.component.css',
   providers: [BsModalService]
@@ -278,8 +280,8 @@ export class PlanningComponent implements OnInit {
 
   showEstimates(epicEstimates: EpicEstimateBean[]): string {
     if (epicEstimates && epicEstimates.length > 0) {
-      return epicEstimates.filter(estimate=>estimate.hours>0)
-        .map(estimate => `${estimate.roleName}: ${estimate.hours} hrs
+      return epicEstimates.filter(estimate=>estimate.estimate>0)
+        .map(estimate => `${estimate.roleName}: ${transformToDhM(estimate.estimate)}
       ${estimate.resources==1?``:`with ${estimate.resources} resources`}`).join('<br/>');
     } else {
       return 'Provide estimates';
@@ -287,7 +289,7 @@ export class PlanningComponent implements OnInit {
   }
   showAssignments(assignments: EpicAssignmentBean[]): string {
     if (assignments && assignments.length > 0) {
-      return assignments.map(estimate => `${estimate.resourceName}: ${estimate.hours} hrs`).join('<br/>');
+      return assignments.map(estimate => `${estimate.resourceName}: ${transformToDhM(estimate.estimate)}`).join('<br/>');
     } else {
       return 'Missing';
     }
@@ -301,9 +303,9 @@ export class PlanningComponent implements OnInit {
   openDialogForEpic(epic: EpicBean): void {
     console.log("Planning epic:"+epic);
     const dialogRef = this.dialog.open(EpicComponent, {
-      width: '80%',
+      width: '100%',
       maxWidth: '90vw', // 90% of viewport width
-      height: '70%',
+      height: '100%',
       maxHeight: '80vh', // 80% of viewport height
       disableClose: true,
       data: { epicBean: epic, priorities: this.priorities, subComponents: this.subComponents },

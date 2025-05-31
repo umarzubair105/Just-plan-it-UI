@@ -46,6 +46,9 @@ export const routes: Routes = [
   { path: 'execution/:productId', loadComponent: ()=>import(
       './execution/execution.component').then((m)=>m.ExecutionComponent),
     canActivate: [AuthGuard]},
+  { path: 'executed/:productId', loadComponent: ()=>import(
+      './execution/executed.component').then((m)=>m.ExecutedComponent),
+    canActivate: [AuthGuard]},
   { path: 'epic-estimate', loadComponent: ()=>import(
       './planning/epic-estimate.component').then((m)=>m.EpicEstimateComponent),
     canActivate: [AuthGuard]},

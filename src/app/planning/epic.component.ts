@@ -1,21 +1,21 @@
-import {Component, EventEmitter, inject, Inject, Input, OnInit, Output} from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { FormsModule, } from '@angular/forms';
-import {Epic, EpicBean, EpicEstimate, EpicEstimateBean} from '../models/planning';
-import {Priority, Role, SubComponent} from '../models/basic';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import {Component, inject, Inject, OnInit} from '@angular/core';
+import {CommonModule} from '@angular/common';
+import {FormsModule,} from '@angular/forms';
+import {Epic, EpicBean, EpicDetail, EpicDetailType, EpicEstimate, EpicLink, EpicLinkType} from '../models/planning';
+import {Priority, SubComponent} from '../models/basic';
+import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ShowErrorsDirective} from '../directives/show-errors.directive';
-import {PositiveIntegerDirective} from '../directives/positive-integer.directive';
-import {EpicEstimateService} from '../services/epic-estimate.service';
 import {Utils} from '../utils/utils';
-import {forkJoin, of, tap} from 'rxjs';
-import {catchError} from 'rxjs/operators';
 import {EpicService} from '../services/epic.service';
+import {DecimalToTimePipe} from '../pipes/decimal.to.time';
+import {FormatDatePipe} from '../pipes/format.date';
+import {formatDate} from '../utils/helper';
+import {AppConstants} from '../configuration/app.constants';
 
 @Component({
   selector: 'epic',
   standalone: true,
-  imports: [CommonModule, FormsModule, ShowErrorsDirective],
+  imports: [CommonModule, FormsModule, ShowErrorsDirective, DecimalToTimePipe, FormatDatePipe],
   templateUrl: 'epic.component.html',
 })
 export class EpicComponent implements OnInit {
@@ -24,7 +24,15 @@ export class EpicComponent implements OnInit {
   priorities: Priority[] = [];
   subComponents: SubComponent[] = [];
   epicService: EpicService = inject(EpicService);
-
+  selectedFileForUpload: File | null = null;
+  descriptionForFileUpload: string = '';
+  files: EpicDetail[] = [];
+  references: EpicDetail[] = [];
+  comments: EpicDetail[] = [];
+  epicLinks: EpicLink[] = [];
+  comment: EpicDetail = new EpicDetail();
+  reference: EpicDetail = new EpicDetail();
+  link: EpicLink = new EpicLink();
   constructor(public dialogRef: MatDialogRef<EpicComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               private readonly util: Utils) {
@@ -40,11 +48,133 @@ export class EpicComponent implements OnInit {
       this.epicBean.forcefullyAdded=false;
       this.epicBean.code='EpicCode';
       this.epicBean.estimates = [];
+    } else {
+      this.epicService.getEpicDetails(this.epicBean.id).subscribe({
+        next: (data) => {
+          let epicDetails = data._embedded.epicDetails;
+          this.files = epicDetails.filter((e: EpicDetail)=>e.detailType===EpicDetailType.ATTACHED_FILE);
+          this.comments = epicDetails.filter((e: EpicDetail)=>e.detailType===EpicDetailType.COMMENT);
+          this.references = epicDetails.filter((e: EpicDetail)=>e.detailType===EpicDetailType.REFERENCE);
+        },
+        error: (err) => (this.util.showErrorMessage(err)),
+      });
+      this.epicService.getEpicLinks(this.epicBean.id).subscribe({
+        next: (data) => {
+          this.epicLinks = data._embedded.epicLinks;
+        },
+        error: (err) => (this.util.showErrorMessage(err)),
+      });
     }
   }
 
+  addEpicLink(epicLink: EpicLink): void {
+    if (!epicLink) {
+      alert("Please enter data");
+      return;
+    }
+    this.epicService.getByCompanyIdAndCode(this.util.getCompanyId(), epicLink.details).subscribe({
+      next: (data) => {
+        console.log("found:"+data._embedded.epics);
+        if (data._embedded.epics.length==0) {
+          alert("There is no epic with Code:"+epicLink.details);
+          return;
+        }
+        epicLink.linkedEpicId = data._embedded.epics[0].id;
+        epicLink.details = '';
+        epicLink.epicId = this.epicBean.id;
+        epicLink.active = true;
+        this.epicService.createEpicLink(epicLink).subscribe({
+          next: (data) => {
+            this.epicLinks.push(epicLink);
+            this.link = new EpicLink();
+            this.util.showSuccessMessage('Link is added.');
+          },
+          error: (err) => (this.util.showErrorMessage(err)),
+        });
+
+      },
+      error: (err) => (this.util.showErrorMessage(err)),
+    });
+  }
+  deleteEpicLink(epicLink:EpicLink) {
+    this.epicService.deleteEpicLink(epicLink.id).subscribe(blob => {
+        this.epicLinks = this.epicLinks.filter(f => f.id !== epicLink.id);
+    }, error => {
+      console.error('Error in deleting.', error);
+    });
+  }
+
+  addEpicDetail(epicDetail: EpicDetail, epicDetailType: EpicDetailType): void {
+    if (!epicDetail) {
+      alert("Please enter data");
+      return;
+    }
+    epicDetail.epicId = this.epicBean.id;
+    epicDetail.detailType = epicDetailType;
+    epicDetail.active = true;
+      this.epicService.createEpicDetail(epicDetail).subscribe({
+        next: (data) => {
+          if (epicDetail.detailType === EpicDetailType.COMMENT) {
+            this.comments.push(data);
+            this.comment = new EpicDetail();
+            this.util.showSuccessMessage('Comment is added.');
+          } else if (epicDetail.detailType === EpicDetailType.REFERENCE) {
+            this.references.push(data);
+            this.reference = new EpicDetail();
+            this.util.showSuccessMessage('Reference is added.');
+          }
+        },
+        error: (err) => (this.util.showErrorMessage(err)),
+      });
+  }
+  onFileSelected(event: any) {
+    this.selectedFileForUpload = event.target.files[0];
+  }
+  onSubmitFileForm(): void {
+    console.log('File Form Submitted!');
+    if (!this.selectedFileForUpload) {
+      alert("Please select a file");
+      return;
+    }
+    if (this.epicBean.id>0) {
+      this.epicService.uploadEpicDetailFile(this.epicBean.id,this.selectedFileForUpload,this.descriptionForFileUpload).subscribe({
+        next: (data) => {
+          this.descriptionForFileUpload = '';
+          this.files.push(data);
+          this.util.showSuccessMessage('File is uploaded.');
+        },
+        error: (err) => (this.util.showErrorMessage(err)),
+      });
+    }
+  }
+  download(file:EpicDetail) {
+    this.epicService.downloadEpicDetailFile(file.id).subscribe(blob => {
+      const a = document.createElement('a');
+      const objectUrl = URL.createObjectURL(blob);
+      a.href = objectUrl;
+      a.download = file.name; // You can make this dynamic
+      //a.download = response.headers.get('Content-Disposition')?.split('filename=')[1];
+      a.click();
+      URL.revokeObjectURL(objectUrl);
+    }, error => {
+      console.error('Download error:', error);
+    });
+  }
+  deleteEpicDetail(epicDetail:EpicDetail) {
+    this.epicService.deleteEpicDetail(epicDetail.id).subscribe(blob => {
+      if (epicDetail.detailType === EpicDetailType.ATTACHED_FILE) {
+        this.files = this.files.filter(f => f.id !== epicDetail.id);
+      } else if (epicDetail.detailType === EpicDetailType.COMMENT) {
+        this.comments = this.comments.filter(f => f.id !== epicDetail.id);
+      } else if (epicDetail.detailType === EpicDetailType.REFERENCE) {
+        this.references = this.references.filter(f => f.id !== epicDetail.id);
+      }
 
 
+    }, error => {
+      console.error('Error in deleting.', error);
+    });
+  }
   onSubmit(form: any): void {
     console.log('Form Submitted!', form.value);
     if (this.epicBean.id==0) {
@@ -107,4 +237,8 @@ export class EpicComponent implements OnInit {
     }
   }
 
+  protected readonly EpicDetailType = EpicDetailType;
+  protected readonly EpicLinkType = EpicLinkType;
+  protected readonly formatDate = formatDate;
+  protected readonly AppConstants = AppConstants;
 }

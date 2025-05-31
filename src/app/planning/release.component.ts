@@ -24,6 +24,7 @@ import {EpicEstimateComponent} from './epic-estimate.component';
 import { MatDialog } from '@angular/material/dialog';
 import {EpicComponent} from './epic.component';
 import {PlanningDashboardService} from '../services/planning-dashboard.service';
+import {transformToDhM} from '../utils/helper';
 @Component({
   selector: 'app-planned-release',
   standalone: true,
@@ -176,7 +177,7 @@ export class ReleaseComponent implements OnInit {
 
   showAssignments(assignments: EpicAssignmentBean[]): string {
     if (assignments && assignments.length > 0) {
-      return assignments.map(estimate => `${estimate.resourceName}: ${estimate.hours} hrs`).join('<br/>');
+      return assignments.map(estimate => `${estimate.resourceName}: ${transformToDhM(estimate.estimate)}`).join('<br/>');
     } else {
       return 'Missing';
     }

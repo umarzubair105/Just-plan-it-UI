@@ -3,6 +3,13 @@ export class Basic {
   public active: boolean = true;
 }
 
+export class Audit extends Basic {
+  public createdById: number = 0;
+  public createdDate: Date | null = null;
+  public updatedById: number = 0;
+  public updatedDate: Date | null = null;
+}
+
 export class Company  extends Basic {
   public name: string = '';
   public sample: boolean = false;

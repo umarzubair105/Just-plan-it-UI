@@ -84,12 +84,12 @@
                 <ngx-datatable-column name="Resource" prop="resourceName"></ngx-datatable-column>
                 <ngx-datatable-column name="Time Assigned">
                   <ng-template let-row="row" ngx-datatable-cell-template>
-                    {{ row.prodBasedAssignedTime }}
+                    {{ row.prodBasedAssignedTime | decimalToTime}}
                   </ng-template>
                 </ngx-datatable-column>
                 <ngx-datatable-column name="Remaining Assignable Time">
                   <ng-template let-row="row" ngx-datatable-cell-template>
-                    {{ row.prodBasedAssignableTime - row.prodBasedAssignedTime }}
+                    {{ row.prodBasedAssignableTime - row.prodBasedAssignedTime | decimalToTime}}
                   </ng-template>
                 </ngx-datatable-column>
               </ngx-datatable>

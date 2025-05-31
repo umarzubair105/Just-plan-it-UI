@@ -10,6 +10,7 @@ import {EpicEstimateService} from '../services/epic-estimate.service';
 import {Utils} from '../utils/utils';
 import {forkJoin, of, tap} from 'rxjs';
 import {catchError} from 'rxjs/operators';
+import {convertToMinutes, transformToDhM} from '../utils/helper';
 
 @Component({
   selector: 'epic-estimate',
@@ -38,7 +39,8 @@ export class EpicEstimateComponent implements OnInit {
           console.log('EpicEstimate:'+newB.roleName);
           newB.roleId = r.id;
           newB.resources = 1;
-          newB.hours = 0;
+          newB.estimate = 0;
+          newB.estimateStr = '';
           newB.id=0;
           newB.active = true;
           newB.epicId = this.epicBean.id;
@@ -47,6 +49,9 @@ export class EpicEstimateComponent implements OnInit {
           console.log('EpicEstimate Found'+r.name)
         }
       });
+      this.epicEstimatBeans.forEach(e=> {
+        e.estimateStr = transformToDhM(e.estimate);
+      })
     }
   }
 
@@ -55,6 +60,7 @@ export class EpicEstimateComponent implements OnInit {
   onSubmit(form: any): void {
     console.log('Form Submitted!', form.value);
     const serviceCalls = this.epicEstimatBeans.map((es) => {
+      es.estimate = convertToMinutes(es.estimateStr);
       if (es.id === 0) {
         // Create new epic estimate
         return this.epicEstimateService.create(es).pipe(
@@ -111,7 +117,7 @@ export class EpicEstimateComponent implements OnInit {
     }
   }
   removeEpicEstimate(indexToRemove: number): void {
-    this.epicEstimatBeans[indexToRemove].hours=0;
+    this.epicEstimatBeans[indexToRemove].estimateStr='';
   //  this.epicEstimatBeans.splice(indexToRemove, 1);
   }
 

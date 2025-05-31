@@ -28,7 +28,7 @@ import {ReleaseService} from '../services/release.service';
 import {DecimalToTimePipe} from '../pipes/decimal.to.time';
 import {EpicAssignmentService} from '../services/epic.assignment.service';
 import {TimeLoggingService} from '../services/time.logging.service';
-import {getLocalDate} from '../utils/helper';
+import {convertToMinutes, getLocalDate} from '../utils/helper';
 @Component({
   selector: 'app-planning',
   standalone: true,
@@ -116,7 +116,7 @@ export class ExecutionComponent implements OnInit {
   closeRelease(releaseDetail: ReleaseDetailBean) {
     console.log('Planning it:'+releaseDetail.release?.name);
     if (releaseDetail.release) {
-      this.releaseService.updateSpecificFieldsPasses(releaseDetail.release.id, {status: ReleaseStatusEnum.PLANNED}).subscribe({
+      this.releaseService.updateSpecificFieldsPasses(releaseDetail.release.id, {status: ReleaseStatusEnum.COMPLETED}).subscribe({
         next: (data) => {
           this.util.showSuccessMessage('Release is closed.');
           this.releases = this.releases.filter(wh => wh.release?.id !== releaseDetail.release?.id);
@@ -155,25 +155,10 @@ export class ExecutionComponent implements OnInit {
     this.timeLogging.loggedForDate = getLocalDate();
     this.modalRef = this.modalService.show(template);
   }
-  convertToMinutes(timeString: string): number {
-    let totalMinutes = 0;
 
-    const hoursMatch = timeString.match(/(\d+)\s*h/);
-    const minutesMatch = timeString.match(/(\d+)\s*min/);
-
-    if (hoursMatch) {
-      totalMinutes += parseInt(hoursMatch[1], 10) * 60;
-    }
-
-    if (minutesMatch) {
-      totalMinutes += parseInt(minutesMatch[1], 10);
-    }
-
-    return totalMinutes;
-  }
   addTimeLogging() {
     this.timeLogging.active=true;
-    this.timeLogging.minutes=this.convertToMinutes(this.timeLogged);
+    this.timeLogging.minutes= convertToMinutes(this.timeLogged);
     //this.editEpic.raisedByResourceId = this.au;
     return this.timeLoggingService.create(this.timeLogging).subscribe({
       next: (data) => {
@@ -249,22 +234,6 @@ export class ExecutionComponent implements OnInit {
   }
 
 
-  showEstimates(epicEstimates: EpicEstimateBean[]): string {
-    if (epicEstimates && epicEstimates.length > 0) {
-      return epicEstimates.filter(estimate=>estimate.hours>0)
-        .map(estimate => `${estimate.roleName}: ${estimate.hours} hrs
-      ${estimate.resources==1?``:`with ${estimate.resources} resources`}`).join('<br/>');
-    } else {
-      return 'Provide estimates';
-    }
-  }
-  showAssignments(assignments: EpicAssignmentBean[]): string {
-    if (assignments && assignments.length > 0) {
-      return assignments.map(estimate => `${estimate.resourceName}: ${estimate.hours} hrs ${estimate.status} logged: ${estimate.minutesLogged} minutes`).join('<br/>');
-    } else {
-      return 'Missing';
-    }
-  }
   openDialogForEpic(epic: EpicBean): void {
     console.log("Planning epic:"+epic);
     const dialogRef = this.dialog.open(EpicComponent, {

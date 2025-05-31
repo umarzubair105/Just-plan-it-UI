@@ -62,6 +62,144 @@
           <button type="submit" class="btn btn-secondary btn-sm" (click)="closeDialogDoNothing()">Close</button>
         </div>
       </form>
+      <div class="card-body" *ngIf="epicBean.id>0">
+      <form (submit)="onSubmitFileForm()" enctype="multipart/form-data">
+        <input type="file" (change)="onFileSelected($event)" /><br />
+        <input type="text" [(ngModel)]="descriptionForFileUpload" name="descriptionForFileUpload" placeholder="File Description" /><br />
+        <button type="submit">Upload Attachment</button>
+      </form>
+      </div>
+      <div class="card-body" *ngIf="epicBean.id>0">
+        <table>
+          <thead>
+          <tr>
+            <th>File</th>
+            <th>Uploaded At</th>
+            <th>Details</th>
+            <th>Action</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let epicDetail of files">
+            <td>{{ epicDetail.name }}</td>
+            <td>{{ epicDetail.createdDate ? (epicDetail.createdDate | date: AppConstants.DATE_TIME_FORMAT) : '-' }}</td>
+            <td>{{ epicDetail.details }}</td>
+            <td>
+              <a (click)="download(epicDetail)" title="Download">
+                <i class="bi bi-download action-icon"></i>
+              </a>
+              <a (click)="deleteEpicDetail(epicDetail)" title="Delete">
+                <i class="bi bi-trash action-icon"></i>
+              </a>
+            </td>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card-body" *ngIf="epicBean.id>0">
+        <form >
+          <div class="form-floating mb-3 mt-3">
+            <input type="text" [(ngModel)]="reference.name" name="name" id="name" placeholder="Reference" /><br />
+          </div>
+          <button type="submit" class="btn btn-secondary btn-sm" (click)="addEpicDetail(reference, EpicDetailType.REFERENCE)">Add</button>
+        </form>
+        <table>
+          <thead>
+          <tr>
+            <th>Reference</th>
+            <th>Added At</th>
+            <th>Action</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let epicDetail of references">
+            <td>{{ epicDetail.name }}</td>
+            <td>{{ epicDetail.createdDate ? (epicDetail.createdDate | date: AppConstants.DATE_TIME_FORMAT) : '-' }}</td>
+            <td>
+              <a (click)="deleteEpicDetail(epicDetail)" title="Delete">
+                <i class="bi bi-trash action-icon"></i>
+              </a>
+            </td>
+          </tbody>
+        </table>
+      </div>
+
+
+      <div class="card-body" *ngIf="epicBean.id>0">
+        <form >
+          <div class="form-floating mb-3 mt-3">
+            <input type="text" [(ngModel)]="link.details" name="details" id="detailsL" placeholder="Epic Code" /><br />
+          </div>
+          <div class="form-floating mb-3 mt-3">
+            <select name="linkType"  [(ngModel)]="link.linkType" class="form-control" required id="linkType"
+                    #linkType="ngModel"
+                    [ngClass]="{ 'is-invalid': linkType.invalid && (linkType.dirty || linkType.touched) }"
+                    [showErrors]="{ required: 'Type is required' }"
+            >
+              <option value="">Select Type</option>
+              <option>
+                {{ EpicLinkType.RELATED_TO }}
+              </option>
+              <option>
+                {{ EpicLinkType.DEPEND_ON }}
+              </option>
+            </select>
+          </div>
+          <button type="submit" class="btn btn-secondary btn-sm" (click)="addEpicLink(link)">Add</button>
+        </form>
+        <table>
+          <thead>
+          <tr>
+            <th>Code</th>
+            <th>Type</th>
+            <th>Added At</th>
+            <th>Action</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let epicLink of epicLinks">
+            <td>{{ epicLink.details }}</td>
+            <td>{{ epicLink.linkType }}</td>
+            <td>{{ epicLink.createdDate ? (epicLink.createdDate | date: AppConstants.DATE_TIME_FORMAT) : '-' }}</td>
+            <td>{{ epicLink.createdDate | formatDate}}</td>
+            <td>
+              <a (click)="deleteEpicLink(epicLink)" title="Delete">
+                <i class="bi bi-trash action-icon"></i>
+              </a>
+            </td>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card-body" *ngIf="epicBean.id>0">
+        <form >
+          <div class="form-floating mb-3 mt-3">
+            <textarea class="form-control" [(ngModel)]="comment.details" name="details" id="comments" #details="ngModel"></textarea>
+            <label for="details" class="form-label">Comments</label>
+          </div>
+          <button type="submit" class="btn btn-secondary btn-sm" (click)="addEpicDetail(comment, EpicDetailType.COMMENT)">Add</button>
+        </form>
+        <table>
+          <thead>
+          <tr>
+            <th>Comments</th>
+            <th>Added At</th>
+            <th>Action</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let epicDetail of comments">
+            <td>{{ epicDetail.details }}</td>
+            <td>{{ epicDetail.createdDate ? (epicDetail.createdDate | date: AppConstants.DATE_TIME_FORMAT) : '-' }}</td>
+            <td>{{ epicDetail.createdDate | formatDate}}</td>
+            <td>
+              <a (click)="deleteEpicDetail(epicDetail)" title="Delete">
+                <i class="bi bi-trash action-icon"></i>
+              </a>
+            </td>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 

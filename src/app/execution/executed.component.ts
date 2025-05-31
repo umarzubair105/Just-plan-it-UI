@@ -5,12 +5,12 @@ import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
 import {Utils} from '../utils/utils';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {
-  Epic, EpicAssignmentBean,
+  Epic, EpicAssignmentBean, EpicAssignmentStatusEnum,
   EpicBean,
   EpicBeanCopyPasteUpdatedValues,
   EpicEstimateBean,
   Release,
-  ReleaseDetailBean, ReleaseStatusEnum
+  ReleaseDetailBean, ReleaseStatusEnum, TimeLogging
 } from '../models/planning';
 import {EpicService} from '../services/epic.service';
 import {Priority, Role, SubComponent} from '../models/basic';
@@ -20,23 +20,25 @@ import {SubComponentService} from '../services/sub-component.service';
 import {RoleService} from '../services/role.service';
 import {EpicEstimateService} from '../services/epic-estimate.service';
 import {WorkingHourEnum} from '../services/leave.service';
-import {EpicEstimateComponent} from './epic-estimate.component';
+import {EpicEstimateComponent} from '../planning/epic-estimate.component';
 import { MatDialog } from '@angular/material/dialog';
-import {EpicComponent} from './epic.component';
+import {EpicComponent} from '../planning/epic.component';
 import {PlanningDashboardService} from '../services/planning-dashboard.service';
 import {ReleaseService} from '../services/release.service';
-import {transformToDhM} from '../utils/helper';
 import {DecimalToTimePipe} from '../pipes/decimal.to.time';
+import {EpicAssignmentService} from '../services/epic.assignment.service';
+import {TimeLoggingService} from '../services/time.logging.service';
+import {getLocalDate} from '../utils/helper';
 @Component({
   selector: 'app-planning',
   standalone: true,
   imports: [CommonModule, NgIf, NgFor, FormsModule, ModalModule, ReactiveFormsModule,
     NgxDatatableModule, EpicEstimateComponent, RouterLink, DecimalToTimePipe], // ✅ NO BrowserAnimationsModule here!
-  templateUrl: './planned.component.html',
-  styleUrl: './planned.component.css',
+  templateUrl: './executed.component.html',
+  styleUrl: './executed.component.css',
   providers: [BsModalService]
 })
-export class PlannedComponent implements OnInit {
+export class ExecutedComponent implements OnInit {
   modalRef?: BsModalRef;
 
   priorities: Priority[] = [];
@@ -60,7 +62,11 @@ export class PlannedComponent implements OnInit {
   roleService = inject(RoleService)
   planningService = inject(PlanningDashboardService)
   releaseService = inject(ReleaseService)
-
+  epicAssignmentService = inject(EpicAssignmentService)
+  timeLoggingService = inject(TimeLoggingService)
+  timeLogging: TimeLogging = new TimeLogging();
+  selectedEpicAssignment : EpicAssignmentBean = new EpicAssignmentBean();
+  timeLogged: string = '';
   constructor(private readonly modalService: BsModalService, private readonly util: Utils, private readonly route: ActivatedRoute,
               private cdr: ChangeDetectorRef,
               public dialog: MatDialog,
@@ -70,8 +76,8 @@ export class PlannedComponent implements OnInit {
   }
   ngOnInit(): void {
     console.log('Testing');
+    this.loadReleases();
     this.loadMetadata();
-    this.loadPlannedReleases();
     this.route.fragment.subscribe(fragment => {
       if (fragment) {
         const element = document.getElementById(fragment);
@@ -107,31 +113,8 @@ export class PlannedComponent implements OnInit {
       error: (err) => (this.util.showErrorMessage(err)),
     });
   }
-  unplanRelease(releaseDetail: ReleaseDetailBean) {
-    if (releaseDetail.release) {
-      this.releaseService.updateSpecificFieldsPasses(releaseDetail.release.id, {status: ReleaseStatusEnum.INITIATED}).subscribe({
-        next: (data) => {
-          this.util.showSuccessMessage('Release is un planned.');
-          this.releases = this.releases.filter(wh => wh.release?.id !== releaseDetail.release?.id);
-        },
-        error: (err) => (this.util.showErrorMessage(err)),
-      });
-    }
-  }
-
-  startRelease(releaseDetail: ReleaseDetailBean) {
-    if (releaseDetail.release) {
-      this.releaseService.updateSpecificFieldsPasses(releaseDetail.release.id, {status: ReleaseStatusEnum.STARTED}).subscribe({
-        next: (data) => {
-          this.util.showSuccessMessage('Release is started to work upon.');
-          this.releases = this.releases.filter(wh => wh.release?.id !== releaseDetail.release?.id);
-        },
-        error: (err) => (this.util.showErrorMessage(err)),
-      });
-    }
-  }
-  loadPlannedReleases(): void {
-    this.planningService.getPlannedReleasesByProductId(this.productId).subscribe({
+  loadReleases(): void {
+    this.planningService.getOldReleasesByProductId(this.productId).subscribe({
       next: (data) => {
         console.log(data);
         this.releases = data;
@@ -140,75 +123,28 @@ export class PlannedComponent implements OnInit {
     });
   }
 
+  expand(releaseDetail: ReleaseDetailBean): void {
+    let releaseId = releaseDetail.release?.id;
+    if (releaseId) {
+      this.planningService.getReleaseDetailByReleaseId(releaseId).subscribe({
+        next: (data) => {
+          releaseDetail.resourceCaps = data.resourceCaps;
+          releaseDetail.epics = data.epics;
+        },
+        error: (err) => (this.util.showErrorMessage(err)),
+      });
+  }
+  }
 
-  changePriorityToLower(epic:EpicBean) {
-    const priority = this.priorities.find(p=>p.priorityLevel>epic.priorityLevel);
-    if (priority) {
-      console.log('Lower e:'+epic.priorityLevel);
-      console.log('Lower n:'+priority.priorityLevel);
-      this.updatePriority(epic, priority);
-    }
-  }
-  showChangePriorityToLower(epic:EpicBean) {
-    //console.log(' 1 Lower:'+epic.priorityLevel);
-    const priority = this.priorities.find(p=>p.priorityLevel>epic.priorityLevel);
-    //console.log(' 2 Lower:'+priority?.priorityLevel);
-    return !!priority;
-  }
-  changePriorityToUpper(epic:EpicBean) {
-    const higherPriorities = this.priorities.filter(p=>p.priorityLevel<epic.priorityLevel);
-    if (higherPriorities && higherPriorities.length>0) {
-      const priority = higherPriorities[higherPriorities.length-1];
-      console.log('Upper e:'+epic.priorityLevel);
-      console.log('Upper n:'+priority.priorityLevel);
-      this.updatePriority(epic, priority);
-    }
-  }
-  showChangePriorityToUpper(epic:EpicBean) {
-    const priority = this.priorities.find(p=>p.priorityLevel<epic.priorityLevel);
-    return !!priority;
-  }
-  updatePriority(epic: EpicBean, priority: Priority) {
-    this.epicService.updateSpecificFieldsPasses(epic.id, {priorityId:priority.id}).subscribe({
-      next: (data) => {
-        epic.priorityLevel = priority.priorityLevel;
-        epic.priorityName = priority.name;
-        epic.priorityId = priority.id;
-        this.util.showSuccessMessage('Priority is updated');
-        this.closeModal();
-      },
-      error: (err) => (this.util.showErrorMessage(err)),
-    });
-  }
   rowIndex: number=0;
   getRowClass(row: any): string {
     this.rowIndex = this.rowIndex +1;
     return this.rowIndex % 2 === 0 ? 'even-row' : 'odd-row';
   }
 
-  // Close modal
-  closeModal() {
-    this.modalRef?.hide();
-  }
 
-
-  showEstimates(epicEstimates: EpicEstimateBean[]): string {
-    if (epicEstimates && epicEstimates.length > 0) {
-      return epicEstimates.filter(estimate=>estimate.estimate>0)
-        .map(estimate => `${estimate.roleName}: ${transformToDhM(estimate.estimate)}
-      ${estimate.resources==1?``:`with ${estimate.resources} resources`}`).join('<br/>');
-    } else {
-      return 'Provide estimates';
-    }
-  }
-  showAssignments(assignments: EpicAssignmentBean[]): string {
-    if (assignments && assignments.length > 0) {
-      return assignments.map(estimate => `${estimate.resourceName}: ${transformToDhM(estimate.estimate)}`).join('<br/>');
-    } else {
-      return 'Missing';
-    }
-  }
 
   protected readonly WorkingHourEnum = WorkingHourEnum;
   protected readonly EpicBean = EpicBean;
+  protected readonly EpicAssignmentStatusEnum = EpicAssignmentStatusEnum;
 }

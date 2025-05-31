@@ -6,5 +6,6 @@ export const AppConstants = {
     ENABLE_NEW_DESIGN: true,
     ENABLE_EXPERIMENTAL_FEATURE: false,
   },
-  TOKEN_KEY: 'jwt_token'
+  TOKEN_KEY: 'jwt_token',
+  DATE_TIME_FORMAT: 'yyyy-MM-dd HH:mm:ss'
 };

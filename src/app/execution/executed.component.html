@@ -1,5 +1,5 @@
 <div class="container mt-2">
-  <h2>Execution</h2>
+  <h2>Completed</h2>
   <ul class="horizontal-list">
     <li *ngFor="let releaseDetailLink of releases;let i = index">
       <ng-container *ngIf="i>0">
@@ -20,13 +20,13 @@
             <li>Working Days: {{releaseDetail.release?.workingDays}}</li>
             <li>Status: {{releaseDetail.release?.status}}</li>
             <li>
-              <a (click)="closeRelease(releaseDetail)" title="Close the release">
-                <i class="bi bi-door-closed action-icon"></i>
+              <a (click)="expand(releaseDetail)" title="Expand">
+                <i class="bi bi-arrows-angle-expand action-icon"></i>
               </a>
             </li>
           </ul>
         </div>
-        <div class="card-body">
+        <div class="card-body"  *ngIf="releaseDetail.epics.length>0">
           <h5 class="card-title">Epics</h5>
           <div class="row">
             <div class="col-md-8 table-responsive">
@@ -46,15 +46,6 @@
                 <ngx-datatable-column name="Priority" prop="priorityLevel" [sortable]="true" maxWidth="50">
                   <ng-template let-row="row" ngx-datatable-cell-template>
                     {{row.priorityName}}
-                    <a (click)="changePriorityToUpper(row)" title="Move it to higher priority"
-                       *ngIf="showChangePriorityToUpper(row)">
-                      <i class="bi bi-arrow-up-short action-icon"></i>
-                    </a>
-                    <a (click)="changePriorityToLower(row)" title="Move it to lower priority"
-                       *ngIf="showChangePriorityToLower(row)">
-                      <i class="bi bi-arrow-down-short action-icon"></i>
-                    </a>
-
                   </ng-template>
                 </ngx-datatable-column>
                 <ngx-datatable-column name="Assignment" >
@@ -70,7 +61,6 @@
                         <th>Estimate</th>
                         <th>Logged</th>
                         <th>Status</th>
-                        <th>Action</th>
                       </tr>
                       </thead>
                       <tbody>
@@ -79,54 +69,18 @@
                         <td>{{ assignment.estimate | decimalToTime }}</td>
                         <td>{{ assignment.minutesLogged | decimalToTime }}</td>
                         <td>{{ assignment.status }}</td>
-                        <td>
-                          <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.OPEN)"
-                             title="Re open it"
-                             *ngIf="assignment.status === EpicAssignmentStatusEnum.COMPLETED || assignment.status === EpicAssignmentStatusEnum.ON_HOLD
-                                || assignment.status === EpicAssignmentStatusEnum.OVERDUE">
-                            <i class="bi bi-stop-circle-fill action-icon"></i>
-                          </a>
-                          <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.STARTED)"
-                             title="Start working on"
-                             *ngIf="assignment.status === EpicAssignmentStatusEnum.OPEN || assignment.status === EpicAssignmentStatusEnum.ON_HOLD">
-                            <i class="bi bi-play-circle-fill action-icon"></i>
-                          </a>
-                          <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.ON_HOLD)"
-                             title="Hold it"
-                             *ngIf="assignment.status === EpicAssignmentStatusEnum.OPEN || assignment.status === EpicAssignmentStatusEnum.STARTED">
-                            <i class="bi bi-pause-circle-fill action-icon"></i>
-                          </a>
-                          <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.COMPLETED)"
-                             title="Mark as Completed"
-                             *ngIf="assignment.status === EpicAssignmentStatusEnum.STARTED">
-                            <i class="bi bi-check-circle-fill action-icon"></i>
-                          </a>
-                          <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.OVERDUE)"
-                             title="Can't be completed"
-                             *ngIf="assignment.status !== EpicAssignmentStatusEnum.OVERDUE">
-                            <i class="bi bi-exclamation-circle-fill action-icon"></i>
-                          </a>
-                          <a (click)="updateTimeLoggingModal(timeLoggingTemplate, releaseDetail.release?.id, assignment)"
-                             title="Log your work"
-                             *ngIf="assignment.status === EpicAssignmentStatusEnum.STARTED">
-                            <i class="bi bi-clock action-icon"></i>
-                          </a>
-                        </td>
-                      </tr>
                       </tbody>
                     </table>
                   </ng-template>
                 </ngx-datatable-column>
                 <ngx-datatable-column name="Actions" maxWidth="50">
                   <ng-template let-row="row" ngx-datatable-cell-template>
-                    <a (click)="openDialogForEpic(row)" title="Edit">
-                      <i class="bi bi-pencil-square action-icon"></i>
-                    </a>
+
                   </ng-template>
                 </ngx-datatable-column>
               </ngx-datatable>
             </div>
-            <div class="col-md-4">
+            <div class="col-md-4"  *ngIf="releaseDetail.resourceCaps.length>0">
               <ngx-datatable
                 [rows]="releaseDetail.resourceCaps"
                 [columnMode]="'force'"
@@ -167,37 +121,5 @@
   </div>
 
 
-  <ng-template #timeLoggingTemplate>
-    <div class="modal fade show d-block">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Add Time Logging</h5>
-            <button type="button" class="btn-close" (click)="closeModal()"></button>
-          </div>
-          <div class="modal-body">
-            <form>
-              <div class="mb-3">
-                <label class="form-label">Logging For</label><label class="required-label">&nbsp;* </label>
-                <input type="date" class="form-control" [(ngModel)]="timeLogging.loggedForDate" name="loggedForDate" required>
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Time to log (2h 30min)</label>
-                <input type="text" class="form-control" [(ngModel)]="timeLogged" name="timeLogged" >
-              </div>
-              <div class="mb-3">
-                <label class="form-label">Comments</label>
-                <textarea class="form-control" [(ngModel)]="timeLogging.comments" name="comments" ></textarea>
-              </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button class="btn btn-secondary" (click)="closeModal()">Cancel</button>
-            <button class="btn btn-success" (click)="addTimeLogging()" >Add</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </ng-template>
 
 </div>
