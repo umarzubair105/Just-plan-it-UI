@@ -1,3 +1,31 @@
+statusMessages = new Map<number, string>([
+  [200, 'Success'],
+  [400, 'Bad Request'],
+  [500, 'Server Error']
+]);
+getMessage(code: number): string {
+  return this.statusMessages.get(code) ?? 'Unknown Status';
+}
+
+for (let [key, value] of fruitMap.entries()) {
+  console.log(`${key}: ${value}`);
+}
+
+const fruits = [
+  { name: 'apple', quantity: 5 },
+  { name: 'banana', quantity: 10 },
+  { name: 'orange', quantity: 7 }
+];
+
+const fruitMap = new Map<string, number>();
+
+fruits.forEach(fruit => {
+  fruitMap.set(fruit.name, fruit.quantity);
+});
+const obj = { apple: 5, banana: 10, orange: 7 };
+const objMap = new Map<string, number>(Object.entries(obj));
+
+
 On Epic Estimate, just show roles which are defined in ProductResource.
 
 

@@ -26,6 +26,12 @@ export class EpicService {
       catchError(handleError)
     );
   }
+
+  getById(id:number): Observable<Epic> {
+    return this.http.get<Epic>(`${this.baseUrl}/${id}`).pipe(
+      catchError(handleError)
+    );
+  }
   // Get by ID
 
   create(model: Epic): Observable<Epic> {

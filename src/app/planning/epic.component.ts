@@ -11,6 +11,7 @@ import {DecimalToTimePipe} from '../pipes/decimal.to.time';
 import {FormatDatePipe} from '../pipes/format.date';
 import {formatDate} from '../utils/helper';
 import {AppConstants} from '../configuration/app.constants';
+import {ResourceService} from '../services/resource.service';
 
 @Component({
   selector: 'epic',
@@ -24,6 +25,7 @@ export class EpicComponent implements OnInit {
   priorities: Priority[] = [];
   subComponents: SubComponent[] = [];
   epicService: EpicService = inject(EpicService);
+  resourceService: ResourceService = inject(ResourceService);
   selectedFileForUpload: File | null = null;
   descriptionForFileUpload: string = '';
   files: EpicDetail[] = [];
@@ -33,6 +35,8 @@ export class EpicComponent implements OnInit {
   comment: EpicDetail = new EpicDetail();
   reference: EpicDetail = new EpicDetail();
   link: EpicLink = new EpicLink();
+  resourceMap = new Map<number, string>();
+  epicMap = new Map<number, string>();
   constructor(public dialogRef: MatDialogRef<EpicComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               private readonly util: Utils) {
@@ -52,6 +56,9 @@ export class EpicComponent implements OnInit {
       this.epicService.getEpicDetails(this.epicBean.id).subscribe({
         next: (data) => {
           let epicDetails = data._embedded.epicDetails;
+          epicDetails.forEach((e: EpicDetail)=>{
+            this.getResourceName(e);
+          })
           this.files = epicDetails.filter((e: EpicDetail)=>e.detailType===EpicDetailType.ATTACHED_FILE);
           this.comments = epicDetails.filter((e: EpicDetail)=>e.detailType===EpicDetailType.COMMENT);
           this.references = epicDetails.filter((e: EpicDetail)=>e.detailType===EpicDetailType.REFERENCE);
@@ -61,6 +68,38 @@ export class EpicComponent implements OnInit {
       this.epicService.getEpicLinks(this.epicBean.id).subscribe({
         next: (data) => {
           this.epicLinks = data._embedded.epicLinks;
+          this.epicLinks.forEach(e=>{
+            this.getEpicCode(e);
+          })
+        },
+        error: (err) => (this.util.showErrorMessage(err)),
+      });
+    }
+  }
+  getEpicCode(epicLink:EpicLink) {
+    let epicId = epicLink.linkedEpicId;
+    if (this.epicMap.has(epicId)) {
+      epicLink.details = <string>this.epicMap.get(epicId);
+    } else {
+      this.epicService.getById(epicId).subscribe({
+        next: (data) => {
+          this.epicMap.set(epicId, data.code);
+          epicLink.details = <string>this.epicMap.get(epicId);
+        },
+        error: (err) => (this.util.showErrorMessage(err)),
+      });
+    }
+  }
+
+  getResourceName(epicDetail:EpicDetail) {
+    let rId = epicDetail.createdById;
+    if (this.resourceMap.has(rId)) {
+      epicDetail.createdByName = <string>this.resourceMap.get(rId);
+    } else {
+      this.resourceService.getById(rId).subscribe({
+        next: (data) => {
+          this.resourceMap.set(rId, data.name);
+          epicDetail.createdByName = <string>this.resourceMap.get(rId);
         },
         error: (err) => (this.util.showErrorMessage(err)),
       });
@@ -115,6 +154,7 @@ export class EpicComponent implements OnInit {
       this.epicService.createEpicDetail(epicDetail).subscribe({
         next: (data) => {
           if (epicDetail.detailType === EpicDetailType.COMMENT) {
+            this.getResourceName(data);
             this.comments.push(data);
             this.comment = new EpicDetail();
             this.util.showSuccessMessage('Comment is added.');
@@ -139,6 +179,7 @@ export class EpicComponent implements OnInit {
     if (this.epicBean.id>0) {
       this.epicService.uploadEpicDetailFile(this.epicBean.id,this.selectedFileForUpload,this.descriptionForFileUpload).subscribe({
         next: (data) => {
+          this.getResourceName(data);
           this.descriptionForFileUpload = '';
           this.files.push(data);
           this.util.showSuccessMessage('File is uploaded.');

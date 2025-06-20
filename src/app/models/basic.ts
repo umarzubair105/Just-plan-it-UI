@@ -5,8 +5,10 @@ export class Basic {
 
 export class Audit extends Basic {
   public createdById: number = 0;
+  public createdByName: string | null = null;
   public createdDate: Date | null = null;
   public updatedById: number = 0;
+  public updatedByName: string | null = null;
   public updatedDate: Date | null = null;
 }
 
