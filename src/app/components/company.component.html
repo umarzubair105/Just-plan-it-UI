@@ -25,55 +25,6 @@
             [showErrors]="{ required: 'Company Name is required'}"
           />
         </div>
-        <div class="mb-3">
-          <label for="resourceName" class="form-label">Your Name</label>
-          <label class="required-label">&nbsp;* </label>
-          <input
-            type="text"
-            id="resourceName"
-            name="resourceName"
-            required
-            class="form-control"
-            placeholder="Enter your name"
-            [(ngModel)]="addCompany.resourceName"
-            #resourceName="ngModel"
-            [ngClass]="{ 'is-invalid': resourceName.invalid && (resourceName.dirty || resourceName.touched) }"
-            [showErrors]="{ required: 'Your Name is required' }"
-          />
-        </div>
-        <div class="mb-3">
-          <label for="email" class="form-label">Email</label>
-          <label class="required-label">&nbsp;* </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            required
-            email
-            class="form-control"
-            placeholder="Enter your email"
-            [(ngModel)]="addCompany.email"
-            #email="ngModel"
-            [ngClass]="{ 'is-invalid': email.invalid && (email.dirty || email.touched) }"
-            [showErrors]="{ required: 'Email is required', email: 'Email is not valid' }"
-          />
-        </div>
-        <div class="mb-3">
-          <label for="designation" class="form-label">Your Designation</label>
-          <label class="required-label">&nbsp;* </label>
-          <input
-            type="text"
-            id="designation"
-            name="designation"
-            required
-            class="form-control"
-            placeholder="Enter your designation name"
-            [(ngModel)]="addCompany.designation"
-            #designation="ngModel"
-            [ngClass]="{ 'is-invalid': designation.invalid && (designation.dirty || designation.touched) }"
-            [showErrors]="{ required: 'Your designation is required' }"
-          />
-        </div>
         <div class="mt-3">
           <label for="sampleCompanyId" class="form-label">Industry</label>
           <label class="required-label">&nbsp;* </label>
@@ -113,7 +64,58 @@
           </select>
         </div>
         <div class="mt-3">
-          <label for="mobileNumber" class="form-label">Mobile Number</label>
+          <label for="resourceName" class="form-label">Your Name</label>
+          <label class="required-label">&nbsp;* </label>
+          <input
+            type="text"
+            id="resourceName"
+            name="resourceName"
+            required
+            class="form-control"
+            placeholder="Enter your name"
+            [(ngModel)]="addCompany.resourceName"
+            #resourceName="ngModel"
+            [ngClass]="{ 'is-invalid': resourceName.invalid && (resourceName.dirty || resourceName.touched) }"
+            [showErrors]="{ required: 'Your Name is required' }"
+          />
+        </div>
+        <div class="mt-3">
+          <label for="email" class="form-label">Your Email</label>
+          <label class="required-label">&nbsp;* </label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            required
+            email
+            class="form-control"
+            placeholder="Enter your email"
+            [(ngModel)]="addCompany.email"
+            #email="ngModel"
+            [ngClass]="{ 'is-invalid': email.invalid && (email.dirty || email.touched) }"
+            [showErrors]="{ required: 'Email is required', email: 'Email is not valid' }"
+          />
+        </div>
+        <div class="mt-3">
+          <label for="designation" class="form-label">Your Designation</label>
+          <label class="required-label">&nbsp;* </label>
+          <input
+            type="text"
+            id="designation"
+            name="designation"
+            required
+            class="form-control"
+            placeholder="Enter your designation name"
+            [(ngModel)]="addCompany.designation"
+            #designation="ngModel"
+            [ngClass]="{ 'is-invalid': designation.invalid && (designation.dirty || designation.touched) }"
+            [showErrors]="{ required: 'Your designation is required' }"
+          />
+        </div>
+
+
+        <div class="mt-3">
+          <label for="mobileNumber" class="form-label">Your Mobile Number</label>
           <label class="required-label">&nbsp;* </label>
           <input
             type="text"
@@ -128,7 +130,7 @@
             [showErrors]="{ required: 'Mobile Number is required' }"
           />
         </div>
-        <div class="mt-3">
+        <!--<div class="mt-3">
           <label for="password" class="form-label">Password</label>
           <label class="required-label">&nbsp;* </label>
           <input
@@ -161,7 +163,7 @@
             [ngClass]="{ 'is-invalid': confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched) }"
             [showErrors]="{ required: 'Confirm Password is required' }"
           />
-        </div>
+        </div>-->
         <!-- Submit Button -->
         <div class="text-center">
           <button class="btn btn-primary" type="submit" [disabled]="useForm.invalid" >Submit</button>

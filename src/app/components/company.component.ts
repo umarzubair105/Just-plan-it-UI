@@ -78,12 +78,12 @@ export class CompanyComponent implements OnInit {
 //    this.router.navigate(['/resource']);
  // }
   onSubmit() {
-      if (this.addCompany.password !== this.addCompany.confirmPassword) {
-        this.errorMessage = "Password is not matching with Confirm Password";
-      } else {
+      //if (this.addCompany.password !== this.addCompany.confirmPassword) {
+        //this.errorMessage = "Password is not matching with Confirm Password";
+      //} else {
         this.errorMessage = '';
         this.addNewCompanySetup();
-      }
+      //}
   }
 
 
@@ -94,8 +94,8 @@ export class CompanyComponent implements OnInit {
         //this.wizardService.setStepData('company', this.step1Data);
         this.util.showSuccessMessage('Company is added successfully.');
         this.companyService.login({username: this.addCompany.email,
-          password: this.addCompany.password,
-          companyCode: data.context}).pipe()
+          password: data.context,
+          companyCode: ''}).pipe()
           .subscribe((resp: any) => {
               this.util.saveToken(resp.token);
               this.router.navigate(['/upload-resource']);

@@ -22,7 +22,7 @@ export class AddCompany {
   resourceName: string = '';
   designation: string='';
   mobileNumber: string='';
-  password: string='';
+  //password: string='';
   confirmPassword: string='';
   sampleCompanyId: number | null= null;
   countryId: number | null= null;
