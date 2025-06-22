@@ -22,7 +22,7 @@ export class ProductService {
     console.log('Testing Service')
   }
   getByCompanyId(companyId:number): Observable<PageResponse> {
-    return this.http.get<PageResponse>(`${this.baseUrl}/search/findByCompanyIdAndActiveIsTrue?productId=${companyId}`).pipe(
+    return this.http.get<PageResponse>(`${this.baseUrl}/search/findByCompanyIdAndActiveIsTrue?companyId=${companyId}`).pipe(
       catchError(handleError)
     );
   }

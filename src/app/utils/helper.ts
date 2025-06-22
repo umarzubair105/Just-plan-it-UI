@@ -66,6 +66,12 @@ export function convertToMinutes(timeString: string): number {
   if (minuteMatch) {
     totalMinutes += parseInt(minuteMatch[1], 10);
   }
+  if (totalMinutes==0) {
+    const hours = Number(timeString);
+    if (!isNaN(hours)) {
+      totalMinutes = hours * 60;
+    }
+  }
   return totalMinutes;
 
 }
@@ -80,7 +86,7 @@ export function transformToDhM(totalMinutes: number): string {
 
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
-  return `${hours}h ${totalMinutes}m`;
+  //return `${hours}h ${totalMinutes}m`;
 
   let result = '';
   //if (days > 0) result += `${days}d `;

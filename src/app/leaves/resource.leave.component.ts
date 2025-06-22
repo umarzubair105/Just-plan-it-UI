@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit, TemplateRef} from '@angular/core';
+import {Component, inject, Inject, OnInit, TemplateRef} from '@angular/core';
 import {CommonModule, NgFor, NgIf} from '@angular/common'; // ✅ Use CommonModule
 import {FormsModule} from '@angular/forms';
 import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
@@ -9,6 +9,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {DataTableColumnCellDirective, DataTableColumnDirective, DatatableComponent} from '@swimlane/ngx-datatable';
 import {ShowErrorsDirective} from '../directives/show-errors.directive';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
+import {ResourceService} from '../services/resource.service';
 
 
 @Component({
@@ -26,7 +27,7 @@ export class ResourceLeaveComponent  implements OnInit {
   resourceId: number;
   loggedUserId: number = 0;
   resource: Resource = new Resource();
-
+  resourceService = inject(ResourceService);
   leaveTypes = Object.keys(LeaveType)
     .filter(key => isNaN(Number(key))) // Exclude numeric keys
     .map((key) => ({
@@ -57,6 +58,12 @@ export class ResourceLeaveComponent  implements OnInit {
       if (!this.resourceId || this.resourceId == 0) {
         this.resourceId = util.getLoggedResourceId();
       }
+      this.resourceService.getById(this.resourceId).subscribe({
+        next: (data) => {
+          this.resource = data;
+        },
+        error: (err) => (this.util.showErrorMessage(err)),
+      });
     }
     this.loggedUserId = util.getLoggedResourceId();
   }

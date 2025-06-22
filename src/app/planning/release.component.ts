@@ -61,7 +61,7 @@ export class ReleaseComponent implements OnInit {
               private cdr: ChangeDetectorRef,
               public dialog: MatDialog) {
     this.companyId = this.util.getCompanyId();
-    this.productId = Number(this.route.snapshot.paramMap.get('productId'));
+    this.productId = this.util.getSelectedProductId();//Number(this.route.snapshot.paramMap.get('productId'));
   }
   ngOnInit(): void {
     console.log('Testing');

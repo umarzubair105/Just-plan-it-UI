@@ -44,7 +44,7 @@ export class PriorityComponent implements OnInit {
 
   ngOnInit(): void {
     this.companyId = this.utils.getCompanyId();
-    this.productId = Number(this.route.snapshot.paramMap.get('productId'));
+    this.productId = this.utils.getSelectedProductId();//Number(this.route.snapshot.paramMap.get('productId'));
     this.loadModels();
   }
 
@@ -105,7 +105,7 @@ export class PriorityComponent implements OnInit {
         error: (err) => {this.errorMessage = err;this.utils.showErrorMessage('Priority is not updated')}
       });
     }
-    this.router.navigate(['/planning', this.productId]);
+    this.router.navigate(['/planning']);
   }
   updateModel(model: Priority | null): void {
     if (model) {

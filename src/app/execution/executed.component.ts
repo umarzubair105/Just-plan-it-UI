@@ -72,7 +72,7 @@ export class ExecutedComponent implements OnInit {
               public dialog: MatDialog,
               private viewportScroller: ViewportScroller) {
     this.companyId = this.util.getCompanyId();
-    this.productId = Number(this.route.snapshot.paramMap.get('productId'));
+    this.productId = this.util.getSelectedProductId();//Number(this.route.snapshot.paramMap.get('productId'));
   }
   ngOnInit(): void {
     console.log('Testing');

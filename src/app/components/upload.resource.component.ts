@@ -92,7 +92,7 @@ export class UploadResourceComponent implements OnInit {
   ngOnInit(): void {
     this.companyId = this.utils.getCompanyId();
       //Number(this.route.snapshot.paramMap.get('companyId'));
-    this.productId = Number(this.route.snapshot.paramMap.get('productId'));
+    this.productId = this.utils.getSelectedProductId();//Number(this.route.snapshot.paramMap.get('productId'));
   }
 
   onFileChange(event: any) {

@@ -48,7 +48,7 @@ export class ProductResourceComponent implements OnInit {
 
   ngOnInit(): void {
     const companyId = this.util.getCompanyId();
-    this.productId = Number(this.route.snapshot.paramMap.get('productId'));
+    this.productId = this.util.getSelectedProductId();//Number(this.route.snapshot.paramMap.get('productId'));
 
     this.products = [];//this.productResourceService.getProducts();
     this.resources = [];//this.productResourceService.getResources();
@@ -184,7 +184,7 @@ export class ProductResourceComponent implements OnInit {
         //this.util.showErrorMessage(err.toString());
       }
     }
-    this.router.navigate(['/priority', this.productId]);
+    this.router.navigate(['/priority']);
   }
 /*
   transformData() {

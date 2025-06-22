@@ -25,37 +25,38 @@ export const routes: Routes = [
   { path: 'product', loadComponent: ()=>import(
       './components/product.component').then((m)=>m.ProductComponent),
     canActivate: [AuthGuard]},
-  { path: 'upload-epic/:productId', loadComponent: ()=>import(
+//  { path: 'upload-epic/:productId', loadComponent: ()=>import(
+  { path: 'upload-epic', loadComponent: ()=>import(
       './components/upload.epic.component').then((m)=>m.UploadEpicComponent),
     canActivate: [AuthGuard]},
-  { path: 'team-resource/:productId', loadComponent: ()=>import(
+  { path: 'team-resource', loadComponent: ()=>import(
       './team/team-resource.component').then((m)=>m.TeamResourceComponent),
     canActivate: [AuthGuard]},
-  { path: 'product-resource/:productId', loadComponent: ()=>import(
+  { path: 'product-resource', loadComponent: ()=>import(
       './team/product-resource.component').then((m)=>m.ProductResourceComponent),
     canActivate: [AuthGuard]},
-  { path: 'priority/:productId', loadComponent: ()=>import(
+  { path: 'priority', loadComponent: ()=>import(
       './components/priority.component').then((m)=>m.PriorityComponent),
     canActivate: [AuthGuard]},
-  { path: 'planning/:productId', loadComponent: ()=>import(
+  { path: 'planning', loadComponent: ()=>import(
       './planning/planning.component').then((m)=>m.PlanningComponent),
     canActivate: [AuthGuard]},
-  { path: 'planned/:productId', loadComponent: ()=>import(
+  { path: 'planned', loadComponent: ()=>import(
       './planning/planned.component').then((m)=>m.PlannedComponent),
     canActivate: [AuthGuard]},
-  { path: 'execution/:productId', loadComponent: ()=>import(
+  { path: 'execution', loadComponent: ()=>import(
       './execution/execution.component').then((m)=>m.ExecutionComponent),
     canActivate: [AuthGuard]},
-  { path: 'executed/:productId', loadComponent: ()=>import(
+  { path: 'executed', loadComponent: ()=>import(
       './execution/executed.component').then((m)=>m.ExecutedComponent),
     canActivate: [AuthGuard]},
   { path: 'epic-estimate', loadComponent: ()=>import(
       './planning/epic-estimate.component').then((m)=>m.EpicEstimateComponent),
     canActivate: [AuthGuard]},
-  { path: 'resource-leave/:resourceId', loadComponent: ()=>import(
+  { path: 'resource-leave', loadComponent: ()=>import(
       './leaves/resource.leave.component').then((m)=>m.ResourceLeaveComponent),
     canActivate: [AuthGuard]},
-  { path: 'planned-release/:productId', loadComponent: ()=>import(
+  { path: 'planned-release', loadComponent: ()=>import(
       './planning/release.component').then((m)=>m.ReleaseComponent),
     canActivate: [AuthGuard]},
   { path: 'resource', loadComponent: ()=>import(

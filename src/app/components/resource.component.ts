@@ -91,7 +91,7 @@ export class ResourceComponent implements OnInit {
         next: (data) => {
           // action: string = 'Close'
           this.utils.showSuccessMessage(data[0].message);
-          this.router.navigate(['/product', this.companyId]);
+          this.router.navigate(['/product']);
           //this.newCompany = { id: 0, name: '', sample: false };
         },
         error: (err) => {this.errorMessage = err;this.utils.showErrorMessage(err);},

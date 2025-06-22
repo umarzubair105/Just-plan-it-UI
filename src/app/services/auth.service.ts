@@ -28,6 +28,8 @@ export class AuthService {
     localStorage.setItem('loggedUser', userName);
     localStorage.setItem('userId', decodedT.id);
     localStorage.setItem('companyId', decodedT.companyId);
+    localStorage.setItem('companyName', decodedT.companyName);
+    localStorage.setItem('email', decodedT.email);
     console.log('AuthService login:'+userName);
     this.userNameSubject.next(userName);
   }
@@ -54,6 +56,12 @@ export class AuthService {
       return Number(localStorage.getItem('companyId'));
     else
       return 0;
+  }
+  getEmail(): string | null {
+    return localStorage.getItem('email');
+  }
+  getCompanyName(): string | null {
+    return localStorage.getItem('companyName');
   }
   // Save JWT token in localStorage
   saveToken(token: string): void {
@@ -89,6 +97,15 @@ export class AuthService {
     }
   }
 
+  setSelectedProductId(productId: number) {
+    localStorage.setItem('productId', ''+productId);
+  }
+  getSelectedProductId(): number {
+    if (localStorage.getItem('productId'))
+      return Number(localStorage.getItem('productId'));
+    else
+      return 0;
+  }
   // 🔹 6. Get User Role from JWT Token
   getUserRole(): string | null {
     const token = this.getToken();

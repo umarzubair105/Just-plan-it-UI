@@ -69,7 +69,9 @@ export class ProductComponent implements OnInit {
           // action: string = 'Close'
           this.utils.showSuccessMessage(data.message);
           this.productId = data.id;
-          this.router.navigate(['/upload-epic', this.productId]);
+          this.utils.setSelectedProductId(this.productId);
+          this.router.navigate(['/upload-epic']);
+          //this.router.navigate(['/upload-epic', this.productId]);
         },
         error: (err) => {this.errorMessage = err; this.utils.showErrorMessage(err);},
       });

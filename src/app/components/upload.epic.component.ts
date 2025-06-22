@@ -95,7 +95,7 @@ export class UploadEpicComponent implements OnInit {
     });
   }
   ngOnInit(): void {
-    this.productId = Number(this.route.snapshot.paramMap.get('productId'));
+    this.productId = this.utils.getSelectedProductId();//Number(this.route.snapshot.paramMap.get('productId'));
   }
 
   onFileChange(event: any) {
@@ -152,7 +152,7 @@ export class UploadEpicComponent implements OnInit {
       next: (data) => {
         // action: string = 'Close'
         this.utils.showSuccessMessage(data[0].message);
-        this.router.navigate(['/team-resource', this.productId]);
+        this.router.navigate(['/team-resource']);
         //this.newCompany = { id: 0, name: '', sample: false };
       },
       error: (err) => {this.errorMessage = err; this.utils.showErrorMessage(err);},

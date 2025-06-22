@@ -19,6 +19,12 @@ export class Utils {
   getCompanyId():number{
     return this.authService.getCompanyId();
   }
+  getSelectedProductId():number{
+    return this.authService.getSelectedProductId();
+  }
+  setSelectedProductId(productId: number){
+    return this.authService.setSelectedProductId(productId);
+  }
   getLoggedResourceId():number{
     return this.authService.getUserId();
   }

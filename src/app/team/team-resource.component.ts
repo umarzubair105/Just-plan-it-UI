@@ -51,7 +51,7 @@ export class TeamResourceComponent implements OnInit {
 
   ngOnInit(): void {
     const companyId = this.util.getCompanyId();
-    this.productId = Number(this.route.snapshot.paramMap.get('productId'));
+    this.productId = this.util.getSelectedProductId();//Number(this.route.snapshot.paramMap.get('productId'));
     this.resourceService.getByCompanyId(companyId).subscribe({
       next: (data) => {
         this.resources = data._embedded.resources;
@@ -99,7 +99,7 @@ export class TeamResourceComponent implements OnInit {
         //this.util.showErrorMessage(err.toString());
       }
     }
-    this.router.navigate(['/product-resource', this.productId]);
+    this.router.navigate(['/product-resource']);
   }
 
 

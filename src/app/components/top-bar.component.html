@@ -1,24 +1,95 @@
-<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">My App</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <a class="navbar-brand fw-bold" href="#">AutoPlan</a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarContent" aria-controls="navbarContent"
+            aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-      <ul class="navbar-nav ms-auto">
-        <li class="nav-item">
-          <a class="nav-link active" href="home#">Home</a>
+
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <!-- Left-side nav -->
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Link</a></li>
+        <li class="nav-item dropdown"  *ngIf="userName">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
+             role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            HR
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <li><a class="dropdown-item" href="upload-resource#">Upload Resources</a></li>
+            <li><a class="dropdown-item" href="mapping-roles-designation#">Role Mapping</a></li>
+            <li><a class="dropdown-item" href="company-calendar#">Calendar</a></li>
+            <li><a class="dropdown-item" href="resource#">Resource</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Something else</a></li>
+          </ul>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">About</a>
+        <li class="nav-item"  *ngIf="userName">
+          <a class="nav-link" href="product#" >Add new Product</a>
         </li>
-        <li class="nav-item">
-          <a class="nav-link" href="#">Contact</a>
+        <li class="nav-item me-2" *ngIf="userName">
+            <select class="form-control form-control-sm me-2"
+                    [(ngModel)]="selectedProductId" name="selectedProductId"
+                    (ngModelChange)="onProductChange($event)">>
+              <option value="0" disabled selected>Select a product</option>
+              <option *ngFor="let p of products" [value]="p.id">
+                {{ p.name }}
+              </option>
+            </select>
+        </li>
+        <li class="nav-item dropdown"  *ngIf="selectedProductId>0">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownProductRel"
+             role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Release
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownProductRel">
+            <li><a class="dropdown-item" href="planning#" title="Releases & Epics in planning process">Planning</a></li>
+            <li><a class="dropdown-item" href="planned#" title="Planned Releases">Planned</a></li>
+            <li><a class="dropdown-item" href="execution#" title="Releases in progress">Execution</a></li>
+            <li><a class="dropdown-item" href="executed#" title="Completed Releases">Executed</a></li>
+            <li><a class="dropdown-item" href="planned-release#" title="Planned Releases 2">Planned 2</a></li>
+          </ul>
+        </li>
+        <li class="nav-item dropdown"  *ngIf="selectedProductId>0">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownProduct"
+             role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Product Metadata
+          </a>
+          <ul class="dropdown-menu" aria-labelledby="navbarDropdownProduct">
+            <li><a class="dropdown-item" href="upload-epic#">Upload Epics</a></li>
+            <li><a class="dropdown-item" href="team-resource#">Team</a></li>
+            <li><a class="dropdown-item" href="product-resource#">Resource Allocation</a></li>
+            <li><a class="dropdown-item" href="priority#">Priorities</a></li>
+          </ul>
+        </li>
+        <li class="nav-item"  *ngIf="userName">
+          <a class="nav-link" (click)="openDialogForMyLeaves()" style="cursor: pointer;">My Leaves</a>
+        </li>
+
+        <li class="nav-item"><a class="nav-link" href="#">About</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
+        <li class="nav-item" *ngIf="companyName">
+          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">{{ companyName }}</a>
+        </li>
+      </ul>
+
+      <!-- Right-side user info and search -->
+      <ul class="navbar-nav mb-2 mb-lg-0 d-flex align-items-center">
+        <li class="nav-item me-2">
+          <form class="d-flex" role="search">
+            <input class="form-control form-control-sm me-2" type="search" placeholder="Search">
+            <button class="btn btn-outline-primary btn-sm" type="submit">Search</button>
+          </form>
+        </li>
+
+        <li class="nav-item" *ngIf="userName">
+          <span class="nav-link text-dark">Welcome, {{ userName }}</span>
         </li>
         <li class="nav-item" *ngIf="userName">
-          <span class="text-white nav-link">Welcome, {{ userName || 'Guest' }}</span>
-        </li>
-        <li class="nav-item" *ngIf="userName">
-          <button *ngIf="userName" class="btn btn-danger btn-sm align-middle" (click)="logout()">Logout</button>
+          <button class="btn btn-sm btn-outline-danger ms-2" (click)="logout()">Logout</button>
         </li>
         <li class="nav-item" *ngIf="!userName">
           <a class="nav-link" href="login#">Login</a>
@@ -27,6 +98,8 @@
           <a class="nav-link" href="company#">Company Sign Up</a>
         </li>
       </ul>
+    </div>
   </div>
 </nav>
+
 
