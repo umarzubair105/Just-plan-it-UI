@@ -98,6 +98,7 @@ export class CompanyComponent implements OnInit {
           companyCode: ''}).pipe()
           .subscribe((resp: any) => {
               this.util.saveToken(resp.token);
+              sessionStorage.setItem('wizard', 'companySetup');
               this.router.navigate(['/upload-resource']);
             },
             (error) => {

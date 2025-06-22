@@ -83,7 +83,9 @@ export class MappingComponent implements OnInit {
         this.companyService.mapDesignation(mapM).subscribe({
           next: () => {
             this.utils.showSuccessMessage('Updated successfully');
-            this.router.navigate(['/company-calendar']);
+            if (sessionStorage.getItem('wizard')) {
+              this.router.navigate(['/company-calendar']);
+            }
           },
           error: (err) => {
             this.errorMessage = err;

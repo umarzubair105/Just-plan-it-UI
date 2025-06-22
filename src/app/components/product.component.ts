@@ -70,6 +70,7 @@ export class ProductComponent implements OnInit {
           this.utils.showSuccessMessage(data.message);
           this.productId = data.id;
           this.utils.setSelectedProductId(this.productId);
+          sessionStorage.setItem('wizard', 'productSetup');
           this.router.navigate(['/upload-epic']);
           //this.router.navigate(['/upload-epic', this.productId]);
         },

@@ -184,7 +184,9 @@ export class ProductResourceComponent implements OnInit {
         //this.util.showErrorMessage(err.toString());
       }
     }
-    this.router.navigate(['/priority']);
+    if (sessionStorage.getItem('wizard')) {
+      this.router.navigate(['/priority']);
+    }
   }
 /*
   transformData() {

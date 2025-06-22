@@ -152,7 +152,9 @@ export class UploadEpicComponent implements OnInit {
       next: (data) => {
         // action: string = 'Close'
         this.utils.showSuccessMessage(data[0].message);
-        this.router.navigate(['/team-resource']);
+        if (sessionStorage.getItem('wizard')) {
+          this.router.navigate(['/team-resource']);
+        }
         //this.newCompany = { id: 0, name: '', sample: false };
       },
       error: (err) => {this.errorMessage = err; this.utils.showErrorMessage(err);},

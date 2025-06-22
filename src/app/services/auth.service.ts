@@ -38,6 +38,11 @@ export class AuthService {
   logout() {
     this.clearToken();
     localStorage.removeItem('loggedUser');
+    localStorage.removeItem('userId');
+    localStorage.removeItem('companyId');
+    localStorage.removeItem('companyName');
+    localStorage.removeItem('email');
+    localStorage.removeItem('productId');
     this.userNameSubject.next(null);
   }
 

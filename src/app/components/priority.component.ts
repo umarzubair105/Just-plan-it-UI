@@ -105,7 +105,9 @@ export class PriorityComponent implements OnInit {
         error: (err) => {this.errorMessage = err;this.utils.showErrorMessage('Priority is not updated')}
       });
     }
-    this.router.navigate(['/planning']);
+    if (sessionStorage.getItem('wizard')) {
+      this.router.navigate(['/planning']);
+    }
   }
   updateModel(model: Priority | null): void {
     if (model) {

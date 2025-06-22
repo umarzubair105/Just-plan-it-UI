@@ -270,3 +270,66 @@ public leaveStatuses = Object.keys(LeaveStatus);
 }
 
 <p>{{ 'ITEM_COUNT' | translate: { count: itemCount } }}</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Create a shared service
+ts
+Copy
+Edit
+// shared-data.service.ts
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+
+@Injectable({
+  providedIn: 'root'  // makes it globally available
+})
+export class SharedDataService {
+  private sharedString = new BehaviorSubject<string>(''); // Initial value
+
+  sharedString$ = this.sharedString.asObservable();
+
+  setSharedString(value: string): void {
+    this.sharedString.next(value);
+  }
+
+  getCurrentValue(): string {
+    return this.sharedString.getValue();
+  }
+}
+2. Update the value in one component
+ts
+Copy
+Edit
+// component-a.ts
+constructor(private sharedDataService: SharedDataService) {}
+
+someMethod() {
+  this.sharedDataService.setSharedString('Hello from Component A');
+}
+3. Read or react to the value in another component
+ts
+Copy
+Edit
+// component-b.ts
+sharedValue: string = '';
+
+constructor(private sharedDataService: SharedDataService) {}
+
+ngOnInit() {
+  this.sharedDataService.sharedString$.subscribe(value => {
+    this.sharedValue = value;
+  });
+}

@@ -152,7 +152,9 @@ export class UploadResourceComponent implements OnInit {
       next: (data) => {
         // action: string = 'Close'
         this.utils.showSuccessMessage(data[0].message);
-        this.router.navigate(['/mapping-roles-designation']);
+        if (sessionStorage.getItem('wizard')) {
+          this.router.navigate(['/mapping-roles-designation']);
+        }
         //this.router.navigate(['/product', this.companyId]);
         //this.newCompany = { id: 0, name: '', sample: false };
       },
