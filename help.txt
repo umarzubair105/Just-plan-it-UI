@@ -1,7 +1,8 @@
 add/edit resoure UI
 search Epic
-reset-password
 on loging thru user to screen for Company Setup
+Role based Menu and Release?planning options
+project url in Epic
 
 statusMessages = new Map<number, string>([
   [200, 'Success'],

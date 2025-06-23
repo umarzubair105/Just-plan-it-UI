@@ -20,19 +20,22 @@ export class EpicService {
 
   constructor(private readonly http: HttpClient) {}
 
+  getById(id:number): Observable<Epic> {
+    return this.http.get<Epic>(`${this.baseUrl}/${id}`).pipe(
+      catchError(handleError)
+    );
+  }
 
   getByCompanyIdAndCode(companyId:number, code:string): Observable<PageResponse> {
     return this.http.get<PageResponse>(`${this.baseUrl}/search/findByCompanyIdAndCode?companyId=${companyId}&code=${code}`).pipe(
       catchError(handleError)
     );
   }
-
-  getById(id:number): Observable<Epic> {
-    return this.http.get<Epic>(`${this.baseUrl}/${id}`).pipe(
+  getEpicBeanByCompanyIdAndCode(companyId:number, code:string): Observable<EpicBean> {
+    return this.http.get<EpicBean>(`${this.baseUrl}/findEpicByCompanyIdAndCode?companyId=${companyId}&code=${code}`).pipe(
       catchError(handleError)
     );
-  }
-  // Get by ID
+  }  // Get by ID
 
   create(model: Epic): Observable<Epic> {
     const { id, ...payload } = model;

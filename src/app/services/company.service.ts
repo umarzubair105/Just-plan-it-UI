@@ -97,6 +97,15 @@ export class CompanyService {
     );
   }
 
+  resetPassword(body: any): Observable<CommonResp> {
+    console.log(body);
+    //const { id, ...payload } = company;
+    //console.log(payload);
+    return this.http.post<any>('http://localhost:8080/api/auth/reset-password', body).pipe(
+      catchError(this.handleError)
+    );
+  }
+
   addCompany(company: AddCompany): Observable<CommonResp> {
     console.log(company);
     //const { id, ...payload } = company;

@@ -1,18 +1,24 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm">
+<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm px-3">
+
   <div class="container-fluid">
     <a class="navbar-brand fw-bold" href="#">AutoPlan</a>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+    <button class="navbar-toggle" type="button" data-bs-toggle="collapse"
             data-bs-target="#navbarContent" aria-controls="navbarContent"
             aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
+      <span class="navbar-toggle-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarContent">
       <!-- Left-side nav -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item"><a class="nav-link active" aria-current="page" href="#">Home</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Link</a></li>
+        <li class="nav-item" *ngIf="companyName">
+          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">{{ companyName }}</a>
+        </li>
+
+<!--
+        <a class="nav-link" routerLink="/home" routerLinkActive="active">Home</a>
+-->
         <li class="nav-item dropdown"  *ngIf="userName">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
              role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -28,17 +34,21 @@
           </ul>
         </li>
         <li class="nav-item"  *ngIf="userName">
-          <a class="nav-link" href="product#" >Add new Product</a>
+          <a class="nav-link"
+             routerLink="/product"
+             routerLinkActive="active"
+             [attr.aria-current]="router.url.startsWith('product') ? 'page' : null">
+            Add new Product</a>
         </li>
-        <li class="nav-item me-2" *ngIf="userName">
-            <select class="form-control form-control-sm me-2"
-                    [(ngModel)]="selectedProductId" name="selectedProductId"
-                    (ngModelChange)="onProductChange($event)">>
-              <option value="0" disabled selected>Select a product</option>
-              <option *ngFor="let p of products" [value]="p.id">
-                {{ p.name }}
-              </option>
-            </select>
+        <li class="nav-item d-flex align-items-center me-2" *ngIf="userName">
+          <label class="me-1 small fw-bold" for="productSelect">Product:</label>
+          <select class="form-select form-select-sm"
+                  id="productSelect"
+                  [(ngModel)]="selectedProductId"
+                  (ngModelChange)="onProductChange($event)">
+            <option value="0" disabled>Select a product</option>
+            <option *ngFor="let p of products" [value]="p.id">{{ p.name }}</option>
+          </select>
         </li>
         <li class="nav-item dropdown"  *ngIf="selectedProductId>0">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownProductRel"
@@ -46,11 +56,11 @@
             Release
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownProductRel">
-            <li><a class="dropdown-item" href="planning#" title="Releases & Epics in planning process">Planning</a></li>
-            <li><a class="dropdown-item" href="planned#" title="Planned Releases">Planned</a></li>
-            <li><a class="dropdown-item" href="execution#" title="Releases in progress">Execution</a></li>
-            <li><a class="dropdown-item" href="executed#" title="Completed Releases">Executed</a></li>
-            <li><a class="dropdown-item" href="planned-release#" title="Planned Releases 2">Planned 2</a></li>
+            <li><a class="dropdown-item" routerLink="/planning" title="Releases & Epics in planning process">Planning</a></li>
+            <li><a class="dropdown-item" routerLink="/planned" title="Planned Releases">Planned</a></li>
+            <li><a class="dropdown-item" routerLink="/execution" title="Releases in progress">Execution</a></li>
+            <li><a class="dropdown-item" routerLink="/executed" title="Completed Releases">Executed</a></li>
+            <li><a class="dropdown-item" routerLink="/planned-release" title="Planned Releases 2">Planned 2</a></li>
           </ul>
         </li>
         <li class="nav-item dropdown"  *ngIf="selectedProductId>0">
@@ -59,40 +69,51 @@
             Product Metadata
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownProduct">
-            <li><a class="dropdown-item" href="upload-epic#">Upload Epics</a></li>
-            <li><a class="dropdown-item" href="team-resource#">Team</a></li>
-            <li><a class="dropdown-item" href="product-resource#">Resource Allocation</a></li>
-            <li><a class="dropdown-item" href="priority#">Priorities</a></li>
+            <li><a class="dropdown-item" routerLink="/upload-epic">Upload Epics</a></li>
+            <li><a class="dropdown-item" routerLink="/team-resource">Team</a></li>
+            <li><a class="dropdown-item" routerLink="/product-resource">Resource Allocation</a></li>
+            <li><a class="dropdown-item" routerLink="/priority">Priorities</a></li>
           </ul>
         </li>
         <li class="nav-item"  *ngIf="userName">
           <a class="nav-link" (click)="openDialogForMyLeaves()" style="cursor: pointer;">My Leaves</a>
         </li>
 
-        <li class="nav-item"><a class="nav-link" href="#">About</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Contact</a></li>
-        <li class="nav-item" *ngIf="companyName">
+<!--        <li class="nav-item" *ngIf="companyName">
+          Company Name
           <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">{{ companyName }}</a>
-        </li>
+        </li>-->
       </ul>
-
+      <!-- Centered company name -->
+  <!--    <span *ngIf="companyName" class="position-absolute top-50 start-50 translate-middle text-muted fw-semibold">
+          {{ companyName }}
+       </span>-->
       <!-- Right-side user info and search -->
       <ul class="navbar-nav mb-2 mb-lg-0 d-flex align-items-center">
-        <li class="nav-item me-2">
-          <form class="d-flex" role="search">
-            <input class="form-control form-control-sm me-2" type="search" placeholder="Search">
+        <li class="nav-item"><a class="nav-link" href="#" >Home</a></li>
+        <li class="nav-item"><a class="nav-link" href="#" *ngIf="!userName">About Us</a></li>
+        <li class="nav-item"><a class="nav-link" href="#">Contact Us</a></li>
+        <li class="nav-item me-3" *ngIf="userName">
+          <form  #useForm="ngForm" class="d-flex" role="search" (ngSubmit)="onSubmit()">
+            <input class="form-control form-control-sm me-1" type="search" id="search"
+                   placeholder="Search"
+                   name="search"
+                   [(ngModel)]="epicSearch.code"
+                   #search="ngModel">
             <button class="btn btn-outline-primary btn-sm" type="submit">Search</button>
           </form>
         </li>
 
         <li class="nav-item" *ngIf="userName">
-          <span class="nav-link text-dark">Welcome, {{ userName }}</span>
+          <span class="nav-link text-dark">Hi, {{ userName }}</span>
         </li>
         <li class="nav-item" *ngIf="userName">
           <button class="btn btn-sm btn-outline-danger ms-2" (click)="logout()">Logout</button>
         </li>
         <li class="nav-item" *ngIf="!userName">
-          <a class="nav-link" href="login#">Login</a>
+          <a class="nav-link" href="login#">
+            <i class="bi bi-box-arrow-in-right me-1"></i> Login
+          </a>
         </li>
         <li class="nav-item" *ngIf="!userName">
           <a class="nav-link" href="company#">Company Sign Up</a>

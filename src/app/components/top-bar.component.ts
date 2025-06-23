@@ -8,24 +8,31 @@ import {ResourceLeaveComponent} from '../leaves/resource.leave.component';
 import {FormsModule} from '@angular/forms';
 import {ProductService} from '../services/product.service';
 import {HttpParams} from '@angular/common/http';
-import {Product} from '../models/planning';
+import {Epic, EpicBeanCopyPasteUpdatedValues, EpicLink, Product} from '../models/planning';
+import {Router, RouterLink, RouterLinkActive} from '@angular/router';
+import {EpicService} from '../services/epic.service';
+import {EpicComponent} from '../planning/epic.component';
 
 @Component({
   selector: 'app-top-bar',
   templateUrl: './top-bar.component.html',
   standalone:true,
-  imports: [CommonModule, FormsModule],  // Import necessary modules
+  imports: [CommonModule, FormsModule, RouterLink, RouterLinkActive],  // Import necessary modules
   //styleUrls: ['./top-bar.component.css']
 })
 export class TopBarComponent implements OnInit {
   userName: string | null = '';
   companyName: string | null = '';
+  search: string = '';
+  epicSearch: Epic = new Epic();
   products: Product[] = [];
   selectedProductId: number = 0;
   constructor(private authService: AuthService,
               private utils: Utils,
               private productService: ProductService,
-              private dialog: MatDialog) {}
+              private epicService: EpicService,
+              private dialog: MatDialog,
+              public router: Router) {}
 
   ngOnInit() {
     console.log('TopBarComponent');
@@ -49,7 +56,9 @@ export class TopBarComponent implements OnInit {
       }
     });
   }
-
+  isActive(path: string): boolean {
+    return this.router.url === path;
+  }
   logout() {
     this.authService.logout();
     this.utils.navigateToResource('/home'); // Redirect to a secure page
@@ -79,4 +88,33 @@ export class TopBarComponent implements OnInit {
     });
   }
 
+  onSubmit():void {
+    this.search = this.epicSearch.code;
+    alert('s:'+this.search);
+    if (this.search  && this.search.trim()) {
+      this.epicService.getEpicBeanByCompanyIdAndCode(this.utils.getCompanyId(), this.search.trim()).subscribe({
+        next: (data) => {
+
+          const dialogRef = this.dialog.open(EpicComponent, {
+            width: '100%',
+            maxWidth: '90vw', // 90% of viewport width
+            height: '100%',
+            maxHeight: '80vh', // 80% of viewport height
+            disableClose: true,
+            data: {epicBean: data, priorities: null, subComponents: null},
+          });
+
+          dialogRef.afterClosed().subscribe(result => {
+            if (result && result.epic && result.epic.id > 0) {
+              console.log('The dialog was closed:' + result.epic.title);
+            }
+            // Handle the result here
+          });
+
+
+        },
+        error: (err) => (this.utils.showErrorMessage(err)),
+      });
+    }
+  }
 }
