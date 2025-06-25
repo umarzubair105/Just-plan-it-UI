@@ -55,7 +55,7 @@ export class UploadResourceComponent implements OnInit {
   // Predefined field names in our system
   predefinedFieldLabels:{ [key: string]: string } = {'email':'Email',
     'name':'Name', 'designation':'Designation','mobileNumber':'Mobile Number',
-    'dateOfBirth':'Date of Birth','lead':'Lead'};
+    'dateOfBirth':'Date of Birth','lead':'Manager'};
   roles: BaseModel[] = [];
   errorMessage: string = '';
   //companyId!: number;
@@ -124,6 +124,14 @@ export class UploadResourceComponent implements OnInit {
   onReset():void {
     this.mappedHeaders = {};
     this.excelHeadersUnmapped = this.excelHeaders.filter(header =>this.searchExcelColumnMapping(header)==='Unmapped');
+  }
+  onSkip():void {
+    if (sessionStorage.getItem('wizard')) {
+      this.router.navigate(['/company-calendar']);
+    }
+  }
+  isWizard():boolean {
+    return sessionStorage.getItem('wizard')!=null && sessionStorage.getItem('wizard')=='companySetup';
   }
   onSubmit() {
     //if ()

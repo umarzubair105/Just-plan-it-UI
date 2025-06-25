@@ -9,8 +9,7 @@
         {{ errorMessage }}
       </div>
       <div class="mb-3">
-        <label for="name" class="form-label">Product Name</label>
-        <label class="required-label">&nbsp;* </label>
+        <label for="name" class="form-label">Product Name<span class="text-danger ms-1">*</span></label>
         <input
           type="text"
           id="name"
@@ -26,8 +25,7 @@
         />
       </div>
       <div class="mb-3">
-        <label for="code" class="form-label">Product Code</label>
-        <label class="required-label">&nbsp;* </label>
+        <label for="code" class="form-label">Product Code<span class="text-danger ms-1">*</span></label>
         <input
           type="text"
           id="code"
@@ -43,8 +41,7 @@
         />
       </div>
       <div class="mb-3">
-        <label for="emailProductManager" class="form-label">Product Manager Email</label>
-        <label class="required-label">&nbsp;* </label>
+        <label for="emailProductManager" class="form-label">Product Manager Email<span class="text-danger ms-1">*</span></label>
         <input
           type="email"
           id="emailProductManager"
@@ -61,8 +58,7 @@
         />
       </div>
       <div class="mb-3">
-        <label for="emailProductOwner" class="form-label">Product Owner Email</label>
-        <label class="required-label">&nbsp;* </label>
+        <label for="emailProductOwner" class="form-label">Product Owner Email<span class="text-danger ms-1">*</span></label>
         <input
           type="email"
           id="emailProductOwner"
@@ -79,8 +75,7 @@
         />
       </div>
       <div class="mb-3">
-        <label for="releaseIteration" class="form-label">Release Duration</label>
-        <label class="required-label">&nbsp;* </label>
+        <label for="releaseIteration" class="form-label">Release Duration<span class="text-danger ms-1">*</span></label>
         <select id="releaseIteration"  name="releaseIteration" class="form-control" required
                 [(ngModel)]="addProduct.releaseIteration"
                 #releaseIteration="ngModel"
@@ -92,8 +87,7 @@
         </select>
       </div>
       <div class="mb-3">
-        <label for="otherActivitiesPercentTime" class="form-label">Non Productive Time %</label>
-        <label class="required-label">&nbsp;* </label>
+        <label for="otherActivitiesPercentTime" class="form-label">Non Productive Time %<span class="text-danger ms-1">*</span></label>
         <input
           type="text"
           id="otherActivitiesPercentTime"
@@ -112,8 +106,7 @@
         />
       </div>
       <div class="mb-3">
-        <label for="startDate" class="form-label">First Working Date</label>
-        <label class="required-label">&nbsp;* </label>
+        <label for="startDate" class="form-label">First Working Date<span class="text-danger ms-1">*</span></label>
         <input
           type="date"
           id="startDate"

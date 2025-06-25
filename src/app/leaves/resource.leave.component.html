@@ -59,7 +59,7 @@
           <div class="modal-body">
             <form  #resourceForm="ngForm" >
               <div class="mb-3">
-                <label class="form-label">Type</label><label class="required-label">&nbsp;* </label>
+                <label class="form-label">Type<span class="text-danger ms-1">*</span></label>
                 <select name="leaveType"  [(ngModel)]="leave.leaveType" class="form-control" required
                         #leaveType="ngModel"
                         [ngClass]="{ 'is-invalid': leaveType.invalid && (leaveType.dirty || leaveType.touched) }"
@@ -70,7 +70,7 @@
                 </select>
               </div>
               <div class="mb-3">
-                <label class="form-label">Reason</label><label class="required-label">&nbsp;* </label>
+                <label class="form-label">Reason<span class="text-danger ms-1">*</span></label>
                 <textarea type="text" class="form-control" [(ngModel)]="leave.reason" name="reason" required
                           #reason="ngModel"
                           [ngClass]="{ 'is-invalid': reason.invalid && (reason.dirty || reason.touched) }"
@@ -78,7 +78,7 @@
                   </textarea>
               </div>
               <div class="mb-3" *ngIf="leave.id>0 && leave.resourceId != loggedUserId">
-                <label class="form-label">Status</label><label class="required-label">&nbsp;* </label>
+                <label class="form-label">Status<span class="text-danger ms-1">*</span></label>
                 <select name="status"  [(ngModel)]="leave.status" class="form-control" required
                         #status="ngModel"
                         [ngClass]="{ 'is-invalid': status.invalid && (status.dirty || status.touched) }"
@@ -89,14 +89,14 @@
                 </select>
               </div>
               <div class="mb-3">
-                <label class="form-label">Start Date</label><label class="required-label">&nbsp;* </label>
+                <label class="form-label">Start Date<span class="text-danger ms-1">*</span></label>
                 <input type="date" class="form-control" [(ngModel)]="leave.startDate" name="startDate" required
                        #startDate="ngModel"
                        [ngClass]="{ 'is-invalid': startDate.invalid && (startDate.dirty || startDate.touched) }"
                        [showErrors]="{ required: 'Start Date is required' }">
               </div>
               <div class="mb-3">
-                <label class="form-label">End Date</label><label class="required-label">&nbsp;* </label>
+                <label class="form-label">End Date<span class="text-danger ms-1">*</span></label>
                 <input type="date" class="form-control" [(ngModel)]="leave.endDate" name="endDate" required
                        #endDate="ngModel"
                        [ngClass]="{ 'is-invalid': endDate.invalid && (endDate.dirty || endDate.touched) }"

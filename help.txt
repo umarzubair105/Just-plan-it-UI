@@ -1,8 +1,10 @@
 add/edit resoure UI
-search Epic
 on loging thru user to screen for Company Setup
 Role based Menu and Release?planning options
-project url in Epic
+project url in Epic, remove dependentEpicId
+Contact Us
+left Bar
+Country based Weekend end and Holidays fill
 
 statusMessages = new Map<number, string>([
   [200, 'Success'],

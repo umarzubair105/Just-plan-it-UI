@@ -1,7 +1,22 @@
-<div class="container mt-5" xmlns="http://www.w3.org/1999/html">
-  <div class="card shadow-lg">
+<div class="container-lg mt-4">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+      <!-- Description Card -->
+      <div class="card shadow-sm mb-2">
+        <!--
+            <img src="https://via.placeholder.com/150" class="card-img-top" alt="Placeholder Image">
+        -->
+        <div class="card-body">
+          <h5 class="card-title">Map Designations with System Roles</h5>
+          <p class="card-text">
+            Map your resource designations to <strong>AutoPlan</strong> roles. Later on in planning or so system roles will be used
+            to assign task and so. Roles to resources can be changed based on product later on.
+          </p>
+        </div>
+      </div>
+      <div class="card shadow-lg">
     <div class="card-header bg-primary text-white text-center">
-      <h3>Mapping Designations with System Roles</h3>
+      <h3>Map your Designations to system Roles</h3>
     </div>
     <div class="card-body">
       <div *ngFor="let source of sourceModels"  class="mb-3">
@@ -12,12 +27,13 @@
         </select>
       </div>
     </div>
-    <div class="text-center">
-    <button (click)="updateModels()">Update</button>
+    <div class="text-center mt-2 d-flex justify-content-center gap-2">
+    <button class="btn btn-primary w-20" (click)="updateModels()">Update</button>
     </div>
   </div>
 </div>
-
+  </div>
+</div>
 
 <!--
 
@@ -41,7 +57,7 @@
 
 
   &lt;!&ndash; Error Message &ndash;&gt;
-  <div *ngIf="errorMessage" class="error">
+  <div *ngIf="errorMessage" class="alert alert-danger">
     {{ errorMessage }}
   </div>
 

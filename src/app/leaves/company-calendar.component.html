@@ -88,7 +88,7 @@
           <div class="modal-body">
             <form  #hrForm="ngForm" >
               <div class="mb-3">
-                <label class="form-label">Description</label><label class="required-label">&nbsp;* </label>
+                <label class="form-label">Description</label><label class="required-label"><span class="text-danger ms-1">*</span></label>
                 <input type="text" class="form-control" [(ngModel)]="editCompanyWorkingHour.description"
                        id="description"
                        name="description" required
@@ -98,7 +98,7 @@
                 >
               </div>
               <div class="mb-3" *ngIf="editCompanyWorkingHour.scope !== WorkingHourEnum.DEFAULT">
-                <label class="form-label">Scope</label><label class="required-label">&nbsp;* </label>
+                <label class="form-label">Scope<span class="text-danger ms-1">*</span></label>
                 <select name="scope"  [(ngModel)]="editCompanyWorkingHour.scope" class="form-control" required
                         id="scope"
                         #scope="ngModel"
@@ -110,35 +110,35 @@
                 </select>
               </div>
               <div class="mb-3">
-                <label class="form-label">Minutes</label><label class="required-label">&nbsp;* </label>
+                <label class="form-label">Minutes<span class="text-danger ms-1">*</span></label>
                 <input type="number" class="form-control" [(ngModel)]="editCompanyWorkingHour.minutes" name="minutes" required
                        #minutes="ngModel"
                        [ngClass]="{ 'is-invalid': minutes.invalid && (minutes.dirty || minutes.touched) }"
                        [showErrors]="{ required: 'Minutes is required' }">
               </div>
               <div class="mb-3" *ngIf="isDisplay('startDate',editCompanyWorkingHour.scope)">
-                <label class="form-label">Start Date</label><label class="required-label">&nbsp;* </label>
+                <label class="form-label">Start Date<span class="text-danger ms-1">*</span></label>
                 <input type="date" class="form-control" [(ngModel)]="editCompanyWorkingHour.startDate" name="startDate" required
                        #startDate="ngModel"
                        [ngClass]="{ 'is-invalid': startDate.invalid && (startDate.dirty || startDate.touched) }"
                        [showErrors]="{ required: 'Start Date is required' }">
               </div>
               <div class="mb-3" *ngIf="isDisplay('endDate',editCompanyWorkingHour.scope)">
-                <label class="form-label">End Date</label><label class="required-label">&nbsp;* </label>
+                <label class="form-label">End Date<span class="text-danger ms-1">*</span></label>
                 <input type="date" class="form-control" [(ngModel)]="editCompanyWorkingHour.endDate" name="endDate" required
                        #endDate="ngModel"
                        [ngClass]="{ 'is-invalid': endDate.invalid && (endDate.dirty || endDate.touched) }"
                        [showErrors]="{ required: 'End Date is required' }">
               </div>
               <div class="mb-3" *ngIf="isDisplay('eventDate',editCompanyWorkingHour.scope)">
-                <label class="form-label">Event Date</label><label class="required-label">&nbsp;* </label>
+                <label class="form-label">Event Date<span class="text-danger ms-1">*</span></label>
                 <input type="date" class="form-control" [(ngModel)]="editCompanyWorkingHour.eventDate" name="eventDate" required
                        #eventDate="ngModel"
                        [ngClass]="{ 'is-invalid': eventDate.invalid && (eventDate.dirty || eventDate.touched) }"
                        [showErrors]="{ required: 'Event Date is required' }">
               </div>
               <div class="mb-3" *ngIf="isDisplay('dayOfWeek',editCompanyWorkingHour.scope)">
-                <label class="form-label">Day of Week</label><label class="required-label">&nbsp;* </label>
+                <label class="form-label">Day of Week<span class="text-danger ms-1">*</span></label>
                 <select name="dayOfWeek"  [(ngModel)]="editCompanyWorkingHour.dayOfWeek" class="form-control" required
                         #dayOfWeek="ngModel"
                         [ngClass]="{ 'is-invalid': dayOfWeek.invalid && (dayOfWeek.dirty || dayOfWeek.touched) }"
@@ -200,14 +200,14 @@
           <div class="modal-body">
             <form  #userForm="ngForm" >
               <div class="mb-3">
-                <label class="form-label">Event</label><label class="required-label">&nbsp;* </label>
+                <label class="form-label">Event<span class="text-danger ms-1">*</span></label>
                 <input type="text" class="form-control" [(ngModel)]="editCompanyCalendar.eventName" name="eventName" required
                        #eventName="ngModel"
                        [ngClass]="{ 'is-invalid': eventName.invalid && (eventName.dirty || eventName.touched) }"
                        [showErrors]="{ required: 'Event is required' }">
               </div>
               <div class="mb-3">
-                <label class="form-label">Type</label><label class="required-label">&nbsp;* </label>
+                <label class="form-label">Type<span class="text-danger ms-1">*</span></label>
                 <select name="eventType"  [(ngModel)]="editCompanyCalendar.eventType" class="form-control" required
                         #eventType="ngModel"
                         [ngClass]="{ 'is-invalid': eventType.invalid && (eventType.dirty || eventType.touched) }"
@@ -218,14 +218,14 @@
                 </select>
               </div>
               <div class="mb-3">
-                <label class="form-label">Start Date</label><label class="required-label">&nbsp;* </label>
+                <label class="form-label">Start Date<span class="text-danger ms-1">*</span></label>
                 <input type="date" class="form-control" [(ngModel)]="editCompanyCalendar.startDate" name="startDate" required
                        #startDate="ngModel"
                        [ngClass]="{ 'is-invalid': startDate.invalid && (startDate.dirty || startDate.touched) }"
                        [showErrors]="{ required: 'Start Date is required' }">
               </div>
               <div class="mb-3">
-                <label class="form-label">End Date</label><label class="required-label">&nbsp;* </label>
+                <label class="form-label">End Date<span class="text-danger ms-1">*</span></label>
                 <input type="date" class="form-control" [(ngModel)]="editCompanyCalendar.endDate" name="endDate" required
                        #endDate="ngModel"
                        [ngClass]="{ 'is-invalid': endDate.invalid && (endDate.dirty || endDate.touched) }"

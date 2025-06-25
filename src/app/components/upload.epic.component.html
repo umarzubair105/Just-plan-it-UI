@@ -27,7 +27,7 @@
     <div *ngFor="let header of predefinedFields" class="mb-3" >
       <div *ngIf="mappedHeaders[header] === undefined">
       <label>{{ predefinedFieldLabels[header] }}</label>
-        <label class="required-label" *ngIf="!!requiredFields[header]">&nbsp;* </label>
+        <label class="required-label" *ngIf="!!requiredFields[header]"><span class="text-danger ms-1">*</span></label>
       <select class="form-select" [(ngModel)]="mappedHeaders[header]" (change)="onMappingChange()"
               [required]="!!requiredFields[header]"
               [showErrors]="{ required: 'It is required' }">
@@ -40,7 +40,7 @@
   <div *ngIf="!!mappedHeaders['requiredBy']" class="card-body">
     <div class="mb-3" >
       <div>
-        <label>Date Format</label><label class="required-label">&nbsp;* </label>
+        <label>Date Format</label><label class="required-label"><span class="text-danger ms-1">*</span></label>
         <select class="form-select" [(ngModel)]="dateFormat" required
                 [showErrors]="{ required: 'It is required' }">
           <option value="">&#45;&#45; Select Field &#45;&#45;</option>

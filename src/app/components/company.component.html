@@ -1,175 +1,112 @@
-<div class="container mt-5" xmlns="http://www.w3.org/1999/html">
-  <div class="card shadow-lg">
-    <div class="card-header bg-primary text-white text-center">
-      <h3>Company Setup</h3>
-    </div>
-    <form #useForm="ngForm" (ngSubmit)="onSubmit()">
-      <div class="card-body">
-        <!-- Name -->
-        <div *ngIf="errorMessage" class="error-message">
-          {{ errorMessage }}
-        </div>
-        <div class="mb-3">
-          <label for="name" class="form-label">Company Name</label>
-          <label class="required-label">&nbsp;* </label>
-          <input
-            type="text"
-            id="name"
-            class="form-control"
-            name="name"
-            required
-            placeholder="Enter your company name"
-            [(ngModel)]="addCompany.name"
-            #name="ngModel"
-            [ngClass]="{ 'is-invalid': name.invalid && (name.dirty || name.touched) }"
-            [showErrors]="{ required: 'Company Name is required'}"
-          />
-        </div>
-        <div class="mt-3">
-          <label for="sampleCompanyId" class="form-label">Industry</label>
-          <label class="required-label">&nbsp;* </label>
-          <select
-            id="sampleCompanyId"
-            name="sampleCompanyId"
-            class="form-select"
-            required
-            [(ngModel)]="addCompany.sampleCompanyId"
-            #sampleCompanyId="ngModel"
-            [ngClass]="{ 'is-invalid': sampleCompanyId.invalid && (sampleCompanyId.dirty || sampleCompanyId.touched) }"
-            [showErrors]="{ required: 'Industry is required' }"
-          >
-            <option value="" disabled selected>Select an industry</option>
-            <option *ngFor="let m of sampleCompanies" [value]="m.id">
-              {{ m.name }}
-            </option>
-          </select>
-        </div>
-        <div class="mt-3">
-          <label for="countryId" class="form-label">Country</label>
-          <label class="required-label">&nbsp;* </label>
-          <select
-            id="countryId"
-            name="countryId"
-            class="form-select"
-            [(ngModel)]="addCompany.countryId"
-            required
-            #countryId="ngModel"
-            [ngClass]="{ 'is-invalid': countryId.invalid && (countryId.dirty || countryId.touched) }"
-            [showErrors]="{ required: 'Country is required' }"
-          >
-            <option value="" disabled selected>Select a country</option>
-            <option *ngFor="let m of countries" [value]="m.id">
-              {{ m.name }}
-            </option>
-          </select>
-        </div>
-        <div class="mt-3">
-          <label for="resourceName" class="form-label">Your Name</label>
-          <label class="required-label">&nbsp;* </label>
-          <input
-            type="text"
-            id="resourceName"
-            name="resourceName"
-            required
-            class="form-control"
-            placeholder="Enter your name"
-            [(ngModel)]="addCompany.resourceName"
-            #resourceName="ngModel"
-            [ngClass]="{ 'is-invalid': resourceName.invalid && (resourceName.dirty || resourceName.touched) }"
-            [showErrors]="{ required: 'Your Name is required' }"
-          />
-        </div>
-        <div class="mt-3">
-          <label for="email" class="form-label">Your Email</label>
-          <label class="required-label">&nbsp;* </label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            required
-            email
-            class="form-control"
-            placeholder="Enter your email"
-            [(ngModel)]="addCompany.email"
-            #email="ngModel"
-            [ngClass]="{ 'is-invalid': email.invalid && (email.dirty || email.touched) }"
-            [showErrors]="{ required: 'Email is required', email: 'Email is not valid' }"
-          />
-        </div>
-        <div class="mt-3">
-          <label for="designation" class="form-label">Your Designation</label>
-          <label class="required-label">&nbsp;* </label>
-          <input
-            type="text"
-            id="designation"
-            name="designation"
-            required
-            class="form-control"
-            placeholder="Enter your designation name"
-            [(ngModel)]="addCompany.designation"
-            #designation="ngModel"
-            [ngClass]="{ 'is-invalid': designation.invalid && (designation.dirty || designation.touched) }"
-            [showErrors]="{ required: 'Your designation is required' }"
-          />
-        </div>
+<div class="container-lg mt-4">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
 
-
-        <div class="mt-3">
-          <label for="mobileNumber" class="form-label">Your Mobile Number</label>
-          <label class="required-label">&nbsp;* </label>
-          <input
-            type="text"
-            id="mobileNumber"
-            name="mobileNumber"
-            class="form-control"
-            required
-            [(ngModel)]="addCompany.mobileNumber"
-            #mobileNumber="ngModel"
-            [ngClass]="{ 'is-invalid': mobileNumber.invalid && (mobileNumber.dirty || mobileNumber.touched) }"
-            placeholder="Enter your mobile number"
-            [showErrors]="{ required: 'Mobile Number is required' }"
-          />
-        </div>
-        <!--<div class="mt-3">
-          <label for="password" class="form-label">Password</label>
-          <label class="required-label">&nbsp;* </label>
-          <input
-            autocomplete="false"
-            type="password"
-            id="password"
-            name="password"
-            class="form-control"
-            placeholder="Enter your password"
-            required
-            [(ngModel)]="addCompany.password"
-            #password="ngModel"
-            [ngClass]="{ 'is-invalid': password.invalid && (password.dirty || password.touched) }"
-            [showErrors]="{ required: 'Password is required' }"
-          />
-        </div>
-        <div class="mt-3">
-          <label for="confirmPassword" class="form-label">Confirm Password</label>
-          <label class="required-label">&nbsp;* </label>
-          <input
-            autocomplete="false"
-            type="password"
-            id="confirmPassword"
-            name="confirmPassword"
-            class="form-control"
-            required
-            placeholder="Enter your password again"
-            [(ngModel)]="addCompany.confirmPassword"
-            #confirmPassword="ngModel"
-            [ngClass]="{ 'is-invalid': confirmPassword.invalid && (confirmPassword.dirty || confirmPassword.touched) }"
-            [showErrors]="{ required: 'Confirm Password is required' }"
-          />
-        </div>-->
-        <!-- Submit Button -->
-        <div class="text-center">
-          <button class="btn btn-primary" type="submit" [disabled]="useForm.invalid" >Submit</button>
-          <button type="reset" class="btn btn-secondary" >Reset</button>
+      <!-- Intro Card -->
+      <div class="card shadow-sm mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Register Your Company</h5>
+          <p class="card-text">
+            Provide basic information about your company to get started. Once following steps gets completed, you'll move to the planning phase.
+          </p>
         </div>
       </div>
-    </form>
+
+      <!-- Main Form Card -->
+      <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white text-center">
+          <h2 class="h4 mb-0">Company Registration</h2>
+        </div>
+        <form #useForm="ngForm" (ngSubmit)="onSubmit()">
+          <div class="card-body">
+
+            <!-- Error Alert -->
+            <div *ngIf="errorMessage" class="alert alert-danger">
+              {{ errorMessage }}
+            </div>
+            <!-- Company Information -->
+            <fieldset class="mb-4">
+              <legend class="h5">Company Information</legend>
+              <div class="mb-3">
+                <label for="name" class="form-label">Company Name <span class="text-danger">*</span></label>
+                <input type="text" id="name" name="name" class="form-control" required
+                       placeholder="e.g. Acme Corp"
+                       [(ngModel)]="addCompany.name" #name="ngModel"
+                       [ngClass]="{ 'is-invalid': name.invalid && (name.dirty || name.touched) }"
+                       [showErrors]="{ required: 'Company Name is required'}" />
+              </div>
+              <div class="mb-3">
+                <label for="sampleCompanyId" class="form-label">Industry <span class="text-danger">*</span></label>
+                <select id="sampleCompanyId" name="sampleCompanyId" class="form-select" required
+                        [(ngModel)]="addCompany.sampleCompanyId" #sampleCompanyId="ngModel"
+                        [ngClass]="{ 'is-invalid': sampleCompanyId.invalid && (sampleCompanyId.dirty || sampleCompanyId.touched) }"
+                        [showErrors]="{ required: 'Industry is required' }">
+                  <option value="" disabled>Select an industry</option>
+                  <option *ngFor="let m of sampleCompanies" [value]="m.id">{{ m.name }}</option>
+                </select>
+              </div>
+
+              <div class="mb-3">
+                <label for="countryId" class="form-label">Country <span class="text-danger">*</span></label>
+                <select id="countryId" name="countryId" class="form-select" required
+                        [(ngModel)]="addCompany.countryId" #countryId="ngModel"
+                        [ngClass]="{ 'is-invalid': countryId.invalid && (countryId.dirty || countryId.touched) }"
+                        [showErrors]="{ required: 'Country is required' }">
+                  <option value="" disabled>Select a country</option>
+                  <option *ngFor="let m of countries" [value]="m.id">{{ m.name }}</option>
+                </select>
+              </div>
+            </fieldset>
+            <!-- Your Information -->
+            <fieldset class="mb-4">
+              <legend class="h5">Your Information</legend>
+
+              <div class="mb-3">
+                <label for="resourceName" class="form-label">Name <span class="text-danger">*</span></label>
+                <input type="text" id="resourceName" name="resourceName" class="form-control" required
+                       placeholder="Your full name"
+                       [(ngModel)]="addCompany.resourceName" #resourceName="ngModel"
+                       [ngClass]="{ 'is-invalid': resourceName.invalid && (resourceName.dirty || resourceName.touched) }"
+                       [showErrors]="{ required: 'Name is required' }" />
+              </div>
+
+              <div class="mb-3">
+                <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
+                <input type="email" id="email" name="email" class="form-control" required
+                       autocomplete="email" placeholder="you@example.com" email
+                       [(ngModel)]="addCompany.email" #email="ngModel"
+                       [ngClass]="{ 'is-invalid': email.invalid && (email.dirty || email.touched) }"
+                       [showErrors]="{ required: 'Email is required', email: 'Invalid email' }" />
+              </div>
+
+              <div class="mb-3">
+                <label for="designation" class="form-label">Designation <span class="text-danger">*</span></label>
+                <input type="text" id="designation" name="designation" class="form-control" required
+                       placeholder="e.g. Product Manager"
+                       [(ngModel)]="addCompany.designation" #designation="ngModel"
+                       [ngClass]="{ 'is-invalid': designation.invalid && (designation.dirty || designation.touched) }"
+                       [showErrors]="{ required: 'Designation is required' }" />
+              </div>
+
+              <div class="mb-3">
+                <label for="mobileNumber" class="form-label">Mobile Number <span class="text-danger">*</span></label>
+                <input type="tel" id="mobileNumber" name="mobileNumber" class="form-control" required
+                       placeholder="+1 555-123-4567"
+                       [(ngModel)]="addCompany.mobileNumber" #mobileNumber="ngModel"
+                       [ngClass]="{ 'is-invalid': mobileNumber.invalid && (mobileNumber.dirty || mobileNumber.touched) }"
+                       [showErrors]="{ required: 'Mobile Number is required' }" />
+              </div>
+            </fieldset>
+            <!-- Actions -->
+            <div class="text-center mt-2 d-flex justify-content-center gap-2">
+              <button class="btn btn-primary w-20" type="submit" [disabled]="useForm.invalid">Submit</button>
+              <button type="reset" class="btn btn-secondary ms-2 w-20">Reset</button>
+            </div>
+
+          </div>
+        </form>
+      </div>
+
+    </div>
   </div>
 </div>
