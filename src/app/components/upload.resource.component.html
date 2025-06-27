@@ -31,8 +31,8 @@
 
       <!-- Preview Table -->
       <div class="table-responsive" *ngIf="rawData.length > 0">
-        <table class="table table-striped table-hover table-bordered mt-4">
-          <thead class="table-primary">
+        <table class="table table-striped table-hover table-bordered table-sm-custom text-sm mt-4">
+          <thead class="table-secondary">
           <tr>
             <th *ngFor="let key of excelHeaders">
               {{ key | titlecase }}

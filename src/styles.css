@@ -47,8 +47,17 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   transition: background-color 0.3s;
 }
 */
-
-
+.table-sm-custom td,
+.table-sm-custom th {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  line-height: 1.2;
+  font-weight: normal;
+}
+.btn-tight-custom {
+  padding: 0.15rem 0.3rem;
+  line-height: 1;
+}
 
 
 

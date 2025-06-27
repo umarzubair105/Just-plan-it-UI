@@ -106,6 +106,9 @@ export class CompanyCalendarComponent  implements OnInit {
     });
   }
 
+  isWizard():boolean {
+    return sessionStorage.getItem('wizard')!=null && sessionStorage.getItem('wizard')=='companySetup';
+  }
   next(){
     this.router.navigate(['/product']);
   }

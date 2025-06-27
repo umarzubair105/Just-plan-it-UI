@@ -1,82 +1,199 @@
-<div class="container mt-4">
-  <h2>Company Calendar</h2>
+<div class="container-lg mt-4">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
 
-  <div class="container">
-    <h2>Weekend</h2>
-    <ul *ngIf="!editWeekend">
-      @for (wd of weekends; track wd.id) {
-      <li *ngIf="wd.id>0 " [ngClass]="{ 'weekend': wd.id>0 }">
-        {{ wd.day | titlecase }}
-      </li>
-      }
-      <button class="btn btn-primary mb-3" (click)="editWeekend=true">Change</button>
-    </ul>
-    <ul *ngIf="editWeekend">
-      <li *ngFor="let day of weekends" >
-        {{ day.day | titlecase }}
-        <input type="checkbox" [(ngModel)]="day.active" >
-      </li>
-      <button class="btn btn-primary mb-3" (click)="saveWeekend()">Save</button>
-    </ul>
+      <!-- Intro Card -->
+      <div class="card shadow-sm mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Define Working Days & Hours</h5>
+          <p class="card-text">
+            Lets define daily working hours, weekend, holidays & explicitly declaring weekend as a working day. This information should
+            be defined prior to creating plan for a specific time period.
+          </p>
+        </div>
+      </div>
+
+      <!-- Main Form Card -->
+      <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white text-center">
+          <h2 class="h4 mb-0">Calendar</h2>
+        </div>
+
+        <div class="container mt-2">
+          <h5 class="mb-2">Weekend</h5>
+
+          <!-- Display Mode -->
+          <div *ngIf="!editWeekend" class="row">
+            <div class="d-flex flex-wrap gap-2 mb-3">
+              <!-- d-inline-flex -->
+              <span
+              class="badge bg-light text-dark fs-6 fw-normal gap-2 align-items-center"
+                *ngFor="let wd of weekends"
+                [hidden]="wd.id <= 0">
+                {{ wd.day | titlecase }}
+              </span>
+              <span class="align-items-center mt-1">
+                <a
+                  class="btn btn-sm btn-outline-primary btn-tight-custom me-1"
+                  (click)="editWeekend = true"
+                  title="Edit">
+                  <i class="bi bi-pencil"></i>
+                </a>
+              </span>
+            </div>
+<!--            <div class="d-flex flex-wrap gap-2 mb-3">
+              <span
+                class="badge bg-light text-dark fs-6 fw-normal gap-2 align-items-center"
+                *ngFor="let wd of weekends"
+                [hidden]="wd.id <= 0">
+                {{ wd.day | titlecase }}
+              </span>
+              <span class="align-items-center mt-1">
+                <a (click)="editWeekend = true" class="btn-link p-0">Edit</a>
+              </span>
+            </div>-->
+          </div>
+
+
+          <!-- Edit Mode -->
+          <div *ngIf="editWeekend" class="row">
+            <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
+              <span *ngFor="let day of weekends" class="form-check form-check-inline">
+                <input
+                  type="checkbox"
+                  class="form-check-input"
+                  [(ngModel)]="day.active"
+                  [id]="day.day"
+                />
+                <label class="form-check-label" [for]="day.day">
+                  {{ day.day | titlecase }}
+                </label>
+              </span>
+              <span>
+                <button class="btn btn-primary" (click)="saveWeekend()">Save</button>
+              </span>
+            </div>
+          </div>
+        </div>
+
+        <div class="container mt-2">
+<!--
+          <div class="d-flex justify-content-between align-items-center">
+-->
+          <div class="d-flex align-items-center mb-2">
+            <h5 class="mb-0 me-2">Working Hours</h5>
+            <a
+              class="btn btn-sm btn-outline-primary btn-tight-custom"
+              (click)="openWDModal(addWHTemplate)"
+              title="Add">
+              <i class="bi bi-plus"></i>
+            </a>
+          </div>
+          <!--            <a (click)="openWDModal(addWHTemplate)" class="btn-link p-0">Add Working Hour</a>-->
+          <div class="table-responsive">
+<!--
+            <table class="table table-bordered table-hover align-middle table-sm-custom text-sm">
+              <thead class="table-secondary text-center">
+-->
+            <table class="table table-striped table-hover table-bordered table-sm-custom text-sm">
+              <thead class="table-secondary" >
+              <tr>
+                <th>Description</th>
+                <th>Scope</th>
+                <th>Minutes</th>
+                <th>Day of Week</th>
+                <th>Event Date</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Action</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let wh of companyWorkingHours;">
+                <td>{{ wh.description }}</td>
+                <td>{{ wh.scope }}</td>
+                <td class="text-center">{{ wh.minutes }}</td>
+                <td>{{ wh.dayOfWeek | titlecase }}</td>
+                <td>{{ wh.eventDate }}</td>
+                <td>{{ wh.startDate }}</td>
+                <td>{{ wh.endDate }}</td>
+                <td class="text-center">
+                  <a
+                    class="btn btn-sm btn-outline-primary btn-tight-custom me-1"
+                    (click)="openWDModalEdit(addWHTemplate, wh.id)"
+                    title="Edit">
+                    <i class="bi bi-pencil"></i>
+                  </a>
+                  <a
+                    class="btn btn-sm btn-outline-danger btn-tight-custom"
+                    (click)="deleteCompanyWorkingHour(wh.id)"
+                    *ngIf="wh.scope !== WorkingHourEnum.DEFAULT"
+                    title="Delete">
+                    <i class="bi bi-trash"></i>
+                  </a>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+
+        <div class="container mt-2">
+          <div class="d-flex align-items-center mb-2">
+            <h5 class="mb-0 me-2">Holidays/Working Days</h5>
+            <a
+              class="btn btn-sm btn-outline-primary btn-tight-custom"
+              (click)="openCCModal(addCCTemplate)"
+              title="Add">
+              <i class="bi bi-plus"></i>
+            </a>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-striped table-hover table-bordered table-sm-custom text-sm">
+              <thead class="table-secondary">
+              <tr>
+                <th>Event</th>
+                <th>Type</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Action</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let wh of companyCalendars; ">
+                <td>{{ wh.eventName }}</td>
+                <td>{{ wh.eventType }}</td>
+                <td>{{ wh.startDate }}</td>
+                <td>{{ wh.endDate }}</td>
+                <td class="text-center">
+                  <a
+                    class="btn btn-sm btn-outline-primary btn-tight-custom me-1"
+                    (click)="openCCModalEdit(addCCTemplate, wh.id)"
+                    title="Edit"
+                  >
+                    <i class="bi bi-pencil"></i>
+                  </a>
+                  <a
+                    class="btn btn-sm btn-outline-danger btn-tight-custom"
+                    (click)="deleteCompanyCalendar(wh.id)"
+                    title="Delete"
+                  >
+                    <i class="bi bi-trash"></i>
+                  </a>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="text-center mt-0 mb-2 d-flex justify-content-center gap-2" *ngIf="isWizard()">
+          <button class="btn btn-primary w-20" (click)="next()">Next</button>
+        </div>
+      </div>
+    </div>
   </div>
 
-  <button class="btn btn-primary mb-3" (click)="openWDModal(addWHTemplate)">Add Working Hour</button>
-  <table class="table table-bordered">
-    <thead class="table-dark">
-    <tr>
-      <th>Description</th>
-      <th>Scope</th>
-      <th>Minutes</th>
-      <th>Day of week</th>
-      <th>Event Date</th>
-      <th>Start Date</th>
-      <th>End Date</th>
-      <th>Action</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let wh of companyWorkingHours; ">
-      <td>{{ wh.description }}</td>
-      <td>{{ wh.scope }}</td>
-      <td>{{ wh.minutes }}</td>
-      <td>{{ wh.dayOfWeek | titlecase }}</td>
-      <td>{{ wh.eventDate }}</td>
-      <td>{{ wh.startDate }}</td>
-      <td>{{ wh.endDate }}</td>
-      <td>
-        <button class="btn btn-danger btn-sm" (click)="deleteCompanyWorkingHour(wh.id)"
-         *ngIf="wh.scope !== WorkingHourEnum.DEFAULT">Delete</button>
-        <button class="btn btn-danger btn-sm" (click)="openWDModalEdit(addWHTemplate, wh.id)">Edit</button>
-      </td>
-    </tr>
-    </tbody>
-  </table>
-  <!--
-  <ng-template #viewLeaveTemplate>
-    <div class="p-4 text-dark">
-      @if (editCompanyWorkingHour) {
-        <p>Description: {{ editCompanyWorkingHour.description }}</p>
-        <hr />
-        <p>Scope: {{ editCompanyWorkingHour.scope }}</p>
-        <hr />
-        <p>Minutes: {{ editCompanyWorkingHour.minutes }}</p>
-        <hr />
-        <p *ngIf="isDisplay('startDate',editCompanyWorkingHour.scope)" >End Date: {{ editCompanyWorkingHour.startDate }}</p>
-        <hr />
-        <p *ngIf="isDisplay('endDate',editCompanyWorkingHour.scope)" >End Date: {{ editCompanyWorkingHour.endDate }}</p>
-        <hr />
-        <p *ngIf="isDisplay('eventDate',editCompanyWorkingHour.scope)" >Event Date: {{ editCompanyWorkingHour.eventDate }}</p>
-        <p *ngIf="isDisplay('dayOfWeek',editCompanyWorkingHour.scope)" >Day of Week: {{ editCompanyWorkingHour.dayOfWeek }}</p>
-
-      }@else{
-        <p>Working Hour does not exist</p>
-      }
-    </div>
-    <div class="modalButton mb-3">
-      <button (click)="closeModal()">close</button>
-    </div>
-  </ng-template>
-  -->
   <ng-template #addWHTemplate>
     <div class="modal fade show d-block">
       <div class="modal-dialog">
@@ -151,50 +268,21 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" (click)="closeModal()">Cancel</button>
-            <button class="btn btn-success" (click)="updateCompanyWorkingHour()" *ngIf="editCompanyWorkingHour.id>0" [disabled]="hrForm.invalid" >Update</button>
-            <button class="btn btn-success" (click)="addCompanyWorkingHour()" *ngIf="editCompanyWorkingHour.id===0" [disabled]="hrForm.invalid" >Add</button>
+            <button class="btn btn-primary w-20" (click)="updateCompanyWorkingHour()" *ngIf="editCompanyWorkingHour.id>0" [disabled]="hrForm.invalid" >Update</button>
+            <button class="btn btn-primary w-20" (click)="addCompanyWorkingHour()" *ngIf="editCompanyWorkingHour.id===0" [disabled]="hrForm.invalid" >Add</button>
+            <button class="btn btn-secondary w-20" (click)="closeModal()">Cancel</button>
           </div>
         </div>
       </div>
     </div>
   </ng-template>
 
-
-
-  <button class="btn btn-primary mb-3" (click)="openCCModal(addCCTemplate)">Add Company Calendar</button>
-  <table class="table table-bordered">
-    <thead class="table-dark">
-    <tr>
-      <th>Event</th>
-      <th>Type</th>
-      <th>Start Date</th>
-      <th>End Date</th>
-      <th>Action</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let wh of companyCalendars; ">
-      <td>{{ wh.eventName }}</td>
-      <td>{{ wh.eventType }}</td>
-      <td>{{ wh.startDate }}</td>
-      <td>{{ wh.endDate }}</td>
-      <td>
-        <button class="btn btn-danger btn-sm" (click)="deleteCompanyCalendar(wh.id)">Delete</button>
-        <button class="btn btn-danger btn-sm" (click)="openCCModalEdit(addCCTemplate, wh.id)">Edit</button>
-      </td>
-    </tr>
-    </tbody>
-  </table>
-  <div class="">
-    <button class="btn btn-primary btn-sm" (click)="next()">Next</button>
-  </div>
   <ng-template #addCCTemplate>
     <div class="modal fade show d-block">
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Add/Update Company Calendar</h5>
+            <h5 class="modal-title">Add/Update Holidays/Working Days</h5>
             <button type="button" class="btn-close" (click)="closeModal()"></button>
           </div>
           <div class="modal-body">
@@ -234,12 +322,39 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" (click)="closeModal()">Cancel</button>
-            <button class="btn btn-success" (click)="updateCompanyCalendar()" *ngIf="editCompanyCalendar.id>0" [disabled]="userForm.invalid" >Update</button>
-            <button class="btn btn-success" (click)="addCompanyCalendar()" *ngIf="editCompanyCalendar.id===0" [disabled]="userForm.invalid" >Add</button>
+            <button class="btn btn-primary w-20" (click)="updateCompanyCalendar()" *ngIf="editCompanyCalendar.id>0" [disabled]="userForm.invalid" >Update</button>
+            <button class="btn btn-primary w-20" (click)="addCompanyCalendar()" *ngIf="editCompanyCalendar.id===0" [disabled]="userForm.invalid" >Add</button>
+            <button class="btn btn-secondary w-20" (click)="closeModal()">Cancel</button>
           </div>
         </div>
       </div>
     </div>
   </ng-template>
+
+  <!--
+  <ng-template #viewLeaveTemplate>
+    <div class="p-4 text-dark">
+      @if (editCompanyWorkingHour) {
+        <p>Description: {{ editCompanyWorkingHour.description }}</p>
+        <hr />
+        <p>Scope: {{ editCompanyWorkingHour.scope }}</p>
+        <hr />
+        <p>Minutes: {{ editCompanyWorkingHour.minutes }}</p>
+        <hr />
+        <p *ngIf="isDisplay('startDate',editCompanyWorkingHour.scope)" >End Date: {{ editCompanyWorkingHour.startDate }}</p>
+        <hr />
+        <p *ngIf="isDisplay('endDate',editCompanyWorkingHour.scope)" >End Date: {{ editCompanyWorkingHour.endDate }}</p>
+        <hr />
+        <p *ngIf="isDisplay('eventDate',editCompanyWorkingHour.scope)" >Event Date: {{ editCompanyWorkingHour.eventDate }}</p>
+        <p *ngIf="isDisplay('dayOfWeek',editCompanyWorkingHour.scope)" >Day of Week: {{ editCompanyWorkingHour.dayOfWeek }}</p>
+
+      }@else{
+        <p>Working Hour does not exist</p>
+      }
+    </div>
+    <div class="modalButton mb-3">
+      <button (click)="closeModal()">close</button>
+    </div>
+  </ng-template>
+  -->
 </div>
