@@ -56,9 +56,9 @@ export class UploadEpicComponent implements OnInit {
   dateFormat: string = '';
   dateFormats:string[] = ['dd/MM/yyyy','dd-MM-yyyy', 'MM/dd/yyyy', 'MM-dd-yyyy']
   // Predefined field names in our system
-  predefinedFieldLabels:{ [key: string]: string } = {'title':'Deliverable/Epic/Story',
+  predefinedFieldLabels:{ [key: string]: string } = {'title':'Deliverable',
     'details':'Details',
-    'component':'Component/Module', 'version':'Version', 'priority':'Priority',
+    'component':'Component', 'version':'Version', 'priority':'Priority',
     'requiredBy':'Date Required By','valueGain':'Value Gain (Number)',
     'comments':'Comments',
     'risks':'Risks'};
@@ -127,6 +127,14 @@ export class UploadEpicComponent implements OnInit {
   onReset():void {
     this.mappedHeaders = {};
     this.excelHeadersUnmapped = this.excelHeaders.filter(header =>this.searchExcelColumnMapping(header)==='Unmapped');
+  }
+  onSkip():void {
+    if (sessionStorage.getItem('wizard')) {
+      this.router.navigate(['/team-resource']);
+    }
+  }
+  isWizard():boolean {
+    return sessionStorage.getItem('wizard')!=null && sessionStorage.getItem('wizard')=='productSetup';
   }
   onSubmit() {
     //if ()

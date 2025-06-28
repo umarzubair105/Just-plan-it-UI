@@ -19,34 +19,179 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   color: #007bff;
   margin-right: 5px;
 }
-::ng-deep .ngx-datatable th {
-  white-space: normal !important;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  text-align: center; /* Optional: Center align headers */
-  min-width: 120px;
+.modal-backdrop.show {
+  background-color: transparent !important;
 }
 
+.transparent-backdrop {
+  background-color: transparent !important;
+}
+/*
+.my-custom-table  .datatable-header {
+  background-color:  #e2e3e5;
+   !* #f8f9fa; Bootstrap light gray *!
+  font-weight: normal;       !* Not bold *!
+  vertical-align: middle;
+}
 
+.my-custom-table .datatable-row-center,
+.my-custom-table .datatable-body-cell {
+  border: 1px solid #dee2e6;
+  vertical-align: middle;
+  padding: 0rem;
+}
 
-.bootstrap-table {
-  font-size: 14px;
+.my-custom-table .datatable-body-row:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+.my-custom-table .datatable-body-row:nth-child(even) {
+  background-color: #ffffff;
+}
+
+.my-custom-table .datatable-header-cell {
+  border: 1px solid #dee2e6;
+  border-color:  #b5b6b7;
+  padding: 0.25rem;
+  vertical-align: middle;
   text-align: left;
 }
 
-/* Style ngx-datatable header */
-.bootstrap-table .datatable-header {
-  background-color: #343a40;
-  color: white;
-  font-weight: bold;
-}
-
-/* Style ngx-datatable rows */
-/*
-.bootstrap-table .datatable-body-row {
-  transition: background-color 0.3s;
+.my-custom-table .datatable-body-cell-label {
+  white-space: normal;
 }
 */
+
+.ngx-datatable {
+  width: 100%;
+  height: auto;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+.ngx-datatable  .datatable-header {
+  background-color:  #e2e3e5;
+  /* #f8f9fa; Bootstrap light gray */
+  font-weight: normal;       /* Not bold */
+  vertical-align: middle;
+
+/*
+  color:  #000;
+  font-size: 14px;
+  text-align: left;
+  font-weight: normal;
+  vertical-align: center;*/
+}
+.ngx-datatable .datatable-header-cell-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+/*  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;*/
+}
+
+
+.ngx-datatable .datatable-header-cell {
+  border: 1px solid #dee2e6;
+  border-color:  #b5b6b7;
+  padding: 0.15rem;
+  vertical-align: middle;
+  text-align: left;
+
+  align-items: center;
+  justify-content: flex-start;
+  display: flex;
+
+  padding-top: 8px;
+  padding-left: 5px;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.ngx-datatable .datatable-row-center,
+.ngx-datatable .datatable-body-cell {
+  border: 1px solid #dee2e6;
+  vertical-align: middle;
+  padding: 0rem;
+}
+
+.ngx-datatable .datatable-body-row:nth-child(odd) {
+  background-color: #f9f9f9;
+}
+
+.ngx-datatable .datatable-body-row:nth-child(even) {
+  background-color: #ffffff;
+}
+
+
+.ngx-datatable .datatable-body-cell-label {
+  white-space: normal;
+  padding-left: 5px;
+}
+
+.ngx-datatable th,
+.ngx-datatable td{
+  white-space: normal !important;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-align: center;
+  min-width: 130px;
+  vertical-align: middle;
+
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  line-height: 1.0;
+  font-weight: normal;
+}
+/*
+.ngx-datatable .datatable-header {
+  background-color: #e2e3e5;
+  border-color: #b5b6b7;
+  color:  #000;
+  font-size: 14px;
+  text-align: left;
+  font-weight: normal;
+  vertical-align: center;
+}
+
+.ngx-datatable .datatable-header-cell {
+  padding-top: 5px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 8px;
+}
+!*::ng-deep*!
+.ngx-datatable th,
+.ngx-datatable td{
+  white-space: normal !important;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-align: center;
+  min-width: 120px;
+  vertical-align: center;
+
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  line-height: 1.2;
+  font-weight: normal;
+}*/
+
+
+
+
+/*ngx-datatable.material {
+  border: 0px solid #dee2e6;
+}
+
+.ngx-datatable .datatable-row-wrapper,
+.ngx-datatable .datatable-header-cell,
+.ngx-datatable .datatable-body-cell {
+  border: 0px solid #dee2e6;
+}*/
+
 .table-sm-custom td,
 .table-sm-custom th {
   padding-top: 0.25rem;

@@ -10,12 +10,13 @@ import {DataTableColumnCellDirective, DataTableColumnDirective, DatatableCompone
 import {ShowErrorsDirective} from '../directives/show-errors.directive';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ResourceService} from '../services/resource.service';
+import {FormatDatePipe} from '../pipes/format.date';
 
 
 @Component({
   selector: 'app-resource-leave',
   standalone: true,
-  imports: [CommonModule, NgIf, NgFor, FormsModule, ModalModule, DataTableColumnCellDirective, DataTableColumnDirective, DatatableComponent, ShowErrorsDirective], // ✅ NO BrowserAnimationsModule here!
+  imports: [CommonModule, NgIf, NgFor, FormsModule, ModalModule, DataTableColumnCellDirective, DataTableColumnDirective, DatatableComponent, ShowErrorsDirective, FormatDatePipe], // ✅ NO BrowserAnimationsModule here!
   templateUrl: './resource.leave.component.html',
   providers: [BsModalService]
 })

@@ -38,7 +38,7 @@ export class ResourceRole extends Basic{
   public resourceId: number = 0;
 }
 
-export class Resource extends Basic {
+export class Resource extends Audit {
   public companyId: number = 0;
   public name: string = '';
   public email: string = '';
@@ -49,6 +49,8 @@ export class Resource extends Basic {
   public lead: boolean = true;
   public individualCapacity: boolean = true;
   public dateOfBirth: Date | null = null;
+  public lastWorkingDate: Date | null = null;
+  public status: ResourceStatus = ResourceStatus.ACTIVE;
 }
 
 export class ResourceProjection {
@@ -74,6 +76,9 @@ export class ProductResourceBean extends ProductResource {
 
 export enum LeaveStatus {
   PENDING="PENDING", APPROVED="APPROVED", REJECTED="REJECTED"
+}
+export enum ResourceStatus {
+  ACTIVE="ACTIVE", INACTIVE="INACTIVE"
 }
 export enum LeaveType {
   SICK_LEAVE, CASUAL_LEAVE, ANNUAL_LEAVE, COMPENSATION_LEAVE,

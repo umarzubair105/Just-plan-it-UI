@@ -1,46 +1,97 @@
-<div class="container mt-5" xmlns="http://www.w3.org/1999/html">
-  <div class="card shadow-lg">
-    <div class="card-header bg-primary text-white text-center">
-      <h3>Resources</h3>
-    </div>
-    <div class="card-body">
-      <div class="table-container">
+<div class="container-lg mt-4">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
 
-        <ngx-datatable
-          [rows]="resources"
-          [columnMode]="'force'"
-          [headerHeight]="50"
-          [footerHeight]="50"
-          [rowHeight]="'auto'"
-          [sorts]="[{ prop: 'priorityLevel', dir: 'asc' }]"
-          class="material">
-
-          <ngx-datatable-column name="Name" prop="name" [sortable]="true"></ngx-datatable-column>
-          <ngx-datatable-column name="Email" prop="email" ></ngx-datatable-column>
-          <ngx-datatable-column name="Mobile Number" prop="mobileNumber" ></ngx-datatable-column>
-          <ngx-datatable-column name="Date of Birth" prop="dateOfBirth" [sortable]="true"></ngx-datatable-column>
-          <ngx-datatable-column name="Action">
-            <ng-template let-row="row" ngx-datatable-cell-template>
-              <a (click)="openDialogForLeaves(row)" title="Leaves">Leaves</a>
-
-              <!--<a (click)="openModalEdit(editLeave, row.id)" title="Update">
-                <i class="bi bi-pencil"></i>
-              </a>
-              <a (click)="delete(row.id)" title="Delete">
-                <i class="bi bi-trash"></i>
-              </a>-->
-
-            </ng-template>
-          </ngx-datatable-column>
-        </ngx-datatable>
+      <!-- Intro Card -->
+      <div class="card shadow-sm mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Resources & their Availability</h5>
+          <p class="card-text">
+            Lets maintain human resources of company and their availability. This information should
+            be defined prior to creating plan for a specific time period.
+          </p>
+        </div>
       </div>
-    </div>
-    <div class="text-center">
-      <!--<button class="btn btn-primary mb-3" (click)="openModal(editLeave)">Apply Leave</button>-->
+
+      <!-- Main Form Card -->
+      <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white text-center">
+          <h2 class="h4 mb-0">Resources</h2>
+        </div>
+
+        <div class="container mt-2">
+          <div class="d-flex align-items-center mb-2">
+            <h5 class="mb-0 me-2">List of resources</h5>
+<!--
+            <a
+              class="btn btn-sm btn-outline-primary btn-tight-custom"
+              (click)="openDialogForLeaves(null)"
+              &lt;!&ndash;(click)="openWDModal(addWHTemplate)"&ndash;&gt;
+              title="Add">
+              <i class="bi bi-plus"></i>
+            </a>
+-->
+          </div>
+          <div class="table-responsive">
+            <table class="table table-striped table-hover table-bordered table-sm-custom text-sm">
+              <thead class="table-secondary" >
+
+              <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Mobile Number</th>
+                <th>Date of Birth</th>
+                <th>Status</th>
+                <th>Activated</th>
+                <th>Action</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let wh of resources;">
+                <td>{{ wh.name | titlecase}}</td>
+                <td>{{ wh.email }}</td>
+                <td>{{ wh.mobileNumber }}</td>
+                <td>{{ wh.createdDate }}</td>
+                <td>{{ wh.status }}</td>
+                <td>{{ wh.active }}</td>
+                <td class="text-center">
+<!--
+                  <a
+                    class="btn btn-sm btn-outline-primary btn-tight-custom me-1"
+                    (click)="openWDModalEdit(addWHTemplate, wh.id)"
+                    title="Edit">
+                    <i class="bi bi-pencil"></i>
+                  </a>
+-->
+                  <a
+                    class="btn btn-sm btn-outline-info btn-tight-custom"
+                    (click)="openDialogForLeaves(wh)"
+                    title="Leaves">
+                    <i class="bi bi-calendar"></i>
+                  </a>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
+</div>
 
+
+
+
+
+
+
+
+
+
+<!--
+ Multi Resources Adddition
   <div class="card shadow-lg">
     <div class="card-header bg-primary text-white text-center">
       <h3>Add Multiple Resources</h3>
@@ -71,17 +122,13 @@
             {{ m.name }}
           </option>
         </select>
-        <!--(change)="onSelectChange($event)"-->
 
       </div>
 
-      <!-- Submit Button -->
       <div class="text-center">
         <button class="btn btn-primary" type="submit">Submit</button>
         <button type="reset" class="btn btn-secondary" >Reset</button>
       </div>
     </div>
     </form>
-  </div>
-
-</div>
+  </div>-->

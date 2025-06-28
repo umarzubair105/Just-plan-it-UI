@@ -70,6 +70,8 @@ export class TopBarComponent implements OnInit {
   }
   openDialogForMyLeaves(): void {
     const dialogRef = this.dialog.open(ResourceLeaveComponent, {
+      backdropClass: 'transparent-backdrop',
+      hasBackdrop: false,
       width: '80%',
       maxWidth: '90vw', // 90% of viewport width
       height: '70%',
