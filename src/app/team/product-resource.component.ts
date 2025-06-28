@@ -172,6 +172,14 @@ export class ProductResourceComponent implements OnInit {
     //}
   }
 
+  onSkip():void {
+    if (sessionStorage.getItem('wizard')) {
+      this.router.navigate(['/priority']);
+    }
+  }
+  isWizard():boolean {
+    return sessionStorage.getItem('wizard')!=null && sessionStorage.getItem('wizard')=='productSetup';
+  }
   //convert following method service calls to sync
   async onSave(): Promise<void> {
     for (const pr of this.productResources.filter(pr => pr.resourceId > 0 && pr.productId > 0 && pr.id > 0)) {

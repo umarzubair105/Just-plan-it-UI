@@ -43,6 +43,7 @@ export class AuthService {
     localStorage.removeItem('companyName');
     localStorage.removeItem('email');
     localStorage.removeItem('productId');
+    sessionStorage.removeItem('wizard');
     this.userNameSubject.next(null);
   }
 

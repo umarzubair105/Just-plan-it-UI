@@ -1,13 +1,85 @@
+<div class="container-lg mt-4">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+
+      <!-- Intro Card -->
+      <div class="card shadow-sm mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Priorities</h5>
+          <p class="card-text">
+            Define priorities and change their priority levels.
+          </p>
+        </div>
+      </div>
+
+      <!-- Main Form Card -->
+      <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white text-center">
+          <h2 class="h4 mb-0">Define Priorities</h2>
+          <div *ngIf="errorMessage" class="alert alert-danger">
+            {{ errorMessage }}
+          </div>
+        </div>
+
+        <div class="container mt-2">
+          <h5 class="mb-2">Add New Priority</h5>
+          <div class="mb-3">
+            <label for="name" class="form-label">Priority <span class="text-danger">*</span></label>
+            <input id="name" [(ngModel)]="newModel.name" required class="form-control"/>
+          </div>
+          <div class="text-center mt-2 d-flex justify-content-center gap-2">
+            <button class="btn btn-primary w-20" (click)="addModel()" [disabled]="!newModel.name">Add</button>
+          </div>
+        </div>
+
+        <div class="container mt-2">
+          <div class="d-flex align-items-center mb-2">
+            <h5 class="mb-0 me-2">Drag & Drop rows to update priority, keep most important on top</h5>
+          </div>
+          <!--            <a (click)="openWDModal(addWHTemplate)" class="btn-link p-0">Add Working Hour</a>-->
+          <div class="table-responsive">
+            <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
+              @for (model of models; track model) {
+                <div  (click)="selectModel(model)" class="example-box" cdkDrag >
+                  <div *ngIf="selectedModel != null && model.id === selectedModel.id">
+                    <span cdkDragHandle>☰</span>
+                    <input [(ngModel)]="selectedModel.name" required/>
+                  </div>
+                  <div *ngIf="selectedModel == null || model.id !== selectedModel.id">
+                    <span cdkDragHandle>☰</span>
+
+                    {{model.name}}
+                  </div>
+                  <!-- <img *cdkDragPreview [src]="movie.poster" [alt]="movie.title">-->
+                </div>
+              }
+            </div>
+          </div>
+        </div>
+
+        <div class="text-center mt-3 mb-3 d-flex justify-content-center gap-2" >
+          <button class="btn btn-primary w-20" (click)="updateModels()" *ngIf="models.length>0">Update</button>
+          <button class="btn btn-secondary w-20" (click)="onSkip()" *ngIf="isWizard()">Skip</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<!--
+
+
 <div class="container mt-4">
   <h2>Define Priorities</h2>
 
-  <!-- Add New -->
+  &lt;!&ndash; Add New &ndash;&gt;
   <div>
     <h5 class="text-center">Add New Priority</h5>
     <p>
       Name: <input [(ngModel)]="newModel.name" required/>
     </p>
-    <button (click)="addModel()">Add</button>
+    <button (click)="addModel()" *ngIf="newModel.name">Add</button>
   </div>
   <h5 class="text-center">🖱️ Drag & Drop rows to update priority, keep most important on top</h5>
   <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
@@ -20,29 +92,30 @@
         <div *ngIf="selectedModel == null || model.id !== selectedModel.id">
           <span cdkDragHandle>☰</span>
 
-        {{model.name}}
+          {{model.name}}
         </div>
-       <!-- <img *cdkDragPreview [src]="movie.poster" [alt]="movie.title">-->
+        &lt;!&ndash; <img *cdkDragPreview [src]="movie.poster" [alt]="movie.title">&ndash;&gt;
       </div>
     }
   </div>
 
 
-  <!-- Error Message -->
+  &lt;!&ndash; Error Message &ndash;&gt;
   <div *ngIf="errorMessage" class="alert alert-danger">
     {{ errorMessage }}
   </div>
 
 
-  <!-- Selected Details -->
+  &lt;!&ndash; Selected Details &ndash;&gt;
   <div *ngIf="models.length>0">
     <button (click)="updateModels()">Update</button>
   </div>
 
 
-<!--  <button (click)="emitEvent()">Go Back</button>-->
+  &lt;!&ndash;  <button (click)="emitEvent()">Go Back</button>&ndash;&gt;
 </div>
 
+-->
 
 <!--
 

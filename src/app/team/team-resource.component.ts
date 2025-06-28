@@ -11,7 +11,7 @@ import {
   DatatableComponent
 } from '@swimlane/ngx-datatable';
 import {FormsModule} from '@angular/forms';
-import {NgFor, NgIf} from '@angular/common';
+import {NgFor, NgIf, TitleCasePipe} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
 import {lastValueFrom} from 'rxjs';
 
@@ -19,15 +19,16 @@ import {lastValueFrom} from 'rxjs';
   selector: 'app-team-resource',
   templateUrl: './team-resource.component.html',
   styleUrl: './team-resource.component.css',
-  imports: [
-    DatatableComponent,
-    DataTableColumnDirective,
-    FormsModule,
-    NgFor,
-    DataTableColumnCellDirective,
-    NgIf,
-    DataTableColumnHeaderDirective
-  ],
+    imports: [
+        DatatableComponent,
+        DataTableColumnDirective,
+        FormsModule,
+        NgFor,
+        DataTableColumnCellDirective,
+        NgIf,
+        DataTableColumnHeaderDirective,
+        TitleCasePipe
+    ],
   standalone: true
 })
 export class TeamResourceComponent implements OnInit {
@@ -79,6 +80,14 @@ export class TeamResourceComponent implements OnInit {
     });
   }
 
+  onSkip():void {
+    if (sessionStorage.getItem('wizard')) {
+      this.router.navigate(['/product-resource']);
+    }
+  }
+  isWizard():boolean {
+    return sessionStorage.getItem('wizard')!=null && sessionStorage.getItem('wizard')=='productSetup';
+  }
 
   async onSave(): Promise<void> {
     for (const pr of this.productResources) {
@@ -99,7 +108,9 @@ export class TeamResourceComponent implements OnInit {
         //this.util.showErrorMessage(err.toString());
       }
     }
-    this.router.navigate(['/product-resource']);
+    if (sessionStorage.getItem('wizard')) {
+      this.router.navigate(['/product-resource']);
+    }
   }
 
 

@@ -1,15 +1,16 @@
+/*
 ngx-datatable {
-  width: 100%;
+/*  width: 100%;
   height: auto;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
   white-space: normal !important;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  text-align: center; /* Optional: Center align headers */
-}
-.table-container {
+  text-align: center;
+}*/
+/*.table-container {
   width: 100%;
-  overflow-x: auto; /* Enables horizontal scroll */
+  overflow-x: auto; !* Enables horizontal scroll *!
   white-space: nowrap;
-}
+}*/
 

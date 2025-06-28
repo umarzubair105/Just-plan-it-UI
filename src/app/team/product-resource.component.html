@@ -1,71 +1,68 @@
-<div class="container mt-5" >
-  <div class="card shadow-lg">
-    <div class="card-header bg-primary text-white text-center">
-      <h3>Assign Time Allocation in percentage to resources against products</h3>
-    </div>
-    <div class="card-body">
-      <!-- Name -->
-      <div *ngIf="errorMessage" class="error-message">
-        {{ errorMessage }}
+<div class="container-lg mt-4">
+  <div class="row">
+    <div class="col-md-12 offset-md-0">
+      <div class="card shadow-sm mb-2">
+        <div class="card-body">
+          <h5 class="card-title">Allocate time to resource</h5>
+          <p class="card-text">
+            It's to define how much time a resource can be allocated to product out of resource availability.
+          </p>
+        </div>
       </div>
-    <div class="table-container">
-      <ngx-datatable
-        [rows]="transformedData"
-        [columns]="columns"
-        class="material"
-        [columnMode]="'force'"
-        [headerHeight]="50"
-        [footerHeight]="50"
-        [scrollbarH]="true"
-        [rowHeight]="'auto'">
 
-        <!-- Resource Name Column -->
-        <ngx-datatable-column name="Resource" prop="resourceName">
-        </ngx-datatable-column>
+      <!-- Upload Card -->
+      <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white text-center">
+          <h3>Time Allocation</h3>
+        </div>
+        <div class="card-body">
+          <div *ngIf="errorMessage" class="alert alert-danger">
+            {{ errorMessage }}
+          </div>
+          <div class="table-container">
+            <ngx-datatable
+              [rows]="transformedData"
+              [columns]="columns"
+              class="material"
+              [columnMode]="'force'"
+              [headerHeight]="40"
+              [footerHeight]="30"
+              [scrollbarH]="true"
+              [rowHeight]="'auto'">
 
-        <!-- Dynamic Product Columns -->
-        <ngx-datatable-column *ngFor="let column of columns.slice(1)" [name]="column.name" [prop]="column.prop">
-          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-            <input
-              type="number"
-              [(ngModel)]="row[column.prop].participationPercentTime"
-              (ngModelChange)="onParticipationChange(row.resourceId, column.prop, $event)"
-              [disabled]="row[column.prop].id==0"
-              />
-          </ng-template>
-        </ngx-datatable-column>
+              <!-- Resource Name Column -->
+              <ngx-datatable-column name="Resource" prop="resourceName">
+              </ngx-datatable-column>
 
-        <ngx-datatable-column name="Total">
-          <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
-            {{row['total'].participationPercentTime}}%
-          </ng-template>
-        </ngx-datatable-column>
-      </ngx-datatable>
+              <!-- Dynamic Product Columns -->
+              <ngx-datatable-column *ngFor="let column of columns.slice(1)" [name]="column.name" [prop]="column.prop">
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                  <input
+                    type="number"
+                    [(ngModel)]="row[column.prop].participationPercentTime"
+                    (ngModelChange)="onParticipationChange(row.resourceId, column.prop, $event)"
+                    [disabled]="row[column.prop].id==0"
+                  />
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Total">
+                <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                  {{row['total'].participationPercentTime}}%
+                </ng-template>
+              </ngx-datatable-column>
+            </ngx-datatable>
+          </div>
+
+
+          <div class="text-center mt-3 d-flex justify-content-center gap-2">
+            <button class="btn btn-primary w-20" type="submit" (click)="onSave()" [disabled]="!isAnyThingChanged || !isValidated">Save</button>
+            <button class="btn btn-secondary w-20" type="reset" (click)="onSkip()" *ngIf="isWizard()">Skip</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
-  <div class="text-center">
-    <button class="btn btn-primary" type="submit" (click)="onSave()" [disabled]="!isAnyThingChanged || !isValidated">Save</button>
-  </div>
-  </div>
 </div>
-<!--
-  <h3 class="mt-4">Selected Roles:</h3>
-  <ul>
-    <li *ngFor="let rr of productResources">
-      Resource {{ rr.resourceId }} → Role {{ rr.roleId }}
-    </li>
-  </ul>
-</div>
--->
 
-<!--  <ngx-datatable
-    class="material"
-    [rows]="transformedData"
-    [columns]="columns"
-    [columnMode]="'force'"
-    [headerHeight]="50"
-    [footerHeight]="50"
-    [rowHeight]="'auto'">
-  </ngx-datatable>
-</div>-->
 

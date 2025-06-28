@@ -14,6 +14,7 @@ import {
 } from '@angular/cdk/drag-drop';
 import {Utils} from '../utils/utils';
 import {Priority} from '../models/basic';
+import {WorkingHourEnum} from '../services/leave.service';
 @Component({
   selector: 'app-priority',
   standalone: true,
@@ -132,5 +133,14 @@ export class PriorityComponent implements OnInit {
       error: (err) => {this.errorMessage = err;this.utils.showErrorMessage(err);},
     });
   }
+  onSkip():void {
+    if (sessionStorage.getItem('wizard')) {
+      this.router.navigate(['/product-resource']);
+    }
+  }
+  isWizard():boolean {
+    return sessionStorage.getItem('wizard')!=null && sessionStorage.getItem('wizard')=='productSetup';
+  }
 
+  protected readonly WorkingHourEnum = WorkingHourEnum;
 }

@@ -62,32 +62,52 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 */
 
+/*
+<ngx-datatable>                      <-- Wrapper Component
+<datatable-header>                <-- Header Section
+<datatable-header-cell>        <-- Individual Column Header
+<div.datatable-header-cell-label>  <-- The actual column name text
+<datatable-body>                  <-- Body Section (Rows)
+<datatable-row-wrapper>        <-- Each Row
+.datatable-body-row
+<datatable-body-cell>        <-- Each Cell in Row*/
+
 .ngx-datatable {
   width: 100%;
   height: auto;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+
+  overflow-x: auto;
+  border: 1px solid #dee2e6;
 }
+
+.ngx-datatable th,
+.ngx-datatable td{
+  white-space: normal !important;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-align: left;
+  min-width: 120px;
+  vertical-align: middle;
+
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  line-height: 1.0;
+  font-weight: normal;
+}
+
 .ngx-datatable  .datatable-header {
   background-color:  #e2e3e5;
   /* #f8f9fa; Bootstrap light gray */
   font-weight: normal;       /* Not bold */
   vertical-align: middle;
-
+  text-align:left;
 /*
   color:  #000;
   font-size: 14px;
   text-align: left;
   font-weight: normal;
   vertical-align: center;*/
-}
-.ngx-datatable .datatable-header-cell-label {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-
-/*  white-space: normal !important;
-  overflow: visible !important;
-  text-overflow: unset !important;*/
 }
 
 
@@ -110,11 +130,28 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   overflow: hidden;
 }
 
+.ngx-datatable .datatable-header-cell-label {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+/*  white-space: normal !important;
+  overflow: visible !important;
+  text-overflow: unset !important;*/
+}
+
+
 .ngx-datatable .datatable-row-center,
 .ngx-datatable .datatable-body-cell {
   border: 1px solid #dee2e6;
   vertical-align: middle;
   padding: 0rem;
+}
+
+.ngx-datatable .datatable-body-cell-label {
+  white-space: normal;
+  padding-left: 5px;
+  text-align:left;
 }
 
 .ngx-datatable .datatable-body-row:nth-child(odd) {
@@ -124,27 +161,23 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .ngx-datatable .datatable-body-row:nth-child(even) {
   background-color: #ffffff;
 }
+.ngx-datatable .datatable-footer {
+  text-align: right;
+  padding-right: 5px;
 
-
-.ngx-datatable .datatable-body-cell-label {
-  white-space: normal;
-  padding-left: 5px;
+  /*  white-space: normal !important;
+    overflow: visible !important;
+    text-overflow: unset !important;*/
 }
 
-.ngx-datatable th,
-.ngx-datatable td{
-  white-space: normal !important;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  text-align: center;
-  min-width: 130px;
-  vertical-align: middle;
 
-  padding-top: 0.25rem;
-  padding-bottom: 0.25rem;
-  line-height: 1.0;
-  font-weight: normal;
-}
+
+
+
+
+
+
+
 /*
 .ngx-datatable .datatable-header {
   background-color: #e2e3e5;
