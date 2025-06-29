@@ -208,7 +208,11 @@ export class PlannedComponent implements OnInit {
       return 'Missing';
     }
   }
-
+  getAssignedPercentage(row: any): number {
+    const total = row.prodBasedAssignableTime;
+    if (!total || total <= 0) return 0;
+    return (row.prodBasedAssignedTime / total) * 100;
+  }
   protected readonly WorkingHourEnum = WorkingHourEnum;
   protected readonly EpicBean = EpicBean;
   protected readonly releaseStatusClass = releaseStatusClass;

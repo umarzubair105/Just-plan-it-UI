@@ -13,7 +13,7 @@
           </li>
         </ul>
 
-  <div class="col-md-12" >
+    <div class="col-md-12" >
 
     <div class="row release" *ngFor="let releaseDetail of releases;let i = index" [id]="'eRelease'+i">
       <div class="">
@@ -36,27 +36,27 @@
           </ul>
         </div>
         <div class="card-body"  *ngIf="releaseDetail.epics.length>0">
-          <div class="row">
-            <div class="col-md-8 table-responsive">
+            <h5 class="card-title">Deliverables</h5>
+            <div class="col-md-12 table-responsive">
               <ngx-datatable
                 class="bootstrap-table table-striped table-bordered table-hover"
                 [rows]="releaseDetail.epics"
                 [columnMode]="'force'"
-                [headerHeight]="50"
-                [footerHeight]="50"
+                [headerHeight]="40"
+                [footerHeight]="40"
                 [rowHeight]="'auto'"
                 [sorts]="[{ prop: 'priorityLevel', dir: 'asc' }]"
                 [rowClass]="getRowClass"
                 >
 
-                <ngx-datatable-column name="Code" prop="code" [sortable]="true" maxWidth="50"></ngx-datatable-column>
-                <ngx-datatable-column name="Title" prop="title" maxWidth="100"></ngx-datatable-column>
-                <ngx-datatable-column name="Priority" prop="priorityLevel" [sortable]="true" maxWidth="50">
+                <ngx-datatable-column name="Code" prop="code" [sortable]="true" [width]="80" [minWidth]="80" [maxWidth]="80"></ngx-datatable-column>
+                <ngx-datatable-column name="Title" prop="title" ></ngx-datatable-column>
+                <ngx-datatable-column name="Priority" prop="priorityLevel" [sortable]="true" [width]="120" [minWidth]="120" [maxWidth]="120">
                   <ng-template let-row="row" ngx-datatable-cell-template>
                     {{row.priorityName}}
                   </ng-template>
                 </ngx-datatable-column>
-                <ngx-datatable-column name="Assignment" >
+                <ngx-datatable-column name="Assignment" [width]="300" [minWidth]="300" [maxWidth]="300">
                   <ng-template let-row="row" ngx-datatable-cell-template>
 <!--
                     <div [innerHTML]="showAssignments(row.assignments)"></div>
@@ -81,39 +81,58 @@
                     </table>
                   </ng-template>
                 </ngx-datatable-column>
-                <ngx-datatable-column name="Actions" maxWidth="50">
-                  <ng-template let-row="row" ngx-datatable-cell-template>
+              </ngx-datatable>
+            </div>
 
-                  </ng-template>
-                </ngx-datatable-column>
-              </ngx-datatable>
-            </div>
-            <div class="col-md-4"  *ngIf="releaseDetail.resourceCaps.length>0">
-              <ngx-datatable
-                [rows]="releaseDetail.resourceCaps"
-                [columnMode]="'force'"
-                [headerHeight]="50"
-                [footerHeight]="50"
-                [rowHeight]="'auto'"
-                class="material">
-                <ngx-datatable-column name="Resource" prop="resourceName"></ngx-datatable-column>
-                <ngx-datatable-column name="Time Assigned">
-                  <ng-template let-row="row" ngx-datatable-cell-template>
-                    {{ row.prodBasedAssignedTime | decimalToTime }}
-                  </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column name="Remaining Assignable Time">
-                  <ng-template let-row="row" ngx-datatable-cell-template>
-                    {{ row.prodBasedAssignableTime - row.prodBasedAssignedTime | decimalToTime }}
-                  </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column name="Time Logged">
-                  <ng-template let-row="row" ngx-datatable-cell-template>
-                    {{ row.loggedTime | decimalToTime }}
-                  </ng-template>
-                </ngx-datatable-column>
-              </ngx-datatable>
-            </div>
+        </div>
+        <div class="card-body"  *ngIf="releaseDetail.epics.length>0">
+          <h5 class="card-title">Resource Allocation</h5>
+          <div class="col-md-12">
+            <ngx-datatable
+              [rows]="releaseDetail.resourceCaps"
+              [columnMode]="'force'"
+              [headerHeight]="40"
+              [footerHeight]="0"
+              [rowHeight]="'auto'"
+              class="material">
+              <ngx-datatable-column name="Resource" prop="resourceName"></ngx-datatable-column>
+              <ngx-datatable-column name="Availability" [width]="150" [minWidth]="150" [maxWidth]="150">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{ row.prodBasedAssignableTime | decimalToTime}}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Time Assigned" [width]="150" [minWidth]="150" [maxWidth]="150">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{ row.prodBasedAssignedTime | decimalToTime}}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Time Unassigned" [width]="150" [minWidth]="150" [maxWidth]="150">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{ row.prodBasedAssignableTime - row.prodBasedAssignedTime | decimalToTime }}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Time Logged">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{ row.loggedTime | decimalToTime }}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Time Utilized" [width]="500" [minWidth]="500" [maxWidth]="500">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <div class="time-bar-container">
+                    <div
+                      class="time-bar-assigned"
+                      [style.width.%]="getLoggedPercentage(row)"
+                      title="Time Logged: {{ row.loggedTime | decimalToTime }}">
+                    </div>
+                    <div
+                      class="time-bar-remaining"
+                      [style.width.%]="100 - getLoggedPercentage(row)"
+                      title="Max Time Left: {{ row.prodBasedAssignableTime - row.loggedTime | decimalToTime }}">
+                    </div>
+                  </div>
+                </ng-template>
+              </ngx-datatable-column>
+            </ngx-datatable>
           </div>
         </div>
       </div>

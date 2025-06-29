@@ -282,6 +282,11 @@ export class ExecutionComponent implements OnInit {
       // Handle the result here
     });
   }
+  getLoggedPercentage(row: any): number {
+    const total = row.prodBasedAssignableTime;
+    if (!total || total <= 0) return 0;
+    return (row.loggedTime / total) * 100;
+  }
   protected readonly WorkingHourEnum = WorkingHourEnum;
   protected readonly EpicBean = EpicBean;
   protected readonly EpicAssignmentStatusEnum = EpicAssignmentStatusEnum;

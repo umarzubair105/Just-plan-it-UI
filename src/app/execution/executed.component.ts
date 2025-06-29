@@ -142,7 +142,11 @@ export class ExecutedComponent implements OnInit {
     return this.rowIndex % 2 === 0 ? 'even-row' : 'odd-row';
   }
 
-
+  getLoggedPercentage(row: any): number {
+    const total = row.prodBasedAssignableTime;
+    if (!total || total <= 0) return 0;
+    return (row.loggedTime / total) * 100;
+  }
 
   protected readonly WorkingHourEnum = WorkingHourEnum;
   protected readonly EpicBean = EpicBean;

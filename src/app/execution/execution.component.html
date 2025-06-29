@@ -13,142 +13,135 @@
           </li>
         </ul>
 
-  <div class="col-md-12" >
 
-    <div class="row release" *ngFor="let releaseDetail of releases;let i = index" [id]="'eRelease'+i">
-      <div class="">
-        <div class="card-header release-info-card">
-        <ul class="release-info-list">
-          <li><strong>Release:</strong> {{ releaseDetail.release?.name }}</li>
-          <li><strong>Start Date:</strong> {{ releaseDetail.release?.startDate }}</li>
-          <li><strong>End Date:</strong> {{ releaseDetail.release?.endDate }}</li>
-          <li><strong>Working Days:</strong> {{ releaseDetail.release?.workingDays }}</li>
-          <li><strong>Status:</strong>
-            <span [ngClass]="releaseStatusClass(releaseDetail.release?.status)">
-                {{ releaseDetail.release?.status }}
-              </span>
-          </li>
-          <li>
-            <a (click)="closeRelease(releaseDetail)" title="Close the release" class="btn btn-sm btn-outline-success">
-              <i class="bi bi-door-closed"></i> Close
-            </a>
-          </li>
-        </ul>
-        </div>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md-8 table-responsive">
-              <ngx-datatable
-                class="bootstrap-table table-striped table-bordered table-hover"
-                [rows]="releaseDetail.epics"
-                [columnMode]="'force'"
-                [headerHeight]="50"
-                [footerHeight]="50"
-                [rowHeight]="'auto'"
-                [sorts]="[{ prop: 'priorityLevel', dir: 'asc' }]"
-                [rowClass]="getRowClass"
-                >
+        <div class="row release" *ngFor="let releaseDetail of releases;let i = index" [id]="'eRelease'+i">
+        <div class="">
+          <div class="card-header release-info-card">
+          <ul class="release-info-list">
+            <li><strong>Release:</strong> {{ releaseDetail.release?.name }}</li>
+            <li><strong>Start Date:</strong> {{ releaseDetail.release?.startDate }}</li>
+            <li><strong>End Date:</strong> {{ releaseDetail.release?.endDate }}</li>
+            <li><strong>Working Days:</strong> {{ releaseDetail.release?.workingDays }}</li>
+            <li><strong>Status:</strong>
+              <span [ngClass]="releaseStatusClass(releaseDetail.release?.status)">
+                  {{ releaseDetail.release?.status }}
+                </span>
+            </li>
+            <li>
+              <a (click)="closeRelease(releaseDetail)" title="Close the release" class="btn btn-sm btn-outline-success">
+                <i class="bi bi-door-closed"></i> Close
+              </a>
+            </li>
+          </ul>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">Deliverables</h5>
+            <div class="col-md-12">
+                <ngx-datatable
+                  class="bootstrap-table table-striped table-bordered table-hover"
+                  [rows]="releaseDetail.epics"
+                  [columnMode]="'force'"
+                  [headerHeight]="40"
+                  [footerHeight]="40"
+                  [rowHeight]="'auto'"
+                  [sorts]="[{ prop: 'priorityLevel', dir: 'asc' }]"
+                  [rowClass]="getRowClass"
+                  >
 
-                <ngx-datatable-column name="Code" prop="code" [sortable]="true" maxWidth="50"></ngx-datatable-column>
-                <ngx-datatable-column name="Title" prop="title" maxWidth="100"></ngx-datatable-column>
-                <ngx-datatable-column name="Priority" prop="priorityLevel" [sortable]="true" maxWidth="50">
-                  <ng-template let-row="row" ngx-datatable-cell-template>
-                    {{row.priorityName}}
-                    <a (click)="changePriorityToUpper(row)" title="Move it to higher priority"
-                       *ngIf="showChangePriorityToUpper(row)">
-                      <i class="bi bi-arrow-up-short action-icon"></i>
-                    </a>
-                    <a (click)="changePriorityToLower(row)" title="Move it to lower priority"
-                       *ngIf="showChangePriorityToLower(row)">
-                      <i class="bi bi-arrow-down-short action-icon"></i>
-                    </a>
+                  <ngx-datatable-column name="Code" prop="code" [sortable]="true" [width]="80" [minWidth]="80" [maxWidth]="80"></ngx-datatable-column>
+                  <ngx-datatable-column name="Title" prop="title" ></ngx-datatable-column>
+                  <ngx-datatable-column name="Assignment" [width]="620" [minWidth]="620" [maxWidth]="620">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+  <!--
+                      <div [innerHTML]="showAssignments(row.assignments)"></div>
+  -->
 
-                  </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column name="Assignment" >
-                  <ng-template let-row="row" ngx-datatable-cell-template>
-<!--
-                    <div [innerHTML]="showAssignments(row.assignments)"></div>
--->
-
-                    <table>
-                      <thead>
-                      <tr>
-                        <th>Resource</th>
-                        <th>Estimate</th>
-                        <th>Logged</th>
-                        <th>Status</th>
-                        <th>Action</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      <tr *ngFor="let assignment of row.assignments">
-                        <td>{{ assignment.resourceName }}</td>
-                        <td>{{ assignment.estimate | decimalToTime }}</td>
-                        <td>{{ assignment.minutesLogged | decimalToTime }}</td>
-                        <td>{{ assignment.status }}</td>
-                        <td>
-                          <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.OPEN)"
-                             title="Re open it"
-                             *ngIf="assignment.status === EpicAssignmentStatusEnum.COMPLETED || assignment.status === EpicAssignmentStatusEnum.ON_HOLD
-                                || assignment.status === EpicAssignmentStatusEnum.OVERDUE">
-                            <i class="bi bi-stop-circle-fill action-icon"></i>
-                          </a>
-                          <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.STARTED)"
-                             title="Start working on"
-                             *ngIf="assignment.status === EpicAssignmentStatusEnum.OPEN || assignment.status === EpicAssignmentStatusEnum.ON_HOLD">
-                            <i class="bi bi-play-circle-fill action-icon"></i>
-                          </a>
-                          <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.ON_HOLD)"
-                             title="Hold it"
-                             *ngIf="assignment.status === EpicAssignmentStatusEnum.OPEN || assignment.status === EpicAssignmentStatusEnum.STARTED">
-                            <i class="bi bi-pause-circle-fill action-icon"></i>
-                          </a>
-                          <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.COMPLETED)"
-                             title="Mark as Completed"
-                             *ngIf="assignment.status === EpicAssignmentStatusEnum.STARTED">
-                            <i class="bi bi-check-circle-fill action-icon"></i>
-                          </a>
-                          <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.OVERDUE)"
-                             title="Can't be completed"
-                             *ngIf="assignment.status !== EpicAssignmentStatusEnum.OVERDUE">
-                            <i class="bi bi-exclamation-circle-fill action-icon"></i>
-                          </a>
-                          <a (click)="updateTimeLoggingModal(timeLoggingTemplate, releaseDetail.release?.id, assignment)"
-                             title="Log your work"
-                             *ngIf="assignment.status === EpicAssignmentStatusEnum.STARTED">
-                            <i class="bi bi-clock action-icon"></i>
-                          </a>
-                        </td>
-                      </tr>
-                      </tbody>
-                    </table>
-                  </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column name="Actions" maxWidth="50">
-                  <ng-template let-row="row" ngx-datatable-cell-template>
-                    <a (click)="openDialogForEpic(row)" title="Edit">
-                      <i class="bi bi-pencil-square action-icon"></i>
-                    </a>
-                  </ng-template>
-                </ngx-datatable-column>
-              </ngx-datatable>
+                      <table>
+                        <thead>
+                        <tr>
+                          <th>Resource</th>
+                          <th>Estimate</th>
+                          <th>Logged</th>
+                          <th>Status</th>
+                          <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr *ngFor="let assignment of row.assignments">
+                          <td>{{ assignment.resourceName }}</td>
+                          <td>{{ assignment.estimate | decimalToTime }}</td>
+                          <td>{{ assignment.minutesLogged | decimalToTime }}</td>
+                          <td>{{ assignment.status }}</td>
+                          <td>
+                            <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.OPEN)"
+                               title="Re open it"
+                               *ngIf="assignment.status === EpicAssignmentStatusEnum.COMPLETED || assignment.status === EpicAssignmentStatusEnum.ON_HOLD
+                                  || assignment.status === EpicAssignmentStatusEnum.OVERDUE">
+                              <i class="bi bi-stop-circle-fill action-icon"></i>
+                            </a>
+                            <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.STARTED)"
+                               title="Start working on"
+                               *ngIf="assignment.status === EpicAssignmentStatusEnum.OPEN || assignment.status === EpicAssignmentStatusEnum.ON_HOLD">
+                              <i class="bi bi-play-circle-fill action-icon"></i>
+                            </a>
+                            <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.ON_HOLD)"
+                               title="Hold it"
+                               *ngIf="assignment.status === EpicAssignmentStatusEnum.OPEN || assignment.status === EpicAssignmentStatusEnum.STARTED">
+                              <i class="bi bi-pause-circle-fill action-icon"></i>
+                            </a>
+                            <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.COMPLETED)"
+                               title="Mark as Completed"
+                               *ngIf="assignment.status === EpicAssignmentStatusEnum.STARTED">
+                              <i class="bi bi-check-circle-fill action-icon"></i>
+                            </a>
+                            <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.OVERDUE)"
+                               title="Can't be completed"
+                               *ngIf="assignment.status !== EpicAssignmentStatusEnum.OVERDUE">
+                              <i class="bi bi-exclamation-circle-fill action-icon"></i>
+                            </a>
+                            <a (click)="updateTimeLoggingModal(timeLoggingTemplate, releaseDetail.release?.id, assignment)"
+                               title="Log your work"
+                               *ngIf="assignment.status === EpicAssignmentStatusEnum.STARTED">
+                              <i class="bi bi-clock action-icon"></i>
+                            </a>
+                          </td>
+                        </tr>
+                        </tbody>
+                      </table>
+                    </ng-template>
+                  </ngx-datatable-column>
+                  <ngx-datatable-column name="Actions" [width]="50" [minWidth]="50" [maxWidth]="50">
+                    <ng-template let-row="row" ngx-datatable-cell-template>
+                      <a (click)="openDialogForEpic(row)" title="Edit">
+                        <i class="bi bi-pencil-square action-icon"></i>
+                      </a>
+                    </ng-template>
+                  </ngx-datatable-column>
+                </ngx-datatable>
+              </div>
             </div>
-            <div class="col-md-4">
+          <div class="card-body">
+            <h5 class="card-title">Resource Allocation</h5>
+            <div class="col-md-12">
               <ngx-datatable
                 [rows]="releaseDetail.resourceCaps"
                 [columnMode]="'force'"
-                [headerHeight]="50"
-                [footerHeight]="50"
+                [headerHeight]="40"
+                [footerHeight]="0"
                 [rowHeight]="'auto'"
                 class="material">
                 <ngx-datatable-column name="Resource" prop="resourceName"></ngx-datatable-column>
-                <ngx-datatable-column name="Time Assigned">
+                <ngx-datatable-column name="Availability" [width]="150" [minWidth]="150" [maxWidth]="150">
                   <ng-template let-row="row" ngx-datatable-cell-template>
-                    {{ row.prodBasedAssignedTime | decimalToTime }}
+                    {{ row.prodBasedAssignableTime | decimalToTime}}
                   </ng-template>
                 </ngx-datatable-column>
-                <ngx-datatable-column name="Remaining Assignable Time">
+                <ngx-datatable-column name="Time Assigned" [width]="150" [minWidth]="150" [maxWidth]="150">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ row.prodBasedAssignedTime | decimalToTime}}
+                  </ng-template>
+                </ngx-datatable-column>
+                <ngx-datatable-column name="Time Unassigned" [width]="150" [minWidth]="150" [maxWidth]="150">
                   <ng-template let-row="row" ngx-datatable-cell-template>
                     {{ row.prodBasedAssignableTime - row.prodBasedAssignedTime | decimalToTime }}
                   </ng-template>
@@ -158,19 +151,35 @@
                     {{ row.loggedTime | decimalToTime }}
                   </ng-template>
                 </ngx-datatable-column>
+                <ngx-datatable-column name="Time Utilized" [width]="500" [minWidth]="500" [maxWidth]="500">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    <div class="time-bar-container">
+                      <div
+                        class="time-bar-assigned"
+                        [style.width.%]="getLoggedPercentage(row)"
+                        title="Time Logged: {{ row.loggedTime | decimalToTime }}">
+                      </div>
+                      <div
+                        class="time-bar-remaining"
+                        [style.width.%]="100 - getLoggedPercentage(row)"
+                        title="Max Time Left: {{ row.prodBasedAssignableTime - row.loggedTime | decimalToTime }}">
+                      </div>
+                    </div>
+                  </ng-template>
+                </ngx-datatable-column>
               </ngx-datatable>
             </div>
           </div>
         </div>
+        <div>
+          <ul class="custom-nav-list">
+            <li *ngFor="let releaseDetailLink of releases;let j = index">
+              <a [routerLink]="[]" [fragment]="'eRelease'+j" class="custom-nav-link" *ngIf="j<i || j>i+1">
+                {{releaseDetailLink.release?.name}}</a>
+            </li>
+          </ul>
+        </div>
       </div>
-      <ul class="custom-nav-list">
-        <li *ngFor="let releaseDetailLink of releases;let j = index">
-          <a [routerLink]="[]" [fragment]="'eRelease'+j" class="custom-nav-link" *ngIf="j<i || j>i+1">
-            {{releaseDetailLink.release?.name}}</a>
-        </li>
-      </ul>
-    </div>
-  </div>
       </div>
     </div>
   </div>
@@ -200,8 +209,8 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" (click)="closeModal()">Cancel</button>
-            <button class="btn btn-success" (click)="addTimeLogging()" >Add</button>
+            <button class="btn btn-success w-20" (click)="addTimeLogging()" >Add</button>
+            <button class="btn btn-secondary w-20" (click)="closeModal()">Cancel</button>
           </div>
         </div>
       </div>
