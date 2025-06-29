@@ -1,33 +1,41 @@
-<div class="container mt-2">
-  <h2>Completed</h2>
-  <ul class="horizontal-list">
-    <li *ngFor="let releaseDetailLink of releases;let i = index">
-      <ng-container *ngIf="i>0">
-        <a [routerLink]="[]" [fragment]="'eRelease'+i">
-          {{releaseDetailLink.release?.name}}</a>
-      </ng-container>
-    </li>
-  </ul>
+<div class="container-lg mt-4">
+  <div class="row">
+    <div class="col-md-12 offset-md-0">
+
+      <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white text-center">
+          <h2 class="h4 mb-0">Completed</h2>
+        </div>
+        <ul class="custom-nav-list">
+          <li *ngFor="let releaseDetailLink of releases;let i = index">
+            <a [routerLink]="[]" [fragment]="'eRelease'+i" class="custom-nav-link" *ngIf="i>0">
+              {{releaseDetailLink.release?.name}}</a>
+          </li>
+        </ul>
+
   <div class="col-md-12" >
 
     <div class="row release" *ngFor="let releaseDetail of releases;let i = index" [id]="'eRelease'+i">
-      <div class="card">
-        <div class="card-header">
-          <ul class="horizontal-list">
-            <li>Release: {{releaseDetail.release?.name}}</li>
-            <li>Start Date: {{releaseDetail.release?.startDate}}</li>
-            <li>End Date: {{releaseDetail.release?.endDate}}</li>
-            <li>Working Days: {{releaseDetail.release?.workingDays}}</li>
-            <li>Status: {{releaseDetail.release?.status}}</li>
+      <div class="">
+        <div class="card-header release-info-card">
+          <ul class="release-info-list">
+            <li><strong>Release:</strong> {{ releaseDetail.release?.name }}</li>
+            <li><strong>Start Date:</strong> {{ releaseDetail.release?.startDate }}</li>
+            <li><strong>End Date:</strong> {{ releaseDetail.release?.endDate }}</li>
+            <li><strong>Working Days:</strong> {{ releaseDetail.release?.workingDays }}</li>
+            <li><strong>Status:</strong>
+              <span [ngClass]="releaseStatusClass(releaseDetail.release?.status)">
+                {{ releaseDetail.release?.status }}
+              </span>
+            </li>
             <li>
-              <a (click)="expand(releaseDetail)" title="Expand">
-                <i class="bi bi-arrows-angle-expand action-icon"></i>
+              <a (click)="expand(releaseDetail)" title="Expand the release" class="btn btn-sm btn-outline-success">
+                <i class="bi bi-arrows-angle-expand"></i> Expand
               </a>
             </li>
           </ul>
         </div>
         <div class="card-body"  *ngIf="releaseDetail.epics.length>0">
-          <h5 class="card-title">Epics</h5>
           <div class="row">
             <div class="col-md-8 table-responsive">
               <ngx-datatable
@@ -109,17 +117,16 @@
           </div>
         </div>
       </div>
-      <ul class="horizontal-list">
+      <ul class="custom-nav-list">
         <li *ngFor="let releaseDetailLink of releases;let j = index">
-          <ng-container *ngIf="j<i || j>i+1">
-            <a [routerLink]="[]" [fragment]="'eRelease'+j">
-              {{releaseDetailLink.release?.name}}</a>
-          </ng-container>
+          <a [routerLink]="[]" [fragment]="'eRelease'+j" class="custom-nav-link" *ngIf="j<i || j>i+1">
+            {{releaseDetailLink.release?.name}}</a>
         </li>
       </ul>
     </div>
   </div>
 
-
-
+      </div>
+    </div>
+  </div>
 </div>

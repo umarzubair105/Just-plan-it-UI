@@ -1,6 +1,7 @@
 import {HttpErrorResponse} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {AppConstants} from '../configuration/app.constants';
+import {ReleaseStatusEnum} from '../models/planning';
 
 
 export enum ReleaseIteration {
@@ -96,4 +97,12 @@ export function transformToDhM(totalMinutes: number): string {
 
 
   return result.trim();
+}
+
+export function releaseStatusClass(status: ReleaseStatusEnum | undefined): string {
+  if (!status) {
+    return 'release-status-badge';
+  } else {
+    return 'release-status-badge release-status-'+status.toLowerCase();
+  }
 }

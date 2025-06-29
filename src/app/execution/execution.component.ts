@@ -28,7 +28,7 @@ import {ReleaseService} from '../services/release.service';
 import {DecimalToTimePipe} from '../pipes/decimal.to.time';
 import {EpicAssignmentService} from '../services/epic.assignment.service';
 import {TimeLoggingService} from '../services/time.logging.service';
-import {convertToMinutes, getLocalDate} from '../utils/helper';
+import {convertToMinutes, getLocalDate, releaseStatusClass} from '../utils/helper';
 @Component({
   selector: 'app-planning',
   standalone: true,
@@ -285,4 +285,5 @@ export class ExecutionComponent implements OnInit {
   protected readonly WorkingHourEnum = WorkingHourEnum;
   protected readonly EpicBean = EpicBean;
   protected readonly EpicAssignmentStatusEnum = EpicAssignmentStatusEnum;
+  protected readonly releaseStatusClass = releaseStatusClass;
 }

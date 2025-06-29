@@ -1,7 +1,7 @@
 import {Audit, Basic, Priority} from './basic';
 
 export enum ReleaseStatusEnum {
-  INITIATED="INITIATED",
+  UNPLANNED="UNPLANNED",
   PLANNED="PLANNED",
   STARTED="STARTED",
   COMPLETED="COMPLETED",
@@ -81,7 +81,7 @@ export class Release extends Basic{
   public name: string = '';
   public version: number = 0;
   public workingDays: number = 0;
-  public status: ReleaseStatusEnum = ReleaseStatusEnum.INITIATED;
+  public status: ReleaseStatusEnum = ReleaseStatusEnum.UNPLANNED;
   public startDate: Date | null = null;
   public endDate: Date | null = null;
 }

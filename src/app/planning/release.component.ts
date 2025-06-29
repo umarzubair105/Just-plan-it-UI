@@ -24,7 +24,7 @@ import {EpicEstimateComponent} from './epic-estimate.component';
 import { MatDialog } from '@angular/material/dialog';
 import {EpicComponent} from './epic.component';
 import {PlanningDashboardService} from '../services/planning-dashboard.service';
-import {transformToDhM} from '../utils/helper';
+import {releaseStatusClass, transformToDhM} from '../utils/helper';
 @Component({
   selector: 'app-planned-release',
   standalone: true,
@@ -239,4 +239,5 @@ export class ReleaseComponent implements OnInit {
   }
   protected readonly WorkingHourEnum = WorkingHourEnum;
   protected readonly EpicBean = EpicBean;
+    protected readonly releaseStatusClass = releaseStatusClass;
 }

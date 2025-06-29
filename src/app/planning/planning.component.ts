@@ -25,7 +25,7 @@ import { MatDialog } from '@angular/material/dialog';
 import {EpicComponent} from './epic.component';
 import {PlanningDashboardService} from '../services/planning-dashboard.service';
 import {ReleaseService} from '../services/release.service';
-import {transformToDhM} from '../utils/helper';
+import {releaseStatusClass, transformToDhM} from '../utils/helper';
 import {DecimalToTimePipe} from '../pipes/decimal.to.time';
 @Component({
   selector: 'app-planning',
@@ -348,6 +348,13 @@ export class PlanningComponent implements OnInit {
       // Handle the result here
     });
   }
+
+  getAssignedPercentage(row: any): number {
+    const total = row.prodBasedAssignableTime;
+    if (!total || total <= 0) return 0;
+    return (row.prodBasedAssignedTime / total) * 100;
+  }
   protected readonly WorkingHourEnum = WorkingHourEnum;
   protected readonly EpicBean = EpicBean;
+  protected readonly releaseStatusClass = releaseStatusClass;
 }

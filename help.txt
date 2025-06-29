@@ -5,6 +5,20 @@ project url in Epic, remove dependentEpicId
 Contact Us
 left Bar
 Country based Weekend end and Holidays fill
+SubCompoment UI
+Epic/Estimate UI improvements
+Product Setup page
+Give Epic Unplan Option to remove from Release
+Use loggedTime in UI for ResourceCapInRelease
+
+<div class="truncate-text" title="{{ value }}">
+      {{ value }}
+    </div>
+.truncate-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
 statusMessages = new Map<number, string>([
   [200, 'Success'],

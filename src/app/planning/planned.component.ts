@@ -25,7 +25,7 @@ import { MatDialog } from '@angular/material/dialog';
 import {EpicComponent} from './epic.component';
 import {PlanningDashboardService} from '../services/planning-dashboard.service';
 import {ReleaseService} from '../services/release.service';
-import {transformToDhM} from '../utils/helper';
+import {releaseStatusClass, transformToDhM} from '../utils/helper';
 import {DecimalToTimePipe} from '../pipes/decimal.to.time';
 @Component({
   selector: 'app-planning',
@@ -109,7 +109,7 @@ export class PlannedComponent implements OnInit {
   }
   unplanRelease(releaseDetail: ReleaseDetailBean) {
     if (releaseDetail.release) {
-      this.releaseService.updateSpecificFieldsPasses(releaseDetail.release.id, {status: ReleaseStatusEnum.INITIATED}).subscribe({
+      this.releaseService.updateSpecificFieldsPasses(releaseDetail.release.id, {status: ReleaseStatusEnum.UNPLANNED}).subscribe({
         next: (data) => {
           this.util.showSuccessMessage('Release is un planned.');
           this.releases = this.releases.filter(wh => wh.release?.id !== releaseDetail.release?.id);
@@ -211,4 +211,5 @@ export class PlannedComponent implements OnInit {
 
   protected readonly WorkingHourEnum = WorkingHourEnum;
   protected readonly EpicBean = EpicBean;
+  protected readonly releaseStatusClass = releaseStatusClass;
 }
