@@ -1,4 +1,4 @@
-import {Component, EventEmitter, inject, Input, OnInit, Output, TemplateRef} from '@angular/core';
+import {Component, EventEmitter, inject, Input, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
 import { SubComponentService, } from '../../services/sub-component.service';
 import {FormBuilder, FormsModule} from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -27,6 +27,7 @@ export class SubComponentComponent implements OnInit {
     this.outputEvent.emit('Hello from SubComponent');
   }*/
   modalRef?: BsModalRef;
+  @ViewChild('modelC') myModal!: TemplateRef<any>;
   subComponents: SubComponent[] = [];
   totalSubComponents : number = 0;
   errorMessage: string = '';
@@ -40,6 +41,12 @@ export class SubComponentComponent implements OnInit {
     console.log('Testing')
     this.companyId = this.utils.getCompanyId();
     this.loadSubComponents();
+    if (sessionStorage.getItem('wizard'))
+    {
+      setTimeout(() => {
+        this.openModal(this.myModal);
+      }, 0);
+    }
   }
   loadSubComponents(): void {
     this.subComponentService.getByCompanyId(this.companyId).subscribe({

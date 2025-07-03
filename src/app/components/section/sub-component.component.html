@@ -7,6 +7,15 @@
           <h2 class="h4 mb-0">Components</h2>
         </div>
         <div class="container mt-2">
+          <div class="d-flex align-items-center mb-2">
+            <h5 class="mb-0 me-2">Components</h5>
+            <a
+              class="btn btn-sm btn-outline-primary btn-tight-custom"
+              (click)="openModal(modelC)"
+              title="Add">
+              <i class="bi bi-plus"></i>
+            </a>
+          </div>
           <div class="table-responsive">
             <table class="table table-striped table-hover table-bordered table-sm-custom text-sm">
               <thead class="table-secondary" >
@@ -22,7 +31,7 @@
                 <td>{{ row.name }}</td>
                 <td>{{ row.createdDate | formatDate }}</td>
                 <td class="text-center">
-                  <a (click)="openModalEdit(modelC, row.id)" title="Update">
+                  <a (click)="openModalEdit(modelC, row.id)" title="Edit">
                     <i class="bi bi-pencil action-icon"></i>
                   </a>
                   <a (click)="delete(row.id)" title="Delete">
@@ -36,7 +45,6 @@
 
         </div>
         <div class="text-center mt-2 d-flex justify-content-center gap-2 mt-2 mb-3">
-          <button class="btn btn-primary w-20" (click)="openModal(modelC)">Add</button>
           <button class="btn btn-secondary w-20" (click)="onSkip()" *ngIf="isWizard()">Next</button>
         </div>
       </div>
