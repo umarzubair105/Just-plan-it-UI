@@ -1,79 +1,123 @@
-import {Component, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, inject, Input, OnInit, Output, TemplateRef} from '@angular/core';
 import { SubComponentService, } from '../../services/sub-component.service';
-import { FormsModule } from '@angular/forms';
+import {FormBuilder, FormsModule} from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
-import {SubComponent} from '../../models/basic';
+import {ResourceLeave, SubComponent} from '../../models/basic';
+import {Utils} from '../../utils/utils';
+import {ActivatedRoute, Router} from '@angular/router';
+import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
+import {FormatDatePipe} from '../../pipes/format.date';
+import {ShowErrorsDirective} from '../../directives/show-errors.directive';
+
 @Component({
   selector: 'app-subComponent',
   standalone: true,
-  imports: [FormsModule, CommonModule, HttpClientModule], // Include FormsModule here
+  imports: [FormsModule, CommonModule, ModalModule, HttpClientModule, FormatDatePipe, ShowErrorsDirective], // Include FormsModule here
   //template:`Hello`,
   templateUrl: './sub-component.component.html',
   styleUrls: ['./sub-component.component.css'],
+  providers: [BsModalService]
 })
 export class SubComponentComponent implements OnInit {
 //  @Input() companyId:string = '';
-  companyId:number = 2;
+  companyId:number = 0;
 //  @Output() outputEvent = new EventEmitter<string>();
 /*  emitEvent() {
     this.outputEvent.emit('Hello from SubComponent');
   }*/
-
+  modalRef?: BsModalRef;
   subComponents: SubComponent[] = [];
   totalSubComponents : number = 0;
-  selectedSubComponent: SubComponent | null = null;
   errorMessage: string = '';
-  newSubComponent: SubComponent = new SubComponent();
+  subComponent: SubComponent = new SubComponent();
   subComponentService = inject(SubComponentService)
   //constructor(private companyService: CompanyService) {}
-
+  constructor(private modalService: BsModalService,
+              private utils: Utils,
+              private router: Router,private route: ActivatedRoute) {}
   ngOnInit(): void {
     console.log('Testing')
+    this.companyId = this.utils.getCompanyId();
     this.loadSubComponents();
   }
   loadSubComponents(): void {
-    this.subComponentService.getAll().subscribe({
+    this.subComponentService.getByCompanyId(this.companyId).subscribe({
       next: (data) => {
         console.log(data);
         this.subComponents = data._embedded.components;
         this.totalSubComponents = data.page.totalElements;
       },
-      error: (err) => (this.errorMessage = err),
+      error: (err) => {this.errorMessage = err;this.utils.showErrorMessage(err);},
     });
   }
 
-  selectSubComponent(subComponent: SubComponent): void {
-    this.selectedSubComponent = subComponent;
-  }
+
 
   // Create a new company
-  addSubComponent(): void {
-    this.subComponentService.create(this.newSubComponent).subscribe({
+  add(): void {
+    this.subComponent.active = true;
+    this.subComponent.companyId = this.companyId;
+
+    this.subComponentService.create(this.subComponent).subscribe({
       next: (data) => {
         this.subComponents.push(data);
-        this.newSubComponent = new SubComponent();
+        this.subComponent = new SubComponent();
+        this.utils.showSuccessMessage('Component is added.');
+        this.closeModal();
+
       },
-      error: (err) => (this.errorMessage = err),
+      error: (err) => {this.errorMessage = err;this.utils.showErrorMessage(err);},
     });
   }
-  updateSubComponent(subComponent: SubComponent | null): void {
-    if (subComponent) {
-      this.subComponentService.update(subComponent.id, subComponent).subscribe({
+  update(): void {
+    if (this.subComponent) {
+      this.subComponentService.update(this.subComponent.id, this.subComponent).subscribe({
         next: () => {
           this.loadSubComponents();
-          this.selectedSubComponent = null;
+          this.subComponent = new SubComponent();
+          this.utils.showSuccessMessage('Priority is updated.');
+          this.closeModal();
         },
-        error: (err) => (this.errorMessage = err),
+        error: (err) => {this.errorMessage = err;this.utils.showErrorMessage(err);},
       });
     } else {
-      console.error('Cannot update. SubComponent is null.');
+      console.error('Cannot update. Component is null.');
     }
   }
-  deleteSubComponent(subComponentId: number): void {
-    this.subComponentService.delete(subComponentId).subscribe({
-      next: () => (this.subComponents = this.subComponents.filter((c) => c.id !== subComponentId)),
-      error: (err) => (this.errorMessage = err),
-    });
+  delete(subComponentId: number): void {
+    if (window.confirm("Are you sure you want to delete?")) {
+      this.subComponentService.delete(subComponentId).subscribe({
+        next: () => (this.subComponents = this.subComponents.filter((c) => c.id !== subComponentId)),
+        error: (err) => {
+          this.errorMessage = err;
+          this.utils.showErrorMessage(err);
+        },
+      });
+    }
+  }
+
+  openModal(template: TemplateRef<any>) {
+    this.subComponent = new SubComponent();
+    this.modalRef = this.modalService.show(template);
+  }
+  openModalEdit(template: TemplateRef<any>, id: number) {
+    if (id) {
+      this.subComponent = this.subComponents.find((x) => x.id === id)
+        ?? new SubComponent();
+      this.modalRef = this.modalService.show(template);
+    }
+  }
+  closeModal() {
+    this.modalRef?.hide();
+  }
+
+  onSkip():void {
+    if (sessionStorage.getItem('wizard')) {
+      this.router.navigate(['/product-resource']);
+    }
+  }
+  isWizard():boolean {
+    return sessionStorage.getItem('wizard')!=null && sessionStorage.getItem('wizard')=='productSetup';
   }
 }

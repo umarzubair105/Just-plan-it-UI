@@ -158,8 +158,8 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-success w-20" (click)="update()" *ngIf="leave.id>0" [disabled]="resourceForm.invalid">Update</button>
-            <button class="btn btn-success w-20" (click)="add()" *ngIf="leave.id===0" [disabled]="resourceForm.invalid">Add</button>
+            <button class="btn btn-success w-20" (click)="update()" *ngIf="leave.id>0" [disabled]="resourceForm.invalid">Save</button>
+            <button class="btn btn-success w-20" (click)="add()" *ngIf="leave.id===0" [disabled]="resourceForm.invalid">Save</button>
             <button class="btn btn-secondary w-20" (click)="closeModal()">Cancel</button>
           </div>
         </div>

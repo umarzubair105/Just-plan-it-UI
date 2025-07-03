@@ -106,9 +106,7 @@ export class PriorityComponent implements OnInit {
         error: (err) => {this.errorMessage = err;this.utils.showErrorMessage('Priority is not updated')}
       });
     }
-    if (sessionStorage.getItem('wizard')) {
-      this.router.navigate(['/planning']);
-    }
+
   }
   updateModel(model: Priority | null): void {
     if (model) {
@@ -135,7 +133,7 @@ export class PriorityComponent implements OnInit {
   }
   onSkip():void {
     if (sessionStorage.getItem('wizard')) {
-      this.router.navigate(['/product-resource']);
+      this.router.navigate(['/section']);
     }
   }
   isWizard():boolean {

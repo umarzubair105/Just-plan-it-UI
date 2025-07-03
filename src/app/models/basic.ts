@@ -17,7 +17,7 @@ export class Company  extends Basic {
   public sample: boolean = false;
 }
 
-export class SubComponent extends Basic{
+export class SubComponent extends Audit{
   public name: string = '';
   public companyId: number = 0;
 }

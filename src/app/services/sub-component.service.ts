@@ -4,6 +4,7 @@ import {Observable, throwError} from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {PageResponse} from '../models/page.response';
 import {SubComponent} from '../models/basic';
+import {handleError} from '../utils/helper';
 
 @Injectable({
   providedIn: 'root'
@@ -36,14 +37,17 @@ export class SubComponentService {
       catchError(this.handleError)
     );
   }
-  update(id: number, model: SubComponent): Observable<SubComponent> {
-    return this.http.put<SubComponent>(`${this.baseUrl}/${id}`, model).pipe(
+  update(idPk: number, model: SubComponent): Observable<SubComponent> {
+    const { id, ...payload } = model;
+    return this.http.put<SubComponent>(`${this.baseUrl}/${idPk}`, payload).pipe(
       catchError(this.handleError)
     );
   }
-  delete(id: number): Observable<void> {
-    return this.http.delete<void>(`${this.baseUrl}/${id}`).pipe(
-      catchError(this.handleError)
+
+  delete(id: number): Observable<any> {
+    const updatedFields = { active: false };
+    return this.http.patch(`${this.baseUrl}/${id}`, updatedFields).pipe(
+      catchError(handleError)
     );
   }
 
