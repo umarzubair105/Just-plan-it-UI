@@ -1,4 +1,3 @@
-add/edit resoure UI
 on loging thru user to screen for Company Setup
 Role based Menu and Release?planning options
 project url in Epic, remove dependentEpicId
@@ -9,7 +8,9 @@ SubCompoment UI
 Epic/Estimate UI improvements
 Product Setup page
 Give Epic Unplan Option to remove from Release
-Use loggedTime in UI for ResourceCapInRelease
+Use loggedTime in UI for ResourceCapInRelease in planning/planned
+Use/maintain/add reasource Lead
+Edit Product UI
 
 <div class="truncate-text" title="{{ value }}">
       {{ value }}

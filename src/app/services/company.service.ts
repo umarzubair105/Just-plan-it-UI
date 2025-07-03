@@ -40,16 +40,17 @@ export class AddProduct {
   startDate: Date | null=null;
   endDate: Date | null=null;
 }
-export interface AddResource {
-  companyId: number;
-  productId?: number;
-  email: string;
-  name?: string;
-  designation?: string;
-  mobileNumber?: string;
-  dateOfBirth?: string;
-  lead?: string;
-  dateFormat?: string;
+export class AddResource {
+  companyId: number =0;
+  productId: number =0;
+  email: string = '';
+  name: string = '';
+  designation: string = '';
+  mobileNumber: string = '';
+  dateOfBirth: string ='';
+  dateOfBirthDate: Date | null = null;
+  lead: string ='';
+  dateFormat: string = '';
 }
 
 export interface AddEpic {
@@ -128,11 +129,19 @@ export class CompanyService {
       catchError(this.handleError)
     );
   }
-  addResource(resource: AddResource): Observable<CommonResp[]> {
+  addResourceMultiple(resource: AddResource): Observable<CommonResp[]> {
     console.log(resource);
     //const { id, ...payload } = company;
     //console.log(payload);
-    return this.http.post<CommonResp[]>(this.baseUrlComDashboard+'/add-resource', resource).pipe(
+    return this.http.post<CommonResp[]>(this.baseUrlComDashboard+'/add-resource-multiple', resource).pipe(
+      catchError(this.handleError)
+    );
+  }
+  addResource(resource: AddResource): Observable<CommonResp> {
+    console.log(resource);
+    //const { id, ...payload } = company;
+    //console.log(payload);
+    return this.http.post<CommonResp>(this.baseUrlComDashboard+'/add-resource', resource).pipe(
       catchError(this.handleError)
     );
   }

@@ -1,4 +1,4 @@
-import {Component, inject, Input, OnInit} from '@angular/core';
+import {Component, inject, Input, OnInit, TemplateRef} from '@angular/core';
 import {CompanyService,  AddCompany, CommonResp, BaseModel, AddResource} from '../services/company.service';
 import { SubComponentComponent } from './section/sub-component.component';
 import { FormsModule } from '@angular/forms';
@@ -21,13 +21,17 @@ import { ShowErrorsDirective } from '../directives/show-errors.directive';
 
 import {ActivatedRoute, Router} from '@angular/router';
 import {Utils} from '../utils/utils';
-import {LeaveStatus, Resource, Role} from '../models/basic';
+import {LeaveStatus, LeaveType, Resource, ResourceLeave, ResourceStatus, Role} from '../models/basic';
 import {ResourceService} from '../services/resource.service';
 import {RoleService} from '../services/role.service';
 import {DataTableColumnCellDirective, DataTableColumnDirective, DatatableComponent} from '@swimlane/ngx-datatable';
 import {EpicEstimateComponent} from '../planning/epic-estimate.component';
 import {MatDialog} from '@angular/material/dialog';
 import {ResourceLeaveComponent} from '../leaves/resource.leave.component';
+import {Designation, DesignationService} from '../services/designation.service';
+import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
+import {ReleaseStatusEnum} from '../models/planning';
+import {FormatDatePipe} from '../pipes/format.date';
 
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -36,18 +40,20 @@ import {ResourceLeaveComponent} from '../leaves/resource.leave.component';
   standalone: true,
   imports: [FormsModule, CommonModule, HttpClientModule, SubComponentComponent,
     MatButtonModule, MatToolbarModule, MatInputModule,
-    MatCheckboxModule, MatFormFieldModule,
-    MatListItem, MatList, MatIcon, ReactiveFormsModule, ShowErrorsDirective, DataTableColumnCellDirective, DataTableColumnDirective, DatatableComponent
+    MatCheckboxModule, MatFormFieldModule, ModalModule,
+    MatListItem, MatList, MatIcon, ReactiveFormsModule, ShowErrorsDirective, DataTableColumnCellDirective, DataTableColumnDirective, DatatableComponent, FormatDatePipe
   ], // Include FormsModule here
   //template:`Hello`,
   //templateUrl: './company.component.html',
   templateUrl: './resource.component.html',
   //styleUrls: ['./company.component.css'],
   //providers:[CompanyService],
-
+  providers: [BsModalService]
 })
 export class ResourceComponent implements OnInit {
+  modalRef?: BsModalRef;
   roles: Role[] = [];
+  designations: Designation[] = [];
   errorMessage: string = '';
   companyId!: number;
   //addCompanySetup: AddCompany = { countryId:1, sampleCompanyId:1,name:'',email:'',firstName:'',secondName:'',lastName:'',designation:'' };
@@ -56,12 +62,21 @@ export class ResourceComponent implements OnInit {
   companyService = inject(CompanyService);
   resourceService = inject(ResourceService);
   roleService = inject(RoleService);
+  designationService = inject(DesignationService);
   //constructor(private companyService: CompanyService) {}
-  addResourceSetup: AddResource = { companyId:0, email:'' };
+  addResourceSetup: AddResource = new AddResource();
   resources: Resource[] = [];
+  resource: Resource = new Resource();
 
   myForm: FormGroup;
-  constructor(private readonly fb: FormBuilder, private readonly utils: Utils,
+  statuses = Object.keys(ResourceStatus)
+    .filter(key => isNaN(Number(key))) // Exclude numeric keys
+    .map((key) => ({
+      value: key, // Properly typed access
+      viewValue: key,
+    }));
+  constructor(private modalService: BsModalService,
+              private readonly fb: FormBuilder, private readonly utils: Utils,
               private readonly router: Router, private readonly route: ActivatedRoute,
               public dialog: MatDialog) {
     console.log('Construct')
@@ -78,6 +93,7 @@ export class ResourceComponent implements OnInit {
     console.log(this.companyId); // Output: 123
     console.log('Testing')
     this.loadRoles();
+    this.loadDesignations();
     this.loadResources();
     //this.loadCompanies();
   }
@@ -87,7 +103,7 @@ export class ResourceComponent implements OnInit {
       console.log('Form Data:', this.myForm.value);
       this.addResourceSetup = this.myForm.value;
       this.addResourceSetup.companyId = this.companyId; // Hardcoding companyId for now.
-      this.companyService.addResource(this.addResourceSetup).subscribe({
+      this.companyService.addResourceMultiple(this.addResourceSetup).subscribe({
         next: (data) => {
           // action: string = 'Close'
           this.utils.showSuccessMessage(data[0].message);
@@ -108,6 +124,14 @@ export class ResourceComponent implements OnInit {
     this.roleService.getByCompanyId(this.companyId).subscribe({
       next: (data) => {
         this.roles = data._embedded.roles;
+      },
+      error: (err) => (this.errorMessage = err),
+    });
+  }
+  loadDesignations(): void {
+    this.designationService.getByCompanyId(this.companyId).subscribe({
+      next: (data) => {
+        this.designations = data._embedded.designations;
       },
       error: (err) => (this.errorMessage = err),
     });
@@ -139,4 +163,47 @@ export class ResourceComponent implements OnInit {
       // Handle the result here
     });
   }
+
+
+  add() {
+    this.addResourceSetup.companyId=this.companyId;
+    return this.companyService.addResource(this.addResourceSetup).subscribe({
+      next: (data) => {
+        this.loadResources();
+        this.utils.showSuccessMessage('Data is inserted. Email is sent to user for password.');
+        this.closeModal();
+      },
+      error: (err) => (this.utils.showErrorMessage(err)),
+    });
+  }
+  update() {
+    this.resourceService.updateSpecificFieldsPasses(this.resource.id,
+      {name: this.resource.name,designationId: this.resource.designationId,
+        dateOfBirth:this.resource.dateOfBirth,mobileNumber:this.resource.mobileNumber,
+        status: this.resource.status}
+    ).subscribe({
+      next: (data) => {
+        this.loadResources();
+        this.utils.showSuccessMessage('Data is updated');
+        this.closeModal();
+      },
+      error: (err) => (this.utils.showErrorMessage(err)),
+    });
+  }
+  openModal(template: TemplateRef<any>) {
+    this.addResourceSetup = new AddResource();
+    this.resource = new Resource();
+    this.modalRef = this.modalService.show(template);
+  }
+  openModalEdit(template: TemplateRef<any>, id: number) {
+    if (id) {
+      this.resource = this.resources.find((x) => x.id === id)
+        ?? new Resource();
+      this.modalRef = this.modalService.show(template);
+    }
+  }
+  closeModal() {
+    this.modalRef?.hide();
+  }
+
 }

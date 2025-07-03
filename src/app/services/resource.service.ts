@@ -6,6 +6,7 @@ import {PageResponse} from '../models/page.response';
 import {Resource, Role} from '../models/basic';
 import {handleError} from '../utils/helper';
 import {AppConstants} from '../configuration/app.constants';
+import {AddResource, CommonResp} from './company.service';
 
 // Define the interface
 
@@ -38,6 +39,7 @@ export class ResourceService {
     );
   }
 
+
   // Create a new Role
   create(model: Resource): Observable<Resource> {
     const { id, ...payload } = model;
@@ -53,7 +55,11 @@ export class ResourceService {
       catchError(handleError)
     );
   }
-
+  updateSpecificFieldsPasses(id: number, fieldsToUpdate: Partial<{}>): Observable<any> {
+    return this.http.patch(`${this.baseUrl}/${id}`, fieldsToUpdate).pipe(
+      catchError(handleError)
+    );
+  }
   // Delete a record
   delete(id: number): Observable<any> {
     const updatedFields = {active: false};
