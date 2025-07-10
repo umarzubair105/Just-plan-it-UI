@@ -10,7 +10,9 @@ Product Setup page
 Give Epic Unplan Option to remove from Release
 Use loggedTime in UI for ResourceCapInRelease in planning/planned
 Use/maintain/add reasource Lead
-Edit Product UI
+Product/Project Epic Label changes
+New System Roles & flexible Interconnectivity
+Deployment in Production for Angular
 
 <div class="truncate-text" title="{{ value }}">
       {{ value }}

@@ -1,4 +1,5 @@
 import {Audit, Basic, Priority} from './basic';
+import {ReleaseIteration} from '../utils/helper';
 
 export enum ReleaseStatusEnum {
   UNPLANNED="UNPLANNED",
@@ -118,9 +119,16 @@ export class TimeLogging extends Basic {
   public loggedForDate: Date | null = null;
   public comments: string | null = null;
 }
-export class Product extends Basic {
+export class Product extends Audit {
   public companyId: number = 0;
   public name: string = '';
+  code: string = '';
+  otherActivitiesPercentTime: number=10;
+  releaseIteration: ReleaseIteration | null= null;
+  startDate: Date | null=null;
+  endDate: Date | null=null;
+  public productManagerId: number = 0;
+  public productOwnerId: number = 0;
 }
 
 export class ScheduleEpic {

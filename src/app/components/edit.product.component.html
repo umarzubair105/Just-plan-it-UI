@@ -1,0 +1,229 @@
+<div class="container-lg mt-4">
+  <div class="row">
+    <div class="col-md-12 offset-md-0">
+
+      <!-- Intro Card -->
+      <div class="card shadow-sm mb-3">
+        <div class="card-body">
+          <h5 class="card-title">Product</h5>
+          <p class="card-text">
+            Define the product which your company want to deliver.
+          </p>
+        </div>
+      </div>
+
+      <!-- Main Form Card -->
+      <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white text-center">
+          <h2 class="h4 mb-0">Products</h2>
+        </div>
+
+        <div class="">
+          <div class="card-body">
+            <div class="d-flex align-items-center mb-2">
+              <h5 class="mb-0 me-2">Products</h5>
+
+              <a
+                class="btn btn-sm btn-outline-primary btn-tight-custom"
+                (click)="addNewModel()"
+                title="Add">
+                <i class="bi bi-plus"></i>
+              </a>
+            </div>
+
+
+            <div class="col-md-12 table-responsive">
+
+            <ngx-datatable
+              [rows]="models"
+              [columnMode]="'force'"
+              [headerHeight]="40"
+              [footerHeight]="0"
+              [rowHeight]="'auto'"
+              class="bootstrap-table table-striped table-bordered table-hover">
+              <ngx-datatable-column name="Code" prop="code" [maxWidth]="80"></ngx-datatable-column>
+              <ngx-datatable-column name="Name" prop="name" [maxWidth]="250"></ngx-datatable-column>
+              <ngx-datatable-column name="Non Productive Time %" prop="otherActivitiesPercentTime" [maxWidth]="180"></ngx-datatable-column>
+              <ngx-datatable-column name="Release Duration" prop="releaseIteration" [maxWidth]="150"></ngx-datatable-column>
+              <ngx-datatable-column name="Created At" [maxWidth]="180">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{ row.startDate | formatDate }}
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="First Working Date" [maxWidth]="150">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{ row.startDate }}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column name="Last Delivery Date" [maxWidth]="150">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{ row.endDate | decimalToTime}}
+                </ng-template>
+              </ngx-datatable-column>
+
+              <ngx-datatable-column name="Action" [maxWidth]="100">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <a (click)="openModalEdit(editModel,row.id)" title="Edit">
+                    <i class="bi bi-pencil-square action-icon"></i>
+                  </a>
+                </ng-template>
+              </ngx-datatable-column>
+            </ngx-datatable>
+
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+  </div>
+
+  <ng-template #editModel>
+    <div class="modal fade show d-block">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Update Product</h5>
+            <button type="button" class="btn-close" (click)="closeModal()"></button>
+          </div>
+          <div class="modal-body">
+            <form  #resourceForm="ngForm" >
+              <div class="mb-3">
+                <label for="nameR" class="form-label">Name <span class="text-danger">*</span></label>
+                <input type="text" id="nameR" name="name" class="form-control" required
+                       placeholder="Product name"
+                       [(ngModel)]="model.name" #name="ngModel"
+                       [ngClass]="{ 'is-invalid': name.invalid && (name.dirty || name.touched) }"
+                       [showErrors]="{ required: 'Name is required' }" />
+            </div>
+
+            <div class="mb-3">
+              <label for="codeR" class="form-label">Code <span class="text-danger">*</span></label>
+              <input type="text" id="codeR" name="code" class="form-control" required
+                     placeholder="Product Code" readonly
+                     [(ngModel)]="model.code" #code="ngModel"
+                     [ngClass]="{ 'is-invalid': code.invalid && (code.dirty || code.touched) }"
+                     [showErrors]="{ required: 'Code is required' }" />
+            </div>
+
+              <div class="mb-3">
+                <label for="otherActivitiesPercentTime" class="form-label">Non Productive Time % <span class="text-danger">*</span></label>
+                <input type="text" id="otherActivitiesPercentTime" name="otherActivitiesPercentTime" class="form-control" required
+                       placeholder="Non Productive Time %"
+                       min="0"
+                       max="100"
+                       required
+                       [(ngModel)]="model.otherActivitiesPercentTime" #otherActivitiesPercentTime="ngModel"
+                       [ngClass]="{ 'is-invalid': otherActivitiesPercentTime.invalid && (otherActivitiesPercentTime.dirty || otherActivitiesPercentTime.touched) }"
+                       [showErrors]="{ required: 'Non productive time is required', min:'Min value is 0',
+                             max:'Max value is 100', pattern: 'Should be number only'}" />
+              </div>
+
+
+            <div class="mb-3">
+              <label for="releaseIteration" class="form-label">Release Duration <span class="text-danger">*</span></label>
+              <select name="releaseIteration" id="releaseIteration"  [(ngModel)]="model.releaseIteration" class="form-control" required
+                      #releaseIteration="ngModel"
+                      [ngClass]="{ 'is-invalid': releaseIteration.invalid && (releaseIteration.dirty || releaseIteration.touched) }"
+                      [showErrors]="{ required: 'Designation is required' }">
+                <option *ngFor="let releaseIteration of releaseIterations" [value]="releaseIteration.viewValue">
+                  {{ releaseIteration.value }}
+                </option>
+              </select>
+
+            </div>
+            <div class="mb-3">
+              <label for="startDate" class="form-label">First Working Date</label>
+              <input
+                type="date"
+                id="startDate"
+                class="form-control"
+                name="startDate"
+                required
+                placeholder="First Working Date"
+                [(ngModel)]="model.startDate" #startDate="ngModel"
+
+                [ngClass]="{ 'is-invalid': startDate.invalid && (startDate.dirty || startDate.touched) }"
+
+                [showErrors]="{ required: 'First working date is required' }"
+              />
+            </div>
+
+              <div class="mb-3">
+                <label for="endDate" class="form-label">Last Delivery Date</label>
+                <input
+                  type="date"
+                  id="endDate"
+                  class="form-control"
+                  name="endDate"
+                  placeholder="Last Delivery Date"
+                  [(ngModel)]="model.endDate" #endDate="ngModel"
+
+                  [ngClass]="{ 'is-invalid': endDate.invalid && (endDate.dirty || endDate.touched) }"
+
+                  [showErrors]="{ required: 'Last delivery date is required' }"
+                />
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success w-20" (click)="update()" [disabled]="resourceForm.invalid">Save</button>
+            <button class="btn btn-secondary w-20" (click)="closeModal()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>
+
+
+
+
+
+
+
+
+
+
+<!--
+ Multi Resources Adddition
+  <div class="card shadow-lg">
+    <div class="card-header bg-primary text-white text-center">
+      <h3>Add Multiple Resources</h3>
+    </div>
+    <form [formGroup]="myForm" (ngSubmit)="onSubmit()">
+    <div class="card-body">
+      <div class="mb-3">
+        <label for="email" class="form-label">Emails</label>
+        <textarea
+          type="text"
+          id="email"
+          class="form-control"
+          formControlName="email"
+          placeholder="Enter your email"
+          [showErrors]="{ required: 'Email is required', email: 'Email is not valid' }"
+        ></textarea>
+      </div>
+      <div class="mt-3">
+        <label for="roleId" class="form-label">Role</label>
+        <select
+          id="roleId"
+          class="form-select"
+          formControlName="roleId"
+          [showErrors]="{ required: 'Role is required' }"
+        >
+          <option value="" disabled selected>Select a role</option>
+          <option *ngFor="let m of roles" [value]="m.id">
+            {{ m.name }}
+          </option>
+        </select>
+
+      </div>
+
+      <div class="text-center">
+        <button class="btn btn-primary" type="submit">Submit</button>
+        <button type="reset" class="btn btn-secondary" >Reset</button>
+      </div>
+    </div>
+    </form>
+  </div>-->

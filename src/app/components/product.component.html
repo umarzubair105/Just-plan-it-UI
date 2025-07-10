@@ -75,18 +75,6 @@
         />
       </div>
       <div class="mb-3">
-        <label for="releaseIteration" class="form-label">Release Duration<span class="text-danger ms-1">*</span></label>
-        <select id="releaseIteration"  name="releaseIteration" class="form-control" required
-                [(ngModel)]="addProduct.releaseIteration"
-                #releaseIteration="ngModel"
-                [ngClass]="{ 'is-invalid': releaseIteration.invalid && (releaseIteration.dirty || releaseIteration.touched) }"
-        >
-          <option *ngFor="let releaseIteration of releaseIterations" [value]="releaseIteration.viewValue">
-            {{ releaseIteration.value }}
-          </option>
-        </select>
-      </div>
-      <div class="mb-3">
         <label for="otherActivitiesPercentTime" class="form-label">Non Productive Time %<span class="text-danger ms-1">*</span></label>
         <input
           type="text"
@@ -105,6 +93,19 @@
           max:'Max value is 100', pattern: 'Should be number only'}"
         />
       </div>
+      <div class="mb-3">
+        <label for="releaseIteration" class="form-label">Release Duration<span class="text-danger ms-1">*</span></label>
+        <select id="releaseIteration"  name="releaseIteration" class="form-control" required
+                [(ngModel)]="addProduct.releaseIteration"
+                #releaseIteration="ngModel"
+                [ngClass]="{ 'is-invalid': releaseIteration.invalid && (releaseIteration.dirty || releaseIteration.touched) }"
+        >
+          <option *ngFor="let releaseIteration of releaseIterations" [value]="releaseIteration.viewValue">
+            {{ releaseIteration.value }}
+          </option>
+        </select>
+      </div>
+
       <div class="mb-3">
         <label for="startDate" class="form-label">First Working Date<span class="text-danger ms-1">*</span></label>
         <input
