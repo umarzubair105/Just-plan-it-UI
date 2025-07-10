@@ -63,6 +63,7 @@ export class ProductComponent implements OnInit {
   }
 
   onSubmit() {
+      this.addProduct.code = this.addProduct.code.toUpperCase();
       this.addProduct.companyId = this.companyId; // Hardcoding companyId for now.
       this.companyService.addProduct(this.addProduct).subscribe({
         next: (data) => {

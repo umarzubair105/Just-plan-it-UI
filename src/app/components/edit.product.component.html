@@ -20,7 +20,7 @@
 
         <div class="">
           <div class="card-body">
-            <div class="d-flex align-items-center mb-2">
+            <div class="d-flex align-items-center">
               <h5 class="mb-0 me-2">Products</h5>
 
               <a
@@ -38,11 +38,11 @@
               [rows]="models"
               [columnMode]="'force'"
               [headerHeight]="40"
-              [footerHeight]="0"
+              [footerHeight]="30"
               [rowHeight]="'auto'"
               class="bootstrap-table table-striped table-bordered table-hover">
               <ngx-datatable-column name="Code" prop="code" [maxWidth]="80"></ngx-datatable-column>
-              <ngx-datatable-column name="Name" prop="name" [maxWidth]="250"></ngx-datatable-column>
+              <ngx-datatable-column name="Name" prop="name" ></ngx-datatable-column>
               <ngx-datatable-column name="Non Productive Time %" prop="otherActivitiesPercentTime" [maxWidth]="180"></ngx-datatable-column>
               <ngx-datatable-column name="Release Duration" prop="releaseIteration" [maxWidth]="150"></ngx-datatable-column>
               <ngx-datatable-column name="Created At" [maxWidth]="180">
