@@ -35,7 +35,13 @@ export class EpicService {
     return this.http.get<EpicBean>(`${this.baseUrl}/findEpicByCompanyIdAndCode?companyId=${companyId}&code=${code}`).pipe(
       catchError(handleError)
     );
-  }  // Get by ID
+  }
+  getEpicBeanById(epicId:number): Observable<EpicBean> {
+    return this.http.get<EpicBean>(`${this.baseUrl}/findEpicById?id=${epicId}`).pipe(
+      catchError(handleError)
+    );
+  }
+
 
   create(model: Epic): Observable<Epic> {
     const { id, ...payload } = model;

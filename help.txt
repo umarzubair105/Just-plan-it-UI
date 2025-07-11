@@ -12,6 +12,11 @@ Product/Project Epic Label changes
 New System Roles & flexible Interconnectivity
 Deployment in Production for Angular
 
+import { QuillModule } from 'ngx-quill';
+<quill-editor [(ngModel)]="description" [styles]="{height: '200px'}"></quill-editor>
+
+ [innerHTML]="description"
+
 <div class="truncate-text" title="{{ value }}">
       {{ value }}
     </div>

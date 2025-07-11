@@ -33,7 +33,12 @@
 
               <div class=" mb-3 mt-3 ">
                 <label for="details" class="form-label">Details</label>
-                <textarea class="form-control" [(ngModel)]="epicBean.details" name="details" id="details" #details="ngModel"></textarea>
+                <span [innerHTML]="epicBean.details" *ngIf="!makeDescEditable" (click)="makeDescEditable=true;"
+                class="span-quill-custom"></span>
+                <quill-editor [(ngModel)]="epicBean.details"
+                              class="quill-custom"
+                              name="details" id="details" #details="ngModel"
+                              *ngIf="makeDescEditable"></quill-editor>
 
               </div>
               <div class=" mb-3 mt-3 col-md-4">
@@ -62,8 +67,12 @@
               </div>
               <div class=" mb-3 mt-3">
                 <label for="risks" class="form-label">Risks</label>
-                <textarea class="form-control" [(ngModel)]="epicBean.risks" name="risks" id="risks" #risks="ngModel"></textarea>
-
+                <span [innerHTML]="epicBean.risks" *ngIf="!makeRiskEditable" (click)="makeRiskEditable=true;"
+                      class="span-quill-custom"></span>
+                <quill-editor [(ngModel)]="epicBean.risks"
+                              class="quill-custom"
+                              name="risks" id="risks" #risks="ngModel"
+                              *ngIf="makeRiskEditable"></quill-editor>
               </div>
               <div class=" mb-3 mt-3 col-md-4">
                 <label for="requiredBy" class="form-label">Required By</label>
@@ -225,8 +234,10 @@
               <h2 class="h4 mb-0">Feedback</h2>
             </div>
             <form class="d-flex align-items-center gap-2 mb-2">
-                <textarea  [(ngModel)]="comment.details" name="details" id="comments" #details="ngModel"
-                placeholder="Comments" class="form-control"></textarea>
+              <quill-editor [(ngModel)]="comment.details" [styles]="{height: '200px'}"
+                            class="quill-custom"
+                            name="details" id="comments"
+              ></quill-editor>
              <button type="submit" class="btn btn-primary btn-sm" (click)="addEpicDetail(comment, EpicDetailType.COMMENT)">Add</button>
             </form>
             <div class="table-responsive">

@@ -12,11 +12,12 @@ import {FormatDatePipe} from '../pipes/format.date';
 import {formatDate} from '../utils/helper';
 import {AppConstants} from '../configuration/app.constants';
 import {ResourceService} from '../services/resource.service';
+import {QuillEditorComponent} from 'ngx-quill';
 
 @Component({
   selector: 'epic',
   standalone: true,
-  imports: [CommonModule, FormsModule, ShowErrorsDirective, DecimalToTimePipe, FormatDatePipe],
+  imports: [CommonModule, FormsModule, ShowErrorsDirective, DecimalToTimePipe, FormatDatePipe, QuillEditorComponent],
   templateUrl: 'epic.component.html',
 })
 export class EpicComponent implements OnInit {
@@ -37,6 +38,8 @@ export class EpicComponent implements OnInit {
   link: EpicLink = new EpicLink();
   resourceMap = new Map<number, string>();
   epicMap = new Map<number, string>();
+  makeDescEditable: boolean = false;
+  makeRiskEditable: boolean = false;
   constructor(public dialogRef: MatDialogRef<EpicComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               private readonly util: Utils) {
@@ -52,8 +55,17 @@ export class EpicComponent implements OnInit {
       this.epicBean.forcefullyAdded=false;
       this.epicBean.code='EpicCode';
       this.epicBean.estimates = [];
+      this.makeDescEditable = true;
+      this.makeRiskEditable = true;
     } else {
-      this.epicService.getEpicDetails(this.epicBean.id).subscribe({
+      this.epicService.getEpicBeanById(this.epicBean.id).subscribe({
+        next: (data) => {
+          this.epicBean = data;
+        },
+        error: (err) => (this.util.showErrorMessage(err)),
+      });
+
+        this.epicService.getEpicDetails(this.epicBean.id).subscribe({
         next: (data) => {
           let epicDetails = data._embedded.epicDetails;
           epicDetails.forEach((e: EpicDetail)=>{
@@ -235,6 +247,8 @@ export class EpicComponent implements OnInit {
   }
   onSubmit(form: any): void {
     console.log('Form Submitted!', form.value);
+    this.makeDescEditable = false;
+    this.makeRiskEditable = false;
     if (this.epicBean.id==0) {
       this.epicService.create(this.epicBean).subscribe({
         next: (data) => {
