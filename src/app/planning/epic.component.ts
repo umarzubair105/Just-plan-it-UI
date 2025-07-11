@@ -105,7 +105,20 @@ export class EpicComponent implements OnInit {
       });
     }
   }
-
+  getResourceNameForLink(epicLink:EpicLink) {
+    let rId = epicLink.createdById;
+    if (this.resourceMap.has(rId)) {
+      epicLink.createdByName = <string>this.resourceMap.get(rId);
+    } else {
+      this.resourceService.getById(rId).subscribe({
+        next: (data) => {
+          this.resourceMap.set(rId, data.name);
+          epicLink.createdByName = <string>this.resourceMap.get(rId);
+        },
+        error: (err) => (this.util.showErrorMessage(err)),
+      });
+    }
+  }
   addEpicLink(epicLink: EpicLink): void {
     if (!epicLink) {
       alert("Please enter data");
@@ -115,16 +128,19 @@ export class EpicComponent implements OnInit {
       next: (data) => {
         console.log("found:"+data._embedded.epics);
         if (data._embedded.epics.length==0) {
-          alert("There is no epic with Code:"+epicLink.details);
+          alert("There is no deliverable with Code:"+epicLink.details);
           return;
         }
+        const details = epicLink.details;
         epicLink.linkedEpicId = data._embedded.epics[0].id;
         epicLink.details = '';
         epicLink.epicId = this.epicBean.id;
         epicLink.active = true;
         this.epicService.createEpicLink(epicLink).subscribe({
           next: (data) => {
-            this.epicLinks.push(epicLink);
+            this.getResourceNameForLink(data);
+            data.details = details;
+            this.epicLinks.push(data);
             this.link = new EpicLink();
             this.util.showSuccessMessage('Link is added.');
           },
@@ -159,6 +175,7 @@ export class EpicComponent implements OnInit {
             this.comment = new EpicDetail();
             this.util.showSuccessMessage('Comment is added.');
           } else if (epicDetail.detailType === EpicDetailType.REFERENCE) {
+            this.getResourceName(data);
             this.references.push(data);
             this.reference = new EpicDetail();
             this.util.showSuccessMessage('Reference is added.');
@@ -225,7 +242,7 @@ export class EpicComponent implements OnInit {
           this.fillMetadata(data);
           this.util.showSuccessMessage('Data is inserted.');
           this.originalBean = this.epicBean;
-          this.closeDialog();
+          //this.closeDialog();
         },
         error: (err) => (this.util.showErrorMessage(err)),
       });
@@ -236,7 +253,7 @@ export class EpicComponent implements OnInit {
           this.fillMetadata(data);
           this.util.showSuccessMessage('Data is updated');
           this.originalBean = this.epicBean;
-          this.closeDialog();
+          //this.closeDialog();
         },
         error: (err) => (this.util.showErrorMessage(err)),
       });

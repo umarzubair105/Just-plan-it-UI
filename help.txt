@@ -4,9 +4,7 @@ project url in Epic, remove dependentEpicId
 Contact Us
 left Bar
 Country based Weekend end and Holidays fill
-SubCompoment UI
 Epic/Estimate UI improvements
-Product Setup page
 Give Epic Unplan Option to remove from Release
 Use loggedTime in UI for ResourceCapInRelease in planning/planned
 Use/maintain/add reasource Lead
