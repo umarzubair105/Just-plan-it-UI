@@ -6,6 +6,7 @@ import {PageResponse} from '../models/page.response';
 import {AppConstants} from '../configuration/app.constants';
 import {handleError} from '../utils/helper';
 import {Epic, EpicBean, ReleaseDetailBean, ReleaseStatusEnum, ScheduleEpic} from '../models/planning';
+import {CommonResp} from './company.service';
 
 // Def
 
@@ -79,6 +80,13 @@ export class PlanningDashboardService {
     );
   }
 
+  unplanEpic(id: number): Observable<CommonResp> {
+    let params = new HttpParams();
+    params = params.append('epicId', id);
+    return this.http.post<CommonResp>(`${this.baseUrl}/unplanEpic`, params,{}).pipe(
+      catchError(handleError)
+    );
+  }
   getByReleaseId(releaseId:number): Observable<PageResponse> {
     let params = new HttpParams();
     params = params.append('releaseId', releaseId);

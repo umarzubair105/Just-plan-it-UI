@@ -68,24 +68,19 @@
                   </ngx-datatable-column>
                   <ngx-datatable-column name="Assignment" [width]="300" [minWidth]="300" [maxWidth]="300">
                     <ng-template let-row="row" ngx-datatable-cell-template>
-                      <a (click)="openDialogForEstimates(row)" title="Change Estimates"><div [innerHTML]="showAssignments(row.assignments)"></div></a>
+                      <div [innerHTML]="showAssignments(row.assignments)"></div>
                     </ng-template>
                   </ngx-datatable-column>
                   <ngx-datatable-column name="Actions" [width]="150" [minWidth]="150" [maxWidth]="150">
                     <ng-template let-row="row" ngx-datatable-cell-template>
-                      <a (click)="planEpic(row.id)" title="Make it part of release plan"
-                         *ngIf="row.estimates && row.estimates.length > 0">
-                        <i class="bi bi-play action-icon"></i>
+                      <a (click)="unplanEpic(row.id, releaseDetail.release.id)" title="Remove it from release plan">
+                        <i class="bi bi-dash-square action-icon"></i>
                       </a>
-                      <a (click)="openDialogForEstimates(row)" title="Change Estimates">
-                        <i class="bi bi-bucket action-icon"></i>
-                      </a>
+
                       <a (click)="openDialogForEpic(row)" title="Edit">
                         <i class="bi bi-pencil-square action-icon"></i>
                       </a>
-                      <a (click)="deleteEpic(row.id)" title="Delete">
-                        <i class="bi bi-trash action-icon"></i>
-                      </a>
+
                     </ng-template>
                   </ngx-datatable-column>
                 </ngx-datatable>
@@ -193,7 +188,7 @@
                   <ng-template let-row="row" ngx-datatable-cell-template>
                     <a (click)="planEpic(row.id)" title="Make it part of release plan"
                        *ngIf="row.estimates && row.estimates.length > 0">
-                      <i class="bi bi-bag-check action-icon"></i>
+                      <i class="bi bi-plus-square action-icon"></i>
                     </a>
                     <a (click)="openDialogForEstimates(row)" title="Change Estimates">
                       <i class="bi bi-bucket action-icon"></i>

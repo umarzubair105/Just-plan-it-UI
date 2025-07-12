@@ -1,3 +1,5 @@
+import {Product} from './planning';
+
 export class Basic {
   public id: number = 0;
   public active: boolean = true;
@@ -96,4 +98,23 @@ export class ResourceLeave extends Basic {
   public approvedAt: Date | null = null;
 }
 
+export class ContactUs  extends Basic {
+  public name: string = '';
+  public email: string = '';
+  public subject: string = '';
+  public details: string = '';
+  public companyId: number | null = null;
+  public addressed: boolean = false;
+}
 
+export class ResourceRightBean {
+  public products: Product[] = [];
+  public teamResourceIds: number[] = [];
+  public globalManager: boolean = false;
+  public globalHr: boolean = false;
+  public globalAdmin: boolean = false;
+  public productManager: boolean = false;
+  public productHr: boolean = false;
+  public productAdmin: boolean = false;
+  public leadId: number | null = null;
+}

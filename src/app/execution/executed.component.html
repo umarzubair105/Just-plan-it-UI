@@ -136,12 +136,14 @@
           </div>
         </div>
       </div>
+      <div>
       <ul class="custom-nav-list">
         <li *ngFor="let releaseDetailLink of releases;let j = index">
           <a [routerLink]="[]" [fragment]="'eRelease'+j" class="custom-nav-link" *ngIf="j<i || j>i+1">
             {{releaseDetailLink.release?.name}}</a>
         </li>
       </ul>
+      </div>
     </div>
   </div>
 

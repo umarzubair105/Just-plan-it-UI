@@ -140,7 +140,32 @@ export class PlannedComponent implements OnInit {
     });
   }
 
+  reloadReleases(releaseId: number): void {
+    this.planningService.getReleaseDetailByReleaseId(releaseId).subscribe({
+      next: (data) => {
+        console.log(data);
+        const index = this.releases.findIndex(r => r.release.id === releaseId);
+        this.releases.splice(index, 1, data);
+      },
+      error: (err) => (this.util.showErrorMessage(err)),
+    });
+  }
 
+
+  unplanEpic(id: number, releaseId: number) {
+    if (window.confirm("Are you sure you want to remove it from plan?")) {
+      this.planningService.unplanEpic(id).subscribe({
+        next: (data) => {
+          this.util.showSuccessMessage(data.message);
+          this.reloadReleases(releaseId);
+        },
+        error: (err) => {
+          console.info('---------------------');
+          console.error(err);
+          this.util.showErrorMessage(err);},
+      });
+    }
+  }
   changePriorityToLower(epic:EpicBean) {
     const priority = this.priorities.find(p=>p.priorityLevel>epic.priorityLevel);
     if (priority) {

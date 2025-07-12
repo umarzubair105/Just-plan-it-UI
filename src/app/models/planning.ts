@@ -137,7 +137,7 @@ export class ScheduleEpic {
 }
 
 export class ReleaseDetailBean {
-  public release: Release | null = null;
+  public release: Release = new Release();
   public resourceCaps: ResourceCapInRelease[] = [];
   public epics: EpicBean[] = [];
 }

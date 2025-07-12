@@ -1,16 +1,18 @@
-on loging thru user to screen for Company Setup
-Role based Menu and Release?planning options
+-Give Unplan Option to remove from Release
+-Contact Us
+-left Bar
+
+-on loging thru user to screen for Company Setup
+-Role based Menu and Release?planning options
 project url in Epic, remove dependentEpicId
-Contact Us
-left Bar
-Epic/Estimate UI improvements
-Give Epic Unplan Option to remove from Release
+-ON Resource add/edit add/update ResourceRole based on designation
 Use loggedTime in UI for ResourceCapInRelease in planning/planned
 Use/maintain/add reasource Lead
 Product/Project Epic Label changes
 Deployment in Production for Angular
 Planning refresh pages
 New System Roles & flexible Interconnectivity
+On Save estimate show roles specific to user, if not PM, PO
 
 
 Country based Weekend end and Holidays fill

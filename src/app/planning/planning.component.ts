@@ -130,6 +130,17 @@ export class PlanningComponent implements OnInit {
     });
   }
 
+  reloadReleases(releaseId: number): void {
+    this.planningService.getReleaseDetailByReleaseId(releaseId).subscribe({
+      next: (data) => {
+        console.log(data);
+        const index = this.releases.findIndex(r => r.release.id === releaseId);
+        this.releases.splice(index, 1, data);
+      },
+      error: (err) => (this.util.showErrorMessage(err)),
+    });
+  }
+
 
   loadUnplannedEpics(): void {
     this.planningService.getUnplannedEpicBeansByProductId(this.companyId, this.productId).subscribe({
@@ -221,7 +232,24 @@ export class PlanningComponent implements OnInit {
           if (data.releaseToAddIn) {
             this.util.showSuccessMessage(`It is planned in release ${data.releaseToAddIn.name} starting from ${data.releaseToAddIn.startDate}.`);
             this.unplannedEpics = this.unplannedEpics.filter(wh => wh.id !== id);
+            this.reloadReleases(data.releaseToAddIn.id);
           }
+        },
+        error: (err) => {
+          console.info('---------------------');
+          console.error(err);
+          this.util.showErrorMessage(err);},
+      });
+    }
+  }
+
+  unplanEpic(id: number, releaseId: number) {
+    if (window.confirm("Are you sure you want to remove it from plan?")) {
+      this.planningService.unplanEpic(id).subscribe({
+        next: (data) => {
+            this.util.showSuccessMessage(data.message);
+          this.reloadReleases(releaseId);
+          this.loadUnplannedEpics();
         },
         error: (err) => {
           console.info('---------------------');
