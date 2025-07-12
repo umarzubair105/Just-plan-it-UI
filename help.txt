@@ -1,4 +1,4 @@
--Give Unplan Option to remove from Release
+
 -Contact Us
 -left Bar
 
@@ -10,7 +10,6 @@ Use loggedTime in UI for ResourceCapInRelease in planning/planned
 Use/maintain/add reasource Lead
 Product/Project Epic Label changes
 Deployment in Production for Angular
-Planning refresh pages
 New System Roles & flexible Interconnectivity
 On Save estimate show roles specific to user, if not PM, PO
 

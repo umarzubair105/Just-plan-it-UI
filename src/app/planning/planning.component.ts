@@ -326,9 +326,9 @@ export class PlanningComponent implements OnInit {
     let epic = new EpicBean();
     epic.productId = this.productId;
     epic.releaseId = null;
-    this.openDialogForEpic(epic);
+    this.openDialogForEpic(epic, 0);
   }
-  openDialogForEpic(epic: EpicBean): void {
+  openDialogForEpic(epic: EpicBean, releaseId: number): void {
     console.log("Planning epic:"+epic);
     const dialogRef = this.dialog.open(EpicComponent, {
       width: '100%',
@@ -336,23 +336,34 @@ export class PlanningComponent implements OnInit {
       height: '100%',
       maxHeight: '80vh', // 80% of viewport height
       disableClose: true,
-      data: { epicBean: epic, priorities: this.priorities, subComponents: this.subComponents },
+      data: { epicBean: epic, priorities: this.priorities, subComponents: this.subComponents, releaseId: releaseId },
     });
 
     dialogRef.afterClosed().subscribe(result => {
       if (result && result.epic && result.epic.id>0) {
+        if (result.anythingChanged) {
+          if (result.releaseId==0) {
+            this.loadUnplannedEpics();
+          } else {
+            this.reloadReleases(releaseId);
+          }
+        }
+        /*
         console.log('The dialog was closed:'+result.epic.title);
         let epic = result.epic;
         console.log('The dialog was closed:'+epic.id);
         console.log('The dialog was closed:'+this.unplannedEpics.filter(ep => ep.id === epic.id));
         const index = this.unplannedEpics.findIndex(ep => ep.id === epic.id);
         if (index!== -1) {
-          const exiting = this.unplannedEpics[index];
-          EpicBeanCopyPasteUpdatedValues(epic, exiting);
+          this.unplannedEpics.splice(index, 1, epic);
+          //const exiting = this.unplannedEpics[index];
+          //EpicBeanCopyPasteUpdatedValues(epic, exiting);
         } else {
           console.log('The dialog was closed adding in List:'+result.epic);
           this.unplannedEpics = [...this.unplannedEpics, epic];
-        }
+
+
+        }*/
       }
       // Handle the result here
     });

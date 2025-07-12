@@ -77,7 +77,7 @@
                         <i class="bi bi-dash-square action-icon"></i>
                       </a>
 
-                      <a (click)="openDialogForEpic(row)" title="Edit">
+                      <a (click)="openDialogForEpic(row, releaseDetail.release.id)" title="Edit">
                         <i class="bi bi-pencil-square action-icon"></i>
                       </a>
 
@@ -193,7 +193,7 @@
                     <a (click)="openDialogForEstimates(row)" title="Change Estimates">
                       <i class="bi bi-bucket action-icon"></i>
                     </a>
-                    <a (click)="openDialogForEpic(row)" title="Edit">
+                    <a (click)="openDialogForEpic(row,0)" title="Edit">
                       <i class="bi bi-pencil-square action-icon"></i>
                     </a>
                     <a (click)="deleteEpic(row.id)" title="Delete">

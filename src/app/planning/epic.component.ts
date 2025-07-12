@@ -42,6 +42,7 @@ export class EpicComponent implements OnInit {
   makeTitleEditable: boolean = false;
   makeDescEditable: boolean = false;
   makeRiskEditable: boolean = false;
+  anythingChanged:boolean = false;
   constructor(public dialogRef: MatDialogRef<EpicComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               private readonly util: Utils) {
@@ -139,6 +140,8 @@ export class EpicComponent implements OnInit {
       alert("Please enter data");
       return;
     }
+    this.anythingChanged = true;
+
     this.epicService.getByCompanyIdAndCode(this.util.getCompanyId(), epicLink.details).subscribe({
       next: (data) => {
         console.log("found:"+data._embedded.epics);
@@ -167,6 +170,8 @@ export class EpicComponent implements OnInit {
     });
   }
   deleteEpicLink(epicLink:EpicLink) {
+    this.anythingChanged = true;
+
     this.epicService.deleteEpicLink(epicLink.id).subscribe(blob => {
         this.epicLinks = this.epicLinks.filter(f => f.id !== epicLink.id);
     }, error => {
@@ -179,6 +184,8 @@ export class EpicComponent implements OnInit {
       alert("Please enter data");
       return;
     }
+    this.anythingChanged = true;
+
     if (epicDetailType === EpicDetailType.COMMENT && !epicDetail.details) {
       alert("Please enter Comments");
       return;
@@ -212,6 +219,8 @@ export class EpicComponent implements OnInit {
       alert("Please select a file");
       return;
     }
+    this.anythingChanged = true;
+
     if (this.epicBean.id>0) {
       this.epicService.uploadEpicDetailFile(this.epicBean.id,this.selectedFileForUpload,this.descriptionForFileUpload).subscribe({
         next: (data) => {
@@ -238,6 +247,8 @@ export class EpicComponent implements OnInit {
     });
   }
   deleteEpicDetail(epicDetail:EpicDetail) {
+    this.anythingChanged = true;
+
     this.epicService.deleteEpicDetail(epicDetail.id).subscribe(blob => {
       if (epicDetail.detailType === EpicDetailType.ATTACHED_FILE) {
         this.files = this.files.filter(f => f.id !== epicDetail.id);
@@ -254,6 +265,7 @@ export class EpicComponent implements OnInit {
   }
   onSubmit(form: any): void {
     console.log('Form Submitted!', form.value);
+    this.anythingChanged = true;
     this.makeTitleEditable = false;
     this.makeDescEditable = false;
     this.makeRiskEditable = false;
@@ -296,7 +308,8 @@ export class EpicComponent implements OnInit {
     console.log('Child component initialized');
   }
   closeDialog(): void {
-    let result = {epic:this.originalBean};
+    let result = {epic:this.originalBean, anythingChanged:this.anythingChanged,
+      releaseId:this.data.releaseId};
     console.log('Closing with:'+result);
     this.dialogRef.close(result);
   }
