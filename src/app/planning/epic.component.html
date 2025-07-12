@@ -1,6 +1,6 @@
-<div class="container-lg mt-4">
+<div class="container-lg mt-4" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
   <div class="row">
-    <div class="col-md-8 offset-md-2">
+    <div class="col-md-12 offset-md-0">
 
       <!-- Intro Card -->
       <div class="card shadow-sm mb-3">
@@ -18,17 +18,23 @@
           <h2 class="h4 mb-0">{{epicBean.id==0?'Add New ':'Update '}} Deliverable</h2>
         </div>
 
+        <div class="row">
+          <div class="col-md-8">
 
-          <form  #userForm="ngForm" >
+
+            <form  #userForm="ngForm" >
             <div class="card-body">
               <!--form-floating-->
               <div class=" mb-3 mt-3">
                 <label for="title">Title<span class="text-danger ms-1">*</span></label>
-                <input type="text" class="form-control" [(ngModel)]="epicBean.title" name="title" id="title"
+                <span [innerHTML]="epicBean.title" *ngIf="!makeTitleEditable" (click)="makeTitleEditable=true;"
+                      class="span-quill-custom"></span>
+                <textarea class="form-control" [(ngModel)]="epicBean.title" name="title" id="title"
                        required
                        #title="ngModel"
                        [ngClass]="{ 'is-invalid': title.invalid && (title.dirty || title.touched) }"
-                       [showErrors]="{ required: 'Title is required' }">
+                       [showErrors]="{ required: 'Title is required' }"
+                          *ngIf="makeTitleEditable"></textarea>
               </div>
 
               <div class=" mb-3 mt-3 ">
@@ -44,6 +50,8 @@
               <div class=" mb-3 mt-3 col-md-4">
                 <label for="priorityId" class="form-label">Priority<span class="text-danger ms-1">*</span></label>
                 <select name="priorityId"  [(ngModel)]="epicBean.priorityId" class="form-control" required id="priorityId"
+                        placeholder="Select Priority"
+
                         #priorityId="ngModel"
                         [ngClass]="{ 'is-invalid': priorityId.invalid && (priorityId.dirty || priorityId.touched) }"
                         [showErrors]="{ required: 'Priority is required' }"
@@ -56,6 +64,26 @@
                 </select>
 
               </div>
+              <div class=" mb-3 mt- col-md-4">
+                <label for="componentId" class="form-label">Component</label>
+                <select id="componentId" name="componentId"  [(ngModel)]="epicBean.componentId"
+                        placeholder="Select Component"
+                        class="form-control" #componentId="ngModel">
+                  <option *ngFor="let m of subComponents" [value]="m.id">
+                    {{ m.name }}
+                  </option>
+                </select>
+
+              </div>
+
+              <div class=" mb-3 mt-3 col-md-4">
+                <label for="requiredBy" class="form-label">Required By</label>
+                <input type="date" class="form-control" [(ngModel)]="epicBean.requiredBy" id="requiredBy"
+                       name="requiredBy" #requiredBy="ngModel"
+                >
+
+              </div>
+
               <div class=" mb-3 mt-3 col-md-4">
                 <label for="valueGain" class="form-label">Value Gain (In number)</label>
                 <input type="number" class="form-control" [(ngModel)]="epicBean.valueGain" name="valueGain" id="valueGain"
@@ -74,124 +102,199 @@
                               name="risks" id="risks" #risks="ngModel"
                               *ngIf="makeRiskEditable"></quill-editor>
               </div>
-              <div class=" mb-3 mt-3 col-md-4">
-                <label for="requiredBy" class="form-label">Required By</label>
-                <input type="date" class="form-control" [(ngModel)]="epicBean.requiredBy" id="requiredBy"
-                       name="requiredBy" #requiredBy="ngModel"
-                       >
 
-              </div>
-              <div class=" mb-3 mt- col-md-4">
-                <label for="componentId" class="form-label">Component</label>
-                <select id="componentId" name="componentId"  [(ngModel)]="epicBean.componentId"
-                        class="form-control" #componentId="ngModel">
-                  <option *ngFor="let m of subComponents" [value]="m.id">
-                    {{ m.name }}
-                  </option>
-                </select>
-
-              </div>
             </div>
             <div class="text-center mt-2 d-flex justify-content-center gap-2">
               <button type="submit" class="btn btn-primary w-20" [disabled]="userForm.invalid" (click)="onSubmit(userForm)">Save</button>
               <button type="submit" class="btn btn-secondary ms-2 w-20" (click)="closeDialogDoNothing()">Close</button>
             </div>
           </form>
-          <div class="card-body" *ngIf="epicBean.id>0">
+
+            <div class="card-body" *ngIf="epicBean.id>0">
             <div class="card-header bg-secondary text-white text-center mb-2">
-              <h2 class="h4 mb-0">Attachments</h2>
+              <h2 class="h4 mb-0">Feedback</h2>
             </div>
-            <form class="d-flex align-items-center gap-2 mb-2" (submit)="onSubmitFileForm()" enctype="multipart/form-data">
-              <input type="file" (change)="onFileSelected($event)" class="form-control form-control-sm w-auto" />
-              <input type="text" [(ngModel)]="descriptionForFileUpload"
-                     name="descriptionForFileUpload"
-                     placeholder="File Description"
-                     class="form-control form-control-sm w-auto" />
-              <button type="submit" class="btn btn-sm btn-primary">Upload</button>
-            </form>
 
-
-            <div class="table-responsive">
+            <div class="table-responsive" *ngIf="comments.length>0">
               <table class="table table-striped table-hover table-bordered table-sm-custom text-sm">
                 <thead class="table-secondary" >
               <tr>
-                <th>File</th>
-                <th>Uploaded By</th>
-                <th>Uploaded At</th>
-                <th>Details</th>
+                <th>Comments</th>
                 <th>Action</th>
               </tr>
               </thead>
               <tbody>
-              <tr *ngFor="let epicDetail of files">
-                <td>{{ epicDetail.name }}</td>
-                <td>{{ epicDetail.createdByName }}</td>
-                <td>{{ epicDetail.createdDate ? (epicDetail.createdDate | date: AppConstants.DATE_TIME_FORMAT) : '-' }}</td>
-                <td>{{ epicDetail.details }}</td>
-                <td class="text-center">
-                  <a (click)="download(epicDetail)" title="Download"
-                     class="btn btn-sm btn-outline-primary btn-tight-custom me-1">
-                    <i class="bi bi-download action-icon"></i>
-                  </a>
-                  <a (click)="deleteEpicDetail(epicDetail)" title="Delete"
-                     class="btn btn-sm btn-outline-info btn-tight-custom">
+              <tr *ngFor="let epicDetail of comments">
+                <td>
+                  <span [innerHTML]="epicDetail.details" class="span-quill-custom"></span>
+                  <div class="text-end">
+                  <small>
+                    <em>Updated By: {{ epicDetail.createdByName }} - Updated At: {{ epicDetail.createdDate ? (epicDetail.createdDate | date: AppConstants.DATE_TIME_FORMAT) : '-' }}
+                    </em>
+                  </small>
+                  </div>
+                </td>
+                <td  class="text-center">
+                  <a (click)="deleteEpicDetail(epicDetail)" title="Delete"  class="btn btn-sm btn-outline-info btn-tight-custom">
                     <i class="bi bi-trash action-icon"></i>
                   </a>
-
                 </td>
               </tbody>
             </table>
             </div>
+              <form class="d-flex align-items-center gap-2 mt-2" #commentForm="ngForm">
+                <quill-editor [(ngModel)]="comment.details" [styles]="{height: '200px'}"
+                              class="quill-custom"
+                              name="details" id="comments"
+
+                ></quill-editor>
+                <button type="submit" class="btn btn-primary btn-sm" [disabled]="commentForm.invalid" (click)="addEpicDetail(comment, EpicDetailType.COMMENT)">Add</button>
+              </form>
+          </div>
+          </div>
+          <div class="col-md-4">
+            <div class="card-body" *ngIf="epicBean.id>0">
+                <div class="card-header bg-secondary text-white text-center mb-2">
+                    <h2 class="h4 mb-0">Attachments</h2>
+                </div>
+
+
+                <div class="table-responsive" *ngIf="files.length>0">
+              <table class="table table-striped table-hover table-bordered table-sm-custom text-sm">
+                <thead class="table-secondary" >
+                <tr>
+                  <th>File</th>
+                  <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let epicDetail of files">
+                  <td>File Name: <a (click)="download(epicDetail)" title="Download"
+                                    class="btn btn-sm btn-outline-primary btn-tight-custom me-1">
+                                {{ epicDetail.name }}
+                                </a>
+                    <br/>Detail: {{ epicDetail.details }}
+                    <div class="text-end">
+                    <small><em>
+                      Added By: {{ epicDetail.createdByName }}
+                      <br/>Added At: {{ epicDetail.createdDate ? (epicDetail.createdDate | date: AppConstants.DATE_TIME_FORMAT) : '-' }}
+                    </em></small>
+                    </div>
+                  </td>
+                  <td class="text-center">
+                   <!-- <a (click)="download(epicDetail)" title="Download"
+                       class="btn btn-sm btn-outline-primary btn-tight-custom me-1">
+                      <i class="bi bi-download action-icon"></i>
+                    </a>-->
+                    <a (click)="deleteEpicDetail(epicDetail)" title="Delete"
+                       class="btn btn-sm btn-outline-info btn-tight-custom">
+                      <i class="bi bi-trash action-icon"></i>
+                    </a>
+
+                  </td>
+                </tbody>
+              </table>
+            </div>
+                <form class="align-items-center gap-2 mt-2" #attachForm="ngForm"
+                    (submit)="onSubmitFileForm()"
+                    enctype="multipart/form-data">
+
+                  <input type="file"
+                         (change)="onFileSelected($event)"
+                         class="form-control form-control-sm w-auto" required/>
+
+                  <div class="w-100"></div> <!-- 👈 forces next element to next line -->
+                  <div class="d-flex align-items-center gap-2 mt-2">
+                    <input type="text"
+                           [(ngModel)]="descriptionForFileUpload"
+                           name="descriptionForFileUpload"
+                           placeholder="File Description"
+                           class="form-control form-control-sm" />
+
+                    <button type="submit" class="btn btn-sm btn-primary" [disabled]="attachForm.invalid">Upload</button>
+                  </div>
+                </form>
           </div>
 
-          <div class="card-body" *ngIf="epicBean.id>0">
+            <div class="card-body" *ngIf="epicBean.id>0">
             <div class="card-header bg-secondary text-white text-center mb-2">
               <h2 class="h4 mb-0">References</h2>
             </div>
-            <form class="d-flex align-items-center gap-2 mb-2">
-                <input type="text" [(ngModel)]="reference.name" name="name" id="name" placeholder="Reference"
-                       class="form-control form-control-sm w-auto"/>
-                <button type="submit" class="btn btn-sm btn-primary" (click)="addEpicDetail(reference, EpicDetailType.REFERENCE)">Add</button>
-            </form>
-            <div class="table-responsive">
+
+            <div class="table-responsive" *ngIf="references.length>0">
               <table class="table table-striped table-hover table-bordered table-sm-custom text-sm">
                 <thead class="table-secondary" >
-              <tr>
-                <th>Reference</th>
-                <th>Added By</th>
-                <th>Added At</th>
-                <th>Action</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr *ngFor="let epicDetail of references">
-                <td>{{ epicDetail.name }}</td>
-                <td>{{ epicDetail.createdByName }}</td>
-                <td>{{ epicDetail.createdDate ? (epicDetail.createdDate | date: AppConstants.DATE_TIME_FORMAT) : '-' }}</td>
-                <td class="text-center">
-                  <a (click)="deleteEpicDetail(epicDetail)" title="Delete"
-                     class="btn btn-sm btn-outline-info btn-tight-custom">
-                    <i class="bi bi-trash action-icon"></i>
-                  </a>
-                </td>
-              </tbody>
-            </table>
+                <tr>
+                  <th>Reference</th>
+                  <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let epicDetail of references">
+                  <td>Ref.: {{ epicDetail.name }}
+                    <div class="text-end">
+                    <small><em>
+                    Added By: {{ epicDetail.createdByName }}
+                    <br/>Added At: {{ epicDetail.createdDate ? (epicDetail.createdDate | date: AppConstants.DATE_TIME_FORMAT) : '-' }}
+                      </em></small>
+                    </div>
+                  </td>
+                  <td class="text-center">
+                    <a (click)="deleteEpicDetail(epicDetail)" title="Delete"
+                       class="btn btn-sm btn-outline-info btn-tight-custom">
+                      <i class="bi bi-trash action-icon"></i>
+                    </a>
+                  </td>
+                </tbody>
+              </table>
             </div>
+              <form class="d-flex align-items-center gap-2 mt-2" #refForm="ngForm">
+                <input type="text" [(ngModel)]="reference.name" name="name" id="name" placeholder="Reference"
+                       class="form-control form-control-sm w-auto" required/>
+                <button type="submit" class="btn btn-sm btn-primary" [disabled]="refForm.invalid"  (click)="addEpicDetail(reference, EpicDetailType.REFERENCE)">Add</button>
+              </form>
           </div>
 
 
-          <div class="card-body" *ngIf="epicBean.id>0">
+            <div class="card-body" *ngIf="epicBean.id>0">
             <div class="card-header bg-secondary text-white text-center mb-2">
               <h2 class="h4 mb-0">Relations</h2>
             </div>
-            <form class="d-flex align-items-center gap-2 mb-2">
-                <input type="text" [(ngModel)]="link.details" name="details" id="detailsL" placeholder="Code"
-                       class="form-control form-control-sm w-auto"/>
+
+
+            <div class="table-responsive" *ngIf="epicLinks.length>0">
+              <table class="table table-striped table-hover table-bordered table-sm-custom text-sm">
+                <thead class="table-secondary" >
+                <tr>
+                  <th>Relationship</th>
+                  <th>Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let epicLink of epicLinks">
+                  <td>{{ epicLink.linkType | prettyLabel }} {{ epicLink.details }}
+                    <div class="text-end">
+                    <small><em>
+                      Added By: {{ epicLink.createdByName }}
+                      <br/>Added At: {{ epicLink.createdDate ? (epicLink.createdDate | date: AppConstants.DATE_TIME_FORMAT) : '-' }}
+                    </em></small>
+                    </div>
+                  </td>
+                  <td class="text-center">
+                    <a (click)="deleteEpicLink(epicLink)" title="Delete" class="btn btn-sm btn-outline-info btn-tight-custom">
+                      <i class="bi bi-trash action-icon"></i>
+                    </a>
+                  </td>
+                </tbody>
+              </table>
+            </div>
+              <form class="d-flex align-items-center gap-2 mb-2" #relForm="ngForm">
                 <select name="linkType"  [(ngModel)]="link.linkType" required id="linkType"
                         #linkType="ngModel"
                         class="form-control form-control-sm w-auto"
                         [ngClass]="{ 'is-invalid': linkType.invalid && (linkType.dirty || linkType.touched) }"
                         [showErrors]="{ required: 'Type is required' }"
+
                 >
                   <option value="">Select Type</option>
                   <option>
@@ -201,69 +304,13 @@
                     {{ EpicLinkType.DEPEND_ON }}
                   </option>
                 </select>
-              <button type="submit" class="btn btn-primary btn-sm" (click)="addEpicLink(link)">Add</button>
-            </form>
-
-            <div class="table-responsive">
-              <table class="table table-striped table-hover table-bordered table-sm-custom text-sm">
-                <thead class="table-secondary" >
-              <tr>
-                <th>Code</th>
-                <th>Type</th>
-                <th>Added At</th>
-                <th>Action</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr *ngFor="let epicLink of epicLinks">
-                <td>{{ epicLink.details }}</td>
-                <td>{{ epicLink.linkType }}</td>
-                <td>{{ epicLink.createdDate ? (epicLink.createdDate | date: AppConstants.DATE_TIME_FORMAT) : '-' }}</td>
-                <td class="text-center">
-                  <a (click)="deleteEpicLink(epicLink)" title="Delete" class="btn btn-sm btn-outline-info btn-tight-custom">
-                    <i class="bi bi-trash action-icon"></i>
-                  </a>
-                </td>
-              </tbody>
-            </table>
-            </div>
+                <input type="text" [(ngModel)]="link.details" name="details" id="detailsL" placeholder="Code"
+                       class="form-control form-control-sm w-auto" required/>
+                <button type="submit" class="btn btn-primary btn-sm" [disabled]="relForm.invalid" (click)="addEpicLink(link)">Add</button>
+              </form>
           </div>
-
-          <div class="card-body" *ngIf="epicBean.id>0">
-            <div class="card-header bg-secondary text-white text-center mb-2">
-              <h2 class="h4 mb-0">Feedback</h2>
-            </div>
-            <form class="d-flex align-items-center gap-2 mb-2">
-              <quill-editor [(ngModel)]="comment.details" [styles]="{height: '200px'}"
-                            class="quill-custom"
-                            name="details" id="comments"
-              ></quill-editor>
-             <button type="submit" class="btn btn-primary btn-sm" (click)="addEpicDetail(comment, EpicDetailType.COMMENT)">Add</button>
-            </form>
-            <div class="table-responsive">
-              <table class="table table-striped table-hover table-bordered table-sm-custom text-sm">
-                <thead class="table-secondary" >
-              <tr>
-                <th>Comments</th>
-                <th>Added By</th>
-                <th>Added At</th>
-                <th>Action</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr *ngFor="let epicDetail of comments">
-                <td>{{ epicDetail.details }}</td>
-                <td>{{ epicDetail.createdByName }}</td>
-                <td>{{ epicDetail.createdDate ? (epicDetail.createdDate | date: AppConstants.DATE_TIME_FORMAT) : '-' }}</td>
-                <td  class="text-center">
-                  <a (click)="deleteEpicDetail(epicDetail)" title="Delete"  class="btn btn-sm btn-outline-info btn-tight-custom">
-                    <i class="bi bi-trash action-icon"></i>
-                  </a>
-                </td>
-              </tbody>
-            </table>
-            </div>
           </div>
+        </div>
       </div>
 
     </div>

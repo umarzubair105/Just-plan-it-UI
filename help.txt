@@ -3,14 +3,19 @@ Role based Menu and Release?planning options
 project url in Epic, remove dependentEpicId
 Contact Us
 left Bar
-Country based Weekend end and Holidays fill
 Epic/Estimate UI improvements
 Give Epic Unplan Option to remove from Release
 Use loggedTime in UI for ResourceCapInRelease in planning/planned
 Use/maintain/add reasource Lead
 Product/Project Epic Label changes
-New System Roles & flexible Interconnectivity
 Deployment in Production for Angular
+Planning refresh pages
+New System Roles & flexible Interconnectivity
+
+
+Country based Weekend end and Holidays fill
+Comments Reply and Edit
+Email
 
 import { QuillModule } from 'ngx-quill';
 <quill-editor [(ngModel)]="description" [styles]="{height: '200px'}"></quill-editor>

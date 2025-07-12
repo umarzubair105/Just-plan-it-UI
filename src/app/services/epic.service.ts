@@ -80,7 +80,7 @@ export class EpicService {
   getEpicDetails(epicId:number): Observable<PageResponse> {
     let params = new HttpParams();
     params = params.append('epicId', epicId);
-    return this.http.get<PageResponse>(`${this.epicDetailsUrl}/search/findByEpicIdAndActiveIsTrueOrderByCreatedDateDesc`,
+    return this.http.get<PageResponse>(`${this.epicDetailsUrl}/search/findByEpicIdAndActiveIsTrueOrderByCreatedDateAsc`,
       { params }).pipe(
       catchError(handleError)
     );

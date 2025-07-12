@@ -13,11 +13,12 @@ import {formatDate} from '../utils/helper';
 import {AppConstants} from '../configuration/app.constants';
 import {ResourceService} from '../services/resource.service';
 import {QuillEditorComponent} from 'ngx-quill';
+import {PrettyLabelPipe} from '../pipes/pretty.label';
 
 @Component({
   selector: 'epic',
   standalone: true,
-  imports: [CommonModule, FormsModule, ShowErrorsDirective, DecimalToTimePipe, FormatDatePipe, QuillEditorComponent],
+  imports: [CommonModule, FormsModule, ShowErrorsDirective, DecimalToTimePipe, FormatDatePipe, QuillEditorComponent, PrettyLabelPipe],
   templateUrl: 'epic.component.html',
 })
 export class EpicComponent implements OnInit {
@@ -38,6 +39,7 @@ export class EpicComponent implements OnInit {
   link: EpicLink = new EpicLink();
   resourceMap = new Map<number, string>();
   epicMap = new Map<number, string>();
+  makeTitleEditable: boolean = false;
   makeDescEditable: boolean = false;
   makeRiskEditable: boolean = false;
   constructor(public dialogRef: MatDialogRef<EpicComponent>,
@@ -55,6 +57,7 @@ export class EpicComponent implements OnInit {
       this.epicBean.forcefullyAdded=false;
       this.epicBean.code='EpicCode';
       this.epicBean.estimates = [];
+      this.makeTitleEditable = true;
       this.makeDescEditable = true;
       this.makeRiskEditable = true;
     } else {
@@ -176,6 +179,10 @@ export class EpicComponent implements OnInit {
       alert("Please enter data");
       return;
     }
+    if (epicDetailType === EpicDetailType.COMMENT && !epicDetail.details) {
+      alert("Please enter Comments");
+      return;
+    }
     epicDetail.epicId = this.epicBean.id;
     epicDetail.detailType = epicDetailType;
     epicDetail.active = true;
@@ -247,6 +254,7 @@ export class EpicComponent implements OnInit {
   }
   onSubmit(form: any): void {
     console.log('Form Submitted!', form.value);
+    this.makeTitleEditable = false;
     this.makeDescEditable = false;
     this.makeRiskEditable = false;
     if (this.epicBean.id==0) {
