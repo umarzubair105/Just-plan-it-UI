@@ -114,7 +114,12 @@
                   </ngx-datatable-column>
                   <ngx-datatable-column name="Time Utilization" [width]="500" [minWidth]="500" [maxWidth]="500">
                     <ng-template let-row="row" ngx-datatable-cell-template>
-                      <div class="time-bar-container">
+                      <div class="progress m-1" style="height: 20px;">
+                        <div class="progress-bar" role="progressbar"
+                             [style.width.%]="getAssignedPercentage(row)"
+                             aria-valuemin="0" aria-valuemax="100">{{getAssignedPercentage(row) | truncateNumber}}%</div>
+                      </div>
+                      <!--<div class="time-bar-container">
                         <div
                           class="time-bar-assigned"
                           [style.width.%]="getAssignedPercentage(row)"
@@ -125,7 +130,7 @@
                           [style.width.%]="100 - getAssignedPercentage(row)"
                           title="Time Unassigned: {{ row.prodBasedAssignableTime - row.prodBasedAssignedTime | decimalToTime }}">
                         </div>
-                      </div>
+                      </div>-->
                     </ng-template>
                   </ngx-datatable-column>
                 </ngx-datatable>

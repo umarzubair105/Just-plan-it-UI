@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {PageResponse} from '../models/page.response';
 import {ReleaseIteration} from '../utils/helper';
-import {Company} from '../models/basic';
+import {AuthResponse, Company, ContactUs} from '../models/basic';
 
 // Define the Company interface
 
@@ -82,6 +82,7 @@ export interface MapDesignation {
 })
 export class CompanyService {
   private baseHost = 'http://localhost:8080'; // Base URL for the REST endpoint
+  private baseAuthUrl = 'http://localhost:8080/api/auth'; // Base URL for the REST endpoint
   private baseUrl = 'http://localhost:8080/companies'; // Base URL for the REST endpoint
   private baseUrlComDashboard = 'http://localhost:8080/company-dashboard'; // Base URL for the REST endpoint
   private http = inject(HttpClient);
@@ -89,11 +90,11 @@ export class CompanyService {
     //console.log('Testing Service')
   //}
 
-  login(body: any): Observable<any> {
+  login(body: any): Observable<AuthResponse> {
     console.log(body);
     //const { id, ...payload } = company;
     //console.log(payload);
-    return this.http.post<any>('http://localhost:8080/api/auth/authenticate', body).pipe(
+    return this.http.post<AuthResponse>(this.baseAuthUrl+'/authenticate', body).pipe(
       catchError(this.handleError)
     );
   }
@@ -102,11 +103,16 @@ export class CompanyService {
     console.log(body);
     //const { id, ...payload } = company;
     //console.log(payload);
-    return this.http.post<any>('http://localhost:8080/api/auth/reset-password', body).pipe(
+    return this.http.post<any>(this.baseAuthUrl+'/reset-password', body).pipe(
       catchError(this.handleError)
     );
   }
-
+  contactUs(model: ContactUs): Observable<CommonResp> {
+    const { id, ...payload } = model;
+    return this.http.post<CommonResp>(this.baseAuthUrl+'/contact-us', payload).pipe(
+      catchError(this.handleError)
+    );
+  }
   addCompany(company: AddCompany): Observable<CommonResp> {
     console.log(company);
     //const { id, ...payload } = company;
@@ -218,11 +224,17 @@ export class CompanyService {
     console.log(error);
     if (error.error instanceof ErrorEvent) {
       // Client-side error
+      console.log('>>>>>>>>>>>>'+error.error);
       errorMessage = `Error--: ${error.error.message}`;
     } else {
       // Server-side error
-      console.log(error.error);
-      errorMessage = error.error.message;
+      console.log('>>>'+error.error.error);
+      console.log('>>>'+error.error.message);
+      if (error.error.error) {
+        errorMessage = error.error.error;
+      } else {
+        errorMessage = error.error.message;
+      }
       //errorMessage = `Error Code-----: ${error.status}\nMessage: ${error.message}`;
     }
     return throwError(errorMessage);

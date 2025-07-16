@@ -12,6 +12,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import {MatIcon} from '@angular/material/icon';
+import {AuthResponse} from '../models/basic';
 
 
 @Component({
@@ -42,9 +43,13 @@ export class LoginComponent {
     if (this.myForm.valid) {
       console.log('Form Data:', this.myForm.value);
       this.companyService.login(this.myForm.value)
-        .subscribe((resp: any) => {
+        .subscribe((resp: AuthResponse) => {
           this.authService.login(resp.token);
-            this.router.navigate(['/home']); // Redirect to a secure page
+            if (resp.details && resp.details.route) {
+              this.router.navigate([resp.details.route]); // Redirect to a secure page
+            } else {
+              this.router.navigate(['/home']); // Redirect to a secure page
+            }
             //window.location.reload(); // Reload to update isLoggedIn
         },
         (error) => {

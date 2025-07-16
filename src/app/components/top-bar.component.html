@@ -94,7 +94,7 @@
       <ul class="navbar-nav mb-2 mb-lg-0 d-flex align-items-center">
         <li class="nav-item"><a class="nav-link" href="#" >Home</a></li>
         <li class="nav-item"><a class="nav-link" href="#" *ngIf="!userName">About Us</a></li>
-        <li class="nav-item"><a class="nav-link" href="#">Contact Us</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/contact-us">Contact Us</a></li>
         <li class="nav-item me-3" *ngIf="userName">
           <form  #useForm="ngForm" class="d-flex" role="search" (ngSubmit)="onSubmit()">
             <input class="form-control form-control-sm me-1" type="search" id="search"

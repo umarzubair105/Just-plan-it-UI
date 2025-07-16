@@ -27,7 +27,7 @@
           <div *ngIf="errorMessage" class="error-message">
             {{ errorMessage }}
           </div>
-          <div class="mb-3">
+          <div class="mb-3 col-md-4">
             <label for="name" class="form-label">Product Name<span class="text-danger ms-1">*</span></label>
             <input
               type="text"
@@ -43,7 +43,7 @@
               [showErrors]="{ required: 'Product Name is required' }"
             />
           </div>
-          <div class="mb-3">
+          <div class="mb-3 col-md-4">
             <label for="code" class="form-label">Product Code<span class="text-danger ms-1">*</span></label>
             <input
               type="text"
@@ -59,7 +59,7 @@
               [showErrors]="{ required: 'Product Code is required' }"
             />
           </div>
-          <div class="mb-3">
+          <div class="mb-3 col-md-4">
             <label for="emailProductManager" class="form-label">Product Manager Email<span class="text-danger ms-1">*</span></label>
             <input
               type="email"
@@ -76,7 +76,7 @@
               [showErrors]="{ required: 'Product Manager Email is required', email: 'Product Manager Email is not valid' }"
             />
           </div>
-          <div class="mb-3">
+          <div class="mb-3 col-md-4">
             <label for="emailProductOwner" class="form-label">Product Owner Email<span class="text-danger ms-1">*</span></label>
             <input
               type="email"
@@ -93,7 +93,7 @@
               [showErrors]="{ required: 'Product Owner Email is required', email: 'Product Owner Email is not valid' }"
             />
           </div>
-          <div class="mb-3">
+          <div class="mb-3 col-md-4">
             <label for="otherActivitiesPercentTime" class="form-label">Non Productive Time %<span class="text-danger ms-1">*</span></label>
             <input
               type="text"
@@ -112,7 +112,7 @@
               max:'Max value is 100', pattern: 'Should be number only'}"
             />
           </div>
-          <div class="mb-3">
+          <div class="mb-3 col-md-4">
             <label for="releaseIteration" class="form-label">Release Duration<span class="text-danger ms-1">*</span></label>
             <select id="releaseIteration"  name="releaseIteration" class="form-control" required
                     [(ngModel)]="addProduct.releaseIteration"
@@ -125,7 +125,7 @@
             </select>
           </div>
 
-          <div class="mb-3">
+          <div class="mb-3 col-md-4">
             <label for="startDate" class="form-label">First Working Date<span class="text-danger ms-1">*</span></label>
             <input
               type="date"
@@ -141,7 +141,7 @@
               [showErrors]="{ required: 'First working date is required' }"
             />
           </div>
-          <div class="mb-3">
+          <div class="mb-3 col-md-4">
             <label for="endDate" class="form-label">Last Delivery Date</label>
             <input
               type="date"

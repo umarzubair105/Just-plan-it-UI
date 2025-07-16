@@ -118,3 +118,16 @@ export class ResourceRightBean {
   public productAdmin: boolean = false;
   public leadId: number | null = null;
 }
+
+export class AuthResponse {
+  public token: string = '';
+  public message: string = '';
+  public details: LoggedInDetails = new LoggedInDetails();
+}
+
+export class LoggedInDetails {
+  public route: string = '';
+  public company: Company = new Company();
+}
+
+

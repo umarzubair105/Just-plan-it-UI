@@ -29,11 +29,12 @@ import {DecimalToTimePipe} from '../pipes/decimal.to.time';
 import {EpicAssignmentService} from '../services/epic.assignment.service';
 import {TimeLoggingService} from '../services/time.logging.service';
 import {convertToMinutes, getLocalDate, releaseStatusClass} from '../utils/helper';
+import {TruncateNumberPipe} from "../pipes/truncate.number";
 @Component({
   selector: 'app-planning',
   standalone: true,
-  imports: [CommonModule, NgIf, NgFor, FormsModule, ModalModule, ReactiveFormsModule,
-    NgxDatatableModule, EpicEstimateComponent, RouterLink, DecimalToTimePipe], // ✅ NO BrowserAnimationsModule here!
+    imports: [CommonModule, NgIf, NgFor, FormsModule, ModalModule, ReactiveFormsModule,
+        NgxDatatableModule, EpicEstimateComponent, RouterLink, DecimalToTimePipe, TruncateNumberPipe], // ✅ NO BrowserAnimationsModule here!
   templateUrl: './execution.component.html',
   styleUrl: './execution.component.css',
   providers: [BsModalService]

@@ -70,6 +70,8 @@ export const routes: Routes = [
   { path: 'edit-product', loadComponent: ()=>import(
       './components/edit.product.component').then((m)=>m.EditProductComponent),
     canActivate: [AuthGuard]},
+  { path: 'contact-us', loadComponent: ()=>import(
+      './components/contactus.component').then((m)=>m.ContactUsComponent)},
   { path: 'home', redirectTo: '' },  // Catch-all route (redirect to home for invalid URLs)
   { path: '*', redirectTo: '' }  // Catch-all route (redirect to home for invalid URLs)
 

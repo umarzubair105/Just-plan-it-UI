@@ -27,11 +27,12 @@ import {PlanningDashboardService} from '../services/planning-dashboard.service';
 import {ReleaseService} from '../services/release.service';
 import {releaseStatusClass, transformToDhM} from '../utils/helper';
 import {DecimalToTimePipe} from '../pipes/decimal.to.time';
+import {TruncateNumberPipe} from '../pipes/truncate.number';
 @Component({
   selector: 'app-planning',
   standalone: true,
   imports: [CommonModule, NgIf, NgFor, FormsModule, ModalModule, ReactiveFormsModule,
-    NgxDatatableModule, EpicEstimateComponent, RouterLink, DecimalToTimePipe], // ✅ NO BrowserAnimationsModule here!
+    NgxDatatableModule, EpicEstimateComponent, RouterLink, DecimalToTimePipe, TruncateNumberPipe], // ✅ NO BrowserAnimationsModule here!
   templateUrl: './planning.component.html',
   styleUrl: './planning.component.css',
   providers: [BsModalService]
