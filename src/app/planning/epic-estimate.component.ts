@@ -2,7 +2,7 @@ import {Component, EventEmitter, inject, Inject, Input, OnInit, Output} from '@a
 import { CommonModule } from '@angular/common';
 import { FormsModule, } from '@angular/forms';
 import {EpicBean, EpicEstimate, EpicEstimateBean} from '../models/planning';
-import {Priority, Role, SubComponent} from '../models/basic';
+import {Priority, ResourceRightBean, Role, SubComponent} from '../models/basic';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import {ShowErrorsDirective} from '../directives/show-errors.directive';
 import {PositiveIntegerDirective} from '../directives/positive-integer.directive';
@@ -10,7 +10,8 @@ import {EpicEstimateService} from '../services/epic-estimate.service';
 import {Utils} from '../utils/utils';
 import {forkJoin, of, tap} from 'rxjs';
 import {catchError} from 'rxjs/operators';
-import {convertToMinutes, transformToDhM} from '../utils/helper';
+import {convertToMinutes, isManager, transformToDhM} from '../utils/helper';
+import {AuthService} from '../services/auth.service';
 
 @Component({
   selector: 'epic-estimate',
@@ -23,13 +24,15 @@ export class EpicEstimateComponent implements OnInit {
   roles!: Role[];
   epicEstimatBeans: EpicEstimateBean[] = [];
   epicEstimateService: EpicEstimateService = inject(EpicEstimateService);
-
+  authService = inject(AuthService);
+  rights  = new ResourceRightBean();
   constructor(public dialogRef: MatDialogRef<EpicEstimateComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               private readonly util: Utils) {
     console.log('EpicEstimate');
     this.epicBean = data.epicBean;
     this.roles = data.roles;
+
     if (this.epicBean) {
       this.epicEstimatBeans = this.epicBean.estimates || [];
       this.roles.filter(r=>r.taskAssignable).forEach(r => {
@@ -51,7 +54,14 @@ export class EpicEstimateComponent implements OnInit {
       });
       this.epicEstimatBeans.forEach(e=> {
         e.estimateStr = transformToDhM(e.estimate);
-      })
+      });
+      this.authService.getResourceRightsByProductId(this.epicBean.productId).subscribe({
+        next: (data) => {
+          this.rights = data;
+          //this.epicEstimatBeans = this.epicEstimatBeans.filter(e=> isManager(this.rights) || e.roleId==this.rights.productRoleId);
+        },
+        error: (err) => {this.util.showErrorMessage(err);},
+      });
     }
   }
 
@@ -120,5 +130,5 @@ export class EpicEstimateComponent implements OnInit {
     this.epicEstimatBeans[indexToRemove].estimateStr='';
   //  this.epicEstimatBeans.splice(indexToRemove, 1);
   }
-
+  protected readonly isManager = isManager;
 }

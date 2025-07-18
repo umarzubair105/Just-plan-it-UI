@@ -1,14 +1,20 @@
-import { Injectable } from '@angular/core';
+import {inject, Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {AppConstants} from '../configuration/app.constants';
+import {ResourceRightBean} from '../models/basic';
+import {catchError} from 'rxjs/operators';
+import {HttpClient} from '@angular/common/http';
+import {handleError} from '../utils/helper';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
   private readonly TOKEN_KEY = AppConstants.TOKEN_KEY;  // Key used to store the JWT
+  private readonly baseUrlComDashboard = AppConstants.API_URL+'/company-dashboard'; // Base URL for the REST endpoint
   private userNameSubject = new BehaviorSubject<string | null>(null);
   userName$: Observable<string | null> = this.userNameSubject.asObservable();
+  private http = inject(HttpClient);
 
   constructor() {
     console.log('AuthService constructor');
@@ -19,7 +25,18 @@ export class AuthService {
     }
     console.log('AuthService constructor:'+storedUser);
   }
-
+  getResourceRights(): Observable<ResourceRightBean> {
+    const resourceId = this.getUserId();
+    return this.http.get<ResourceRightBean>(`${this.baseUrlComDashboard}/get-rights?resourceId=${resourceId}`).pipe(
+      catchError(handleError)
+    );
+  }
+  getResourceRightsByProductId(productId: number): Observable<ResourceRightBean> {
+    const resourceId = this.getUserId();
+    return this.http.get<ResourceRightBean>(`${this.baseUrlComDashboard}/get-rights?resourceId=${resourceId}&productId=${productId}`).pipe(
+      catchError(handleError)
+    );
+  }
   // Call this method after user logs in
   login(token: string) {
     this.saveToken(token);

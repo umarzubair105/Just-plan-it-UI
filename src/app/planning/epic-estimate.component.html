@@ -36,25 +36,31 @@
               <td>
                 {{ epicEstimate.roleName }}
               </td>
-              <td> <input id="estimateStr-{{ i }}" [(ngModel)]="epicEstimate.estimateStr" type="text"
+              <td>
+                <input id="estimateStr-{{ i }}" [(ngModel)]="epicEstimate.estimateStr" type="text"
                           name="estimateStr-{{ i }}"
                           class="form-control"
+                       [readOnly]="!(isManager(this.rights) || epicEstimate.roleId==this.rights.productRoleId)"
                       #estimateStr="ngModel"
                           [ngClass]="{ 'is-invalid': estimateStr.invalid && (estimateStr.dirty || estimateStr.touched) }"
                           [showErrors]="{ required: 'Estimate is required', step:'Step' }"
                       />
               </td>
+
               <td> <input id="resources-{{ i }}" [(ngModel)]="epicEstimate.resources" type="number"
                           name="resources-{{ i }}"
                           required class="form-control"
                           min="1"
+                          [readOnly]="!(isManager(this.rights) || epicEstimate.roleId==this.rights.productRoleId)"
                           #resources="ngModel"
                           [ngClass]="{ 'is-invalid': resources.invalid && (resources.dirty || resources.touched) }"
                           [showErrors]="{ required: 'Resources is required',min: 'Min value is 1', step:'Step' }"
                           />
               </td>
-              <td class="text-center">
+              <td class="text-center" *ngIf="isManager(this.rights) || epicEstimate.roleId==this.rights.productRoleId">
                 <button class="btn btn-danger btn-sm"  (click)="removeEpicEstimate(i)" [disabled]="epicEstimate.estimateStr==''">Not Required</button>
+              </td>
+              <td class="text-center" *ngIf="!(isManager(this.rights) || epicEstimate.roleId==this.rights.productRoleId)">
               </td>
             </tr>
             </tbody>

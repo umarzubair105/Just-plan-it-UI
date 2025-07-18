@@ -25,15 +25,15 @@
             HR
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-            <li><a class="dropdown-item" href="upload-resource#">Upload Resources</a></li>
-            <li><a class="dropdown-item" href="mapping-roles-designation#">Role Mapping</a></li>
+            <li *ngIf="isGlobalHR(this.rights)"><a class="dropdown-item" href="upload-resource#">Upload Resources</a></li>
+            <li *ngIf="isGlobalHR(this.rights)"><a class="dropdown-item" href="mapping-roles-designation#">Role Mapping</a></li>
             <li><a class="dropdown-item" href="company-calendar#">Calendar</a></li>
             <li><a class="dropdown-item" href="resource#">Resource</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">Something else</a></li>
           </ul>
         </li>
-        <li class="nav-item"  *ngIf="userName">
+        <li class="nav-item"  *ngIf="userName && isGlobalManager(this.rights)">
           <a class="nav-link"
              routerLink="/product"
              routerLinkActive="active"
@@ -70,11 +70,11 @@
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownProduct">
             <li><a class="dropdown-item" routerLink="/upload-epic">Upload Deliverables</a></li>
-            <li><a class="dropdown-item" routerLink="/team-resource">Define Team</a></li>
-            <li><a class="dropdown-item" routerLink="/product-resource">Time Allocation</a></li>
-            <li><a class="dropdown-item" routerLink="/priority">Define Priorities</a></li>
+            <li *ngIf="isManager(this.rights)"><a class="dropdown-item" routerLink="/team-resource">Define Team</a></li>
+            <li *ngIf="isManager(this.rights)"><a class="dropdown-item" routerLink="/product-resource">Time Allocation</a></li>
+            <li *ngIf="isManager(this.rights)"><a class="dropdown-item" routerLink="/priority">Define Priorities</a></li>
             <li><a class="dropdown-item" routerLink="/section">Define Components</a></li>
-            <li><a class="dropdown-item" routerLink="/edit-product">Products</a></li>
+            <li *ngIf="isManager(this.rights)"><a class="dropdown-item" routerLink="/edit-product">Products</a></li>
           </ul>
         </li>
         <li class="nav-item"  *ngIf="userName">

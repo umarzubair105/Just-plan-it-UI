@@ -4,7 +4,8 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {PageResponse} from '../models/page.response';
 import {ReleaseIteration} from '../utils/helper';
-import {AuthResponse, Company, ContactUs} from '../models/basic';
+import {AuthResponse, Company, ContactUs, ResourceRightBean} from '../models/basic';
+import {AppConstants} from '../configuration/app.constants';
 
 // Define the Company interface
 
@@ -81,10 +82,10 @@ export interface MapDesignation {
   providedIn: 'root',
 })
 export class CompanyService {
-  private baseHost = 'http://localhost:8080'; // Base URL for the REST endpoint
-  private baseAuthUrl = 'http://localhost:8080/api/auth'; // Base URL for the REST endpoint
-  private baseUrl = 'http://localhost:8080/companies'; // Base URL for the REST endpoint
-  private baseUrlComDashboard = 'http://localhost:8080/company-dashboard'; // Base URL for the REST endpoint
+  private readonly baseHost = AppConstants.API_URL; // Base URL for the REST endpoint
+  private readonly baseAuthUrl = AppConstants.API_URL+'/api/auth'; // Base URL for the REST endpoint
+  private readonly baseUrl = AppConstants.API_URL+'/companies'; // Base URL for the REST endpoint
+  private readonly baseUrlComDashboard = AppConstants.API_URL+'/company-dashboard'; // Base URL for the REST endpoint
   private http = inject(HttpClient);
   //constructor(private http: HttpClient) {
     //console.log('Testing Service')
@@ -158,6 +159,11 @@ export class CompanyService {
   }
   addResources(models: AddResource[]): Observable<CommonResp[]> {
     return this.http.post<CommonResp[]>(this.baseUrlComDashboard+'/add-resources', models).pipe(
+      catchError(this.handleError)
+    );
+  }
+  getResourceRights(resourceId: number, productId: number|null): Observable<ResourceRightBean> {
+    return this.http.get<ResourceRightBean>(`${this.baseUrlComDashboard}/get-rights?resourceId=${resourceId}&productId=${productId}`).pipe(
       catchError(this.handleError)
     );
   }

@@ -32,7 +32,7 @@
                 [hidden]="wd.id <= 0">
                 {{ wd.day | titlecase }}
               </span>
-              <span class="align-items-center mt-1">
+              <span class="align-items-center mt-1" *ngIf="isGlobalHR(this.rights)">
                 <a
                   class="btn btn-sm btn-outline-primary btn-tight-custom me-1"
                   (click)="editWeekend = true"
@@ -85,7 +85,7 @@
             <a
               class="btn btn-sm btn-outline-primary btn-tight-custom"
               (click)="openWDModal(addWHTemplate)"
-              title="Add">
+              title="Add" *ngIf="isGlobalHR(this.rights)">
               <i class="bi bi-plus"></i>
             </a>
           </div>
@@ -121,14 +121,14 @@
                   <a
                     class="btn btn-sm btn-outline-primary btn-tight-custom me-1"
                     (click)="openWDModalEdit(addWHTemplate, wh.id)"
-                    title="Edit">
+                    title="Edit" *ngIf="isGlobalHR(this.rights)">
                     <i class="bi bi-pencil"></i>
                   </a>
                   <a
                     class="btn btn-sm btn-outline-danger btn-tight-custom"
                     (click)="deleteCompanyWorkingHour(wh.id)"
-                    *ngIf="wh.scope !== WorkingHourEnum.DEFAULT"
-                    title="Delete">
+                    *ngIf="wh.scope !== WorkingHourEnum.DEFAULT && isGlobalHR(this.rights)"
+                    title="Delete" >
                     <i class="bi bi-trash"></i>
                   </a>
                 </td>
@@ -145,7 +145,7 @@
             <a
               class="btn btn-sm btn-outline-primary btn-tight-custom"
               (click)="openCCModal(addCCTemplate)"
-              title="Add">
+              title="Add" *ngIf="isGlobalHR(this.rights)">
               <i class="bi bi-plus"></i>
             </a>
           </div>
@@ -170,14 +170,14 @@
                   <a
                     class="btn btn-sm btn-outline-primary btn-tight-custom me-1"
                     (click)="openCCModalEdit(addCCTemplate, wh.id)"
-                    title="Edit"
+                    title="Edit" *ngIf="isGlobalHR(this.rights)"
                   >
                     <i class="bi bi-pencil"></i>
                   </a>
                   <a
                     class="btn btn-sm btn-outline-danger btn-tight-custom"
                     (click)="deleteCompanyCalendar(wh.id)"
-                    title="Delete"
+                    title="Delete" *ngIf="isGlobalHR(this.rights)"
                   >
                     <i class="bi bi-trash"></i>
                   </a>

@@ -13,7 +13,7 @@ import {
   ReleaseDetailBean, ReleaseStatusEnum, TimeLogging
 } from '../models/planning';
 import {EpicService} from '../services/epic.service';
-import {Priority, Role, SubComponent} from '../models/basic';
+import {Priority, ResourceRightBean, Role, SubComponent} from '../models/basic';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import {PriorityService} from '../services/priority.service';
 import {SubComponentService} from '../services/sub-component.service';
@@ -28,8 +28,9 @@ import {ReleaseService} from '../services/release.service';
 import {DecimalToTimePipe} from '../pipes/decimal.to.time';
 import {EpicAssignmentService} from '../services/epic.assignment.service';
 import {TimeLoggingService} from '../services/time.logging.service';
-import {convertToMinutes, getLocalDate, releaseStatusClass} from '../utils/helper';
+import {convertToMinutes, getLocalDate, isManager, releaseStatusClass} from '../utils/helper';
 import {TruncateNumberPipe} from "../pipes/truncate.number";
+import {AuthService} from '../services/auth.service';
 @Component({
   selector: 'app-planning',
   standalone: true,
@@ -68,6 +69,8 @@ export class ExecutionComponent implements OnInit {
   timeLogging: TimeLogging = new TimeLogging();
   selectedEpicAssignment : EpicAssignmentBean = new EpicAssignmentBean();
   timeLogged: string = '';
+  authService = inject(AuthService);
+  rights  = new ResourceRightBean();
   constructor(private readonly modalService: BsModalService, private readonly util: Utils, private readonly route: ActivatedRoute,
               private cdr: ChangeDetectorRef,
               public dialog: MatDialog,
@@ -79,6 +82,12 @@ export class ExecutionComponent implements OnInit {
     console.log('Testing');
     this.loadReleases();
     this.loadMetadata();
+    this.authService.getResourceRightsByProductId(this.productId).subscribe({
+      next: (data) => {
+        this.rights = data;
+      },
+      error: (err) => {this.util.showErrorMessage(err);},
+    });
     this.route.fragment.subscribe(fragment => {
       if (fragment) {
         const element = document.getElementById(fragment);
@@ -292,4 +301,5 @@ export class ExecutionComponent implements OnInit {
   protected readonly EpicBean = EpicBean;
   protected readonly EpicAssignmentStatusEnum = EpicAssignmentStatusEnum;
   protected readonly releaseStatusClass = releaseStatusClass;
+    protected readonly isManager = isManager;
 }

@@ -3,7 +3,7 @@ import { AuthService } from '../services/auth.service';
 import {CommonModule} from '@angular/common';
 import {Utils} from '../utils/utils';
 import {MatDialog} from '@angular/material/dialog';
-import {Resource} from '../models/basic';
+import {Resource, ResourceRightBean} from '../models/basic';
 import {ResourceLeaveComponent} from '../leaves/resource.leave.component';
 import {FormsModule} from '@angular/forms';
 import {ProductService} from '../services/product.service';
@@ -12,6 +12,7 @@ import {Epic, EpicBeanCopyPasteUpdatedValues, EpicLink, Product} from '../models
 import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import {EpicService} from '../services/epic.service';
 import {EpicComponent} from '../planning/epic.component';
+import {isGlobalHR, isGlobalManager, isManager} from "../utils/helper";
 
 @Component({
   selector: 'app-top-bar',
@@ -26,7 +27,8 @@ export class TopBarComponent implements OnInit {
   search: string = '';
   epicSearch: Epic = new Epic();
   products: Product[] = [];
-  selectedProductId: number = 0;
+  selectedProductId: number = 0
+  rights  = new ResourceRightBean();
   constructor(private authService: AuthService,
               private utils: Utils,
               private productService: ProductService,
@@ -36,20 +38,33 @@ export class TopBarComponent implements OnInit {
 
   ngOnInit() {
     console.log('TopBarComponent');
+
     this.authService.userName$.subscribe(name => {
       console.log('TopBarComponent:'+name);
       this.userName = name;
       this.selectedProductId = this.authService.getSelectedProductId();
       if (this.userName && this.authService.getCompanyId()) {
         this.companyName = this.authService.getCompanyName();
-        this.productService.getByCompanyId(this.authService.getCompanyId()).subscribe({
+
+        this.authService.getResourceRights().subscribe({
+          next: (data) => {
+            this.rights = data;
+            this.products = data.products;
+            this.products.sort((a, b) => a.name.localeCompare(b.name));
+          },
+          error: (err) => {this.utils.showErrorMessage(err);},
+        });
+        /*this.productService.getByCompanyId(this.authService.getCompanyId()).subscribe({
           next: (data) => {
             this.products = data._embedded.products;
             this.products.sort((a, b) => a.name.localeCompare(b.name));
             // fill selectedRoles using productResources
           },
           error: (err) => (this.utils.showErrorMessage(err)),
-        });
+        });*/
+
+
+
       } else {
         this.products = [];
         this.companyName = '';
@@ -119,4 +134,8 @@ export class TopBarComponent implements OnInit {
       });
     }
   }
+
+    protected readonly isGlobalHR = isGlobalHR;
+    protected readonly isGlobalManager = isGlobalManager;
+    protected readonly isManager = isManager;
 }

@@ -13,7 +13,7 @@ import {
   ReleaseDetailBean, ReleaseStatusEnum
 } from '../models/planning';
 import {EpicService} from '../services/epic.service';
-import {Priority, Role, SubComponent} from '../models/basic';
+import {Priority, ResourceRightBean, Role, SubComponent} from '../models/basic';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import {PriorityService} from '../services/priority.service';
 import {SubComponentService} from '../services/sub-component.service';
@@ -25,9 +25,10 @@ import { MatDialog } from '@angular/material/dialog';
 import {EpicComponent} from './epic.component';
 import {PlanningDashboardService} from '../services/planning-dashboard.service';
 import {ReleaseService} from '../services/release.service';
-import {releaseStatusClass, transformToDhM} from '../utils/helper';
+import {isManager, releaseStatusClass, transformToDhM} from '../utils/helper';
 import {DecimalToTimePipe} from '../pipes/decimal.to.time';
 import {TruncateNumberPipe} from '../pipes/truncate.number';
+import {AuthService} from '../services/auth.service';
 @Component({
   selector: 'app-planning',
   standalone: true,
@@ -62,6 +63,8 @@ export class PlanningComponent implements OnInit {
   planningService = inject(PlanningDashboardService)
   releaseService = inject(ReleaseService)
 
+  authService = inject(AuthService);
+  rights  = new ResourceRightBean();
   constructor(private readonly modalService: BsModalService, private readonly util: Utils, private readonly route: ActivatedRoute,
               private cdr: ChangeDetectorRef,
               public dialog: MatDialog,
@@ -74,6 +77,12 @@ export class PlanningComponent implements OnInit {
     this.loadUnplannedEpics();
     this.loadUnplannedReleases();
     this.loadMetadata();
+    this.authService.getResourceRightsByProductId(this.productId).subscribe({
+      next: (data) => {
+        this.rights = data;
+      },
+      error: (err) => {this.util.showErrorMessage(err);},
+    });
     this.route.fragment.subscribe(fragment => {
       if (fragment) {
         const element = document.getElementById(fragment);
@@ -397,4 +406,5 @@ export class PlanningComponent implements OnInit {
   protected readonly WorkingHourEnum = WorkingHourEnum;
   protected readonly EpicBean = EpicBean;
   protected readonly releaseStatusClass = releaseStatusClass;
+  protected readonly isManager = isManager;
 }

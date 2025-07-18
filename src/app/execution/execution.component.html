@@ -27,7 +27,7 @@
                   {{ releaseDetail.release?.status }}
                 </span>
             </li>
-            <li>
+            <li *ngIf="isManager(this.rights)">
               <a (click)="closeRelease(releaseDetail)" title="Close the release" class="btn btn-sm btn-outline-success">
                 <i class="bi bi-door-closed"></i> Close
               </a>

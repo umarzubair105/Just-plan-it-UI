@@ -3,6 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {PageResponse} from '../models/page.response';
+import {AppConstants} from '../configuration/app.constants';
 
 // Define the interface
 export interface Designation {
@@ -15,7 +16,7 @@ export interface Designation {
   providedIn: 'root',
 })
 export class DesignationService {
-  private baseUrl = 'http://localhost:8080/designations'; // Base URL for the REST endpoint
+  private baseUrl = AppConstants.API_URL+'/designations'; // Base URL for the REST endpoint
 
   constructor(private http: HttpClient) {
     console.log('Testing Service')

@@ -6,9 +6,6 @@ import { CommonModule } from '@angular/common';
 import { HttpClientModule } from '@angular/common/http';
 import {FormGroup, FormControl, FormBuilder} from '@angular/forms';
 import {ReactiveFormsModule, Validators} from '@angular/forms';
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 import { MatButtonModule } from '@angular/material/button';
 import { MatToolbarModule } from '@angular/material/toolbar';
@@ -21,7 +18,15 @@ import { ShowErrorsDirective } from '../directives/show-errors.directive';
 
 import {ActivatedRoute, Router} from '@angular/router';
 import {Utils} from '../utils/utils';
-import {LeaveStatus, LeaveType, Resource, ResourceLeave, ResourceStatus, Role} from '../models/basic';
+import {
+  LeaveStatus,
+  LeaveType,
+  Resource,
+  ResourceLeave,
+  ResourceRightBean,
+  ResourceStatus,
+  Role
+} from '../models/basic';
 import {ResourceService} from '../services/resource.service';
 import {RoleService} from '../services/role.service';
 import {DataTableColumnCellDirective, DataTableColumnDirective, DatatableComponent} from '@swimlane/ngx-datatable';
@@ -32,6 +37,8 @@ import {Designation, DesignationService} from '../services/designation.service';
 import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
 import {ReleaseStatusEnum} from '../models/planning';
 import {FormatDatePipe} from '../pipes/format.date';
+import {AuthService} from '../services/auth.service';
+import {isGlobalHR} from '../utils/helper';
 
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -67,6 +74,8 @@ export class ResourceComponent implements OnInit {
   addResourceSetup: AddResource = new AddResource();
   resources: Resource[] = [];
   resource: Resource = new Resource();
+  authService = inject(AuthService);
+  rights  = new ResourceRightBean();
 
   myForm: FormGroup;
   statuses = Object.keys(ResourceStatus)
@@ -86,15 +95,23 @@ export class ResourceComponent implements OnInit {
 //      countryId: [2, Validators.required],
 //      phone: ['', [Validators.required, Validators.pattern('^\\d{10}$')]], // 10-digit number
     });
+
   }
   ngOnInit(): void {
     this.companyId = this.utils.getCompanyId();
       //Number(this.route.snapshot.paramMap.get('companyId'));
     console.log(this.companyId); // Output: 123
     console.log('Testing')
+
+    this.authService.getResourceRights().subscribe({
+      next: (data) => {
+        this.rights = data;
+        this.loadResources();
+      },
+      error: (err) => {this.errorMessage = err;this.utils.showErrorMessage(err);},
+    });
     this.loadRoles();
     this.loadDesignations();
-    this.loadResources();
     //this.loadCompanies();
   }
 
@@ -140,7 +157,12 @@ export class ResourceComponent implements OnInit {
   loadResources(): void {
     this.resourceService.getByCompanyId(this.companyId).subscribe({
       next: (data) => {
-        this.resources = data._embedded.resources;
+        var tempR : Resource[] = data._embedded.resources;
+        const loggedUserId = this.authService.getUserId();
+        if (!isGlobalHR(this.rights)) {
+          tempR = tempR.filter(t=> t.id==loggedUserId || t.leadResourceId==loggedUserId);
+        }
+        this.resources = tempR;
       },
       error: (err) => (this.errorMessage = err),
     });
@@ -206,4 +228,5 @@ export class ResourceComponent implements OnInit {
     this.modalRef?.hide();
   }
 
+  protected readonly isGlobalHR = isGlobalHR;
 }

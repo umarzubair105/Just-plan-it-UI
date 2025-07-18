@@ -12,9 +12,11 @@ import {
 } from '../services/leave.service';
 import {Utils} from '../utils/utils';
 import {forkJoin, of, tap} from 'rxjs';
-import {ReleaseIteration} from '../utils/helper';
+import {isGlobalHR, ReleaseIteration} from '../utils/helper';
 import {Router} from '@angular/router';
 import {ShowErrorsDirective} from '../directives/show-errors.directive';
+import {AuthService} from '../services/auth.service';
+import {ResourceRightBean} from '../models/basic';
 
 
 @Component({
@@ -49,6 +51,8 @@ export class CompanyCalendarComponent  implements OnInit {
     }));
   companyCalendars: CompanyCalendar[] = [];
   editCompanyCalendar!: CompanyCalendar;
+  authService = inject(AuthService);
+  rights  = new ResourceRightBean();
 
 
   companyId:number;
@@ -64,6 +68,12 @@ export class CompanyCalendarComponent  implements OnInit {
     this.loadWeekends();
     this.loadCompanyWorkingHours();
     this.loadCompanyCalendars();
+    this.authService.getResourceRights().subscribe({
+      next: (data) => {
+        this.rights = data;
+      },
+      error: (err) => {this.util.showErrorMessage(err);},
+    });
   }
 
   loadWeekends(): void {
@@ -280,4 +290,5 @@ export class CompanyCalendarComponent  implements OnInit {
 
 
   protected readonly WorkingHourEnum = WorkingHourEnum;
+  protected readonly isGlobalHR = isGlobalHR;
 }

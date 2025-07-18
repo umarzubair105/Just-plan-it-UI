@@ -117,6 +117,8 @@ export class ResourceRightBean {
   public productHr: boolean = false;
   public productAdmin: boolean = false;
   public leadId: number | null = null;
+  public globalRoleId: number | null = null;
+  public productRoleId: number | null = null;
 }
 
 export class AuthResponse {
@@ -129,5 +131,6 @@ export class LoggedInDetails {
   public route: string = '';
   public company: Company = new Company();
 }
+
 
 

@@ -2,6 +2,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {AppConstants} from '../configuration/app.constants';
 import {ReleaseStatusEnum} from '../models/planning';
+import {ResourceRightBean} from '../models/basic';
 
 
 export enum ReleaseIteration {
@@ -26,6 +27,15 @@ export function capitalizeFirstLetter(str: string): string {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
+export function isGlobalHR(right:ResourceRightBean): boolean {
+  return right.globalAdmin || right.globalHr;
+}
+export function isGlobalManager(right:ResourceRightBean): boolean {
+  return right.globalAdmin || right.globalManager;
+}
+export function isManager(right:ResourceRightBean): boolean {
+  return right.globalAdmin || right.globalManager || right.productManager;
+}
 export function handleError(error: HttpErrorResponse): Observable<never> {
   let errorMessage = 'An unknown error occurred!';
   console.error('>>>>>');

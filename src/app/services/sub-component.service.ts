@@ -5,12 +5,13 @@ import { catchError } from 'rxjs/operators';
 import {PageResponse} from '../models/page.response';
 import {SubComponent} from '../models/basic';
 import {handleError} from '../utils/helper';
+import {AppConstants} from '../configuration/app.constants';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SubComponentService {
-  private baseUrl = 'http://localhost:8080/components'; // Base URL for the REST endpoint
+  private baseUrl = AppConstants.API_URL+'/components'; // Base URL for the REST endpoint
 
   constructor(private http: HttpClient) {
     console.log('Testing Service')
