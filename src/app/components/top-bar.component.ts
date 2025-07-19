@@ -8,11 +8,12 @@ import {ResourceLeaveComponent} from '../leaves/resource.leave.component';
 import {FormsModule} from '@angular/forms';
 import {ProductService} from '../services/product.service';
 import {HttpParams} from '@angular/common/http';
-import {Epic, EpicBeanCopyPasteUpdatedValues, EpicLink, Product} from '../models/planning';
+import {EntityType, Epic, EpicBeanCopyPasteUpdatedValues, EpicLink, Product, Release} from '../models/planning';
 import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import {EpicService} from '../services/epic.service';
 import {EpicComponent} from '../planning/epic.component';
 import {isGlobalHR, isGlobalManager, isManager} from "../utils/helper";
+import {EntityDetailComponent} from '../planning/entity-detail.component';
 
 @Component({
   selector: 'app-top-bar',
@@ -104,7 +105,23 @@ export class TopBarComponent implements OnInit {
       // Handle the result here
     });
   }
+  openDialogForEntityDetail(): void {
+    var product =  this.products.filter(p=>p.id==this.selectedProductId).at(0);
+    if (product) {
+    const dialogRef = this.dialog.open(EntityDetailComponent, {
+      width: '50%',
+      maxWidth: '90vw', // 90% of viewport width
+      height: '70%',
+      maxHeight: '80vh', // 80% of viewport height
+      disableClose: true,
+      data: { entityId: this.selectedProductId, entityType: EntityType.PRODUCT, entityName: product.name },
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+
+    });
+    }
+  }
   onSubmit():void {
     this.search = this.epicSearch.code;
     alert('s:'+this.search);

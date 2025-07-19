@@ -1,0 +1,128 @@
+<div class="container-lg mt-4" xmlns="http://www.w3.org/1999/html" xmlns="http://www.w3.org/1999/html">
+  <div class="row">
+    <div class="col-md-8 offset-md-0">
+
+      <!-- Intro Card -->
+      <div class="card shadow-sm mb-3">
+        <div class="card-body">
+          <h5 class="card-title">{{entityType | titlecase}}</h5>
+          <p class="card-text">
+            Update related documents and urls.
+          </p>
+        </div>
+      </div>
+
+      <!-- Main Form Card -->
+      <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white text-center">
+          <h2 class="h4 mb-0">{{entityType | titlecase}} {{ entityName  }}</h2>
+        </div>
+
+        <div class="row">
+
+          <div class="col-md-12">
+            <div class="card-body" >
+                <div class="card-header bg-secondary text-white text-center mb-2">
+                    <h2 class="h4 mb-0">Documents</h2>
+                </div>
+                <div class="table-responsive" *ngIf="files.length>0">
+              <table class="table table-striped table-hover table-bordered table-sm-custom text-sm">
+                <thead class="table-secondary" >
+                <tr>
+                  <th>File</th>
+                  <th>Description</th>
+                  <th>Added By</th>
+                  <th>Added At</th>
+                  <th *ngIf="isManager(this.rights)">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let detail of files">
+                  <td><a (click)="download(detail)" title="Download"
+                                    class="btn btn-sm btn-outline-primary btn-tight-custom me-1">
+                                {{ detail.name }}
+                                </a></td>
+                  <td>{{ detail.details }}</td>
+                  <td>{{ detail.createdByName }}</td>
+                  <td>{{ detail.createdDate ? (detail.createdDate | date: AppConstants.DATE_TIME_FORMAT) : '-' }}</td>
+                  <td class="text-center" *ngIf="isManager(this.rights)">
+                    <a (click)="deleteEntityDetail(detail)" title="Delete"
+                       class="btn btn-sm btn-outline-info btn-tight-custom">
+                      <i class="bi bi-trash action-icon"></i>
+                    </a>
+                  </td>
+                </tbody>
+              </table>
+            </div>
+                <form class="align-items-center gap-2 mt-2" #attachForm="ngForm"
+                    (submit)="onSubmitFileForm()"
+                    enctype="multipart/form-data">
+
+                  <input type="file"
+                         (change)="onFileSelected($event)"
+                         class="form-control form-control-sm w-auto" required/>
+
+                  <div class="w-100"></div> <!-- 👈 forces next element to next line -->
+                  <div class="d-flex align-items-center gap-2 mt-2">
+                    <input type="text"
+                           [(ngModel)]="descriptionForFileUpload"
+                           name="descriptionForFileUpload"
+                           placeholder="File Description"
+                           class="form-control form-control-sm" />
+
+                    <button type="submit" class="btn btn-sm btn-primary" [disabled]="attachForm.invalid">Upload</button>
+                  </div>
+                </form>
+          </div>
+            <div class="card-body" >
+              <div class="card-header bg-secondary text-white text-center mb-2">
+                <h2 class="h4 mb-0">Urls</h2>
+              </div>
+
+              <div class="table-responsive" *ngIf="urls.length>0">
+                <table class="table table-striped table-hover table-bordered table-sm-custom text-sm">
+                  <thead class="table-secondary" >
+                  <tr>
+                    <th>Url</th>
+                    <th>Description</th>
+                    <th>Added By</th>
+                    <th>Added At</th>
+                    <th *ngIf="isManager(this.rights)">Action</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let detail of urls">
+                    <td>
+                      {{ detail.name }}
+                    </td>
+                    <td>{{ detail.details }}</td>
+                    <td>{{ detail.createdByName }}</td>
+                    <td>{{ detail.createdDate ? (detail.createdDate | date: AppConstants.DATE_TIME_FORMAT) : '-' }}</td>
+                    <td class="text-center" *ngIf="isManager(this.rights)">
+                      <a (click)="deleteEntityDetail(detail)" title="Delete"
+                         class="btn btn-sm btn-outline-info btn-tight-custom">
+                        <i class="bi bi-trash action-icon"></i>
+                      </a>
+                    </td>
+                  </tbody>
+                </table>
+              </div>
+              <form class="d-flex align-items-center gap-2 mt-2" #urlForm="ngForm">
+                <input type="text" [(ngModel)]="url.name" name="name" placeholder="Url"
+                       class="form-control form-control-sm w-auto" required/>
+                <input type="text" [(ngModel)]="url.details" name="name" placeholder="Description"
+                       class="form-control form-control-sm w-auto" required/>
+                <button type="submit" class="btn btn-sm btn-primary" [disabled]="urlForm.invalid"  (click)="addEntityDetail(url, EntityDetailType.URL)">Add</button>
+              </form>
+            </div>
+            <div class="text-center mt-2 d-flex justify-content-center gap-2">
+              <button type="submit" class="btn btn-secondary ms-2 w-20" (click)="closeDialog()">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+

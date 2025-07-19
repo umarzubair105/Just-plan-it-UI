@@ -27,9 +27,15 @@
                   {{ releaseDetail.release?.status }}
                 </span>
             </li>
+
             <li *ngIf="isManager(this.rights)">
               <a (click)="closeRelease(releaseDetail)" title="Close the release" class="btn btn-sm btn-outline-success">
                 <i class="bi bi-door-closed"></i> Close
+              </a>
+            </li>
+            <li>
+              <a (click)="openDialogForEntityDetail(releaseDetail.release)" title="Doc" class="btn btn-sm btn-outline-success">
+                <i class="bi bi-upload"></i> Docs
               </a>
             </li>
           </ul>

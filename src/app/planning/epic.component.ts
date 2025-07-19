@@ -11,19 +11,20 @@ import {
   EpicLinkType,
   Release
 } from '../models/planning';
-import {Audit, Priority, SubComponent} from '../models/basic';
+import {Audit, Priority, ResourceRightBean, SubComponent} from '../models/basic';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ShowErrorsDirective} from '../directives/show-errors.directive';
 import {Utils} from '../utils/utils';
 import {EpicService} from '../services/epic.service';
 import {DecimalToTimePipe} from '../pipes/decimal.to.time';
 import {FormatDatePipe} from '../pipes/format.date';
-import {formatDate} from '../utils/helper';
+import {formatDate, isManager} from '../utils/helper';
 import {AppConstants} from '../configuration/app.constants';
 import {ResourceService} from '../services/resource.service';
 import {QuillEditorComponent} from 'ngx-quill';
 import {PrettyLabelPipe} from '../pipes/pretty.label';
 import {ReleaseService} from '../services/release.service';
+import {AuthService} from '../services/auth.service';
 
 @Component({
   selector: 'epic',
@@ -55,6 +56,8 @@ export class EpicComponent implements OnInit {
   makeDescEditable: boolean = false;
   makeRiskEditable: boolean = false;
   anythingChanged:boolean = false;
+  authService = inject(AuthService);
+  rights  = new ResourceRightBean();
   constructor(public dialogRef: MatDialogRef<EpicComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               private readonly util: Utils) {
@@ -104,6 +107,12 @@ export class EpicComponent implements OnInit {
         error: (err) => (this.util.showErrorMessage(err)),
       });
     }
+    this.authService.getResourceRightsByProductId(this.epicBean.productId).subscribe({
+      next: (data) => {
+        this.rights = data;
+      },
+      error: (err) => {this.util.showErrorMessage(err);},
+    });
   }
   getEpicCode(epicLink:EpicLink) {
     let epicId = epicLink.linkedEpicId;
@@ -340,4 +349,5 @@ export class EpicComponent implements OnInit {
   protected readonly EpicLinkType = EpicLinkType;
   protected readonly formatDate = formatDate;
   protected readonly AppConstants = AppConstants;
+  protected readonly isManager = isManager;
 }

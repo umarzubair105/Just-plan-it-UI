@@ -25,7 +25,15 @@ export enum EpicLinkType {
   RELATED_TO="RELATED_TO",
   DEPEND_ON="DEPEND_ON"
 }
-
+export enum EntityDetailType {
+  ATTACHED_FILE="ATTACHED_FILE",
+  URL="URL"
+}
+export enum EntityType {
+  COMPANY="COMPANY",
+  RELEASE="RELEASE",
+  PRODUCT="PRODUCT"
+}
 export class Epic extends Audit {
   public productId: number = 0;
   public code: string = '';
@@ -167,4 +175,12 @@ export class EpicLink extends Audit {
   public linkedEpicId: number = 0;
   public details: string = '';
   public linkType: EpicLinkType = EpicLinkType.RELATED_TO;
+}
+
+export class EntityDetail extends Audit {
+  public entityId: number = 0;
+  public name: string = '';
+  public details: string = '';
+  public detailType: EntityDetailType = EntityDetailType.ATTACHED_FILE;
+  public entityType: EntityType = EntityType.PRODUCT;
 }

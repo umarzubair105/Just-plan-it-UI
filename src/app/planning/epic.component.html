@@ -135,7 +135,8 @@
                   </div>
                 </td>
                 <td  class="text-center">
-                  <a (click)="deleteEpicDetail(epicDetail)" title="Delete"  class="btn btn-sm btn-outline-info btn-tight-custom">
+                  <a (click)="deleteEpicDetail(epicDetail)" title="Delete"  class="btn btn-sm btn-outline-info btn-tight-custom"
+                     *ngIf="this.rights.resourceId==epicDetail.createdById">
                     <i class="bi bi-trash action-icon"></i>
                   </a>
                 </td>
@@ -171,7 +172,7 @@
                 <thead class="table-secondary" >
                 <tr>
                   <th>File</th>
-                  <th>Action</th>
+                  <th *ngIf="isManager(this.rights)">Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -188,7 +189,7 @@
                     </em></small>
                     </div>
                   </td>
-                  <td class="text-center">
+                  <td class="text-center" *ngIf="isManager(this.rights)">
                    <!-- <a (click)="download(epicDetail)" title="Download"
                        class="btn btn-sm btn-outline-primary btn-tight-custom me-1">
                       <i class="bi bi-download action-icon"></i>
@@ -232,7 +233,7 @@
                   <thead class="table-secondary" >
                   <tr>
                     <th>Url</th>
-                    <th>Action</th>
+                    <th *ngIf="isManager(this.rights)">Action</th>
                   </tr>
                   </thead>
                   <tbody>
@@ -245,7 +246,7 @@
                         </em></small>
                       </div>
                     </td>
-                    <td class="text-center">
+                    <td class="text-center" *ngIf="isManager(this.rights)">
                       <a (click)="deleteEpicDetail(epicDetail)" title="Delete"
                          class="btn btn-sm btn-outline-info btn-tight-custom">
                         <i class="bi bi-trash action-icon"></i>
@@ -270,7 +271,7 @@
                 <thead class="table-secondary" >
                 <tr>
                   <th>Reference</th>
-                  <th>Action</th>
+                  <th *ngIf="isManager(this.rights)">Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -283,7 +284,7 @@
                       </em></small>
                     </div>
                   </td>
-                  <td class="text-center">
+                  <td class="text-center" *ngIf="isManager(this.rights)">
                     <a (click)="deleteEpicDetail(epicDetail)" title="Delete"
                        class="btn btn-sm btn-outline-info btn-tight-custom">
                       <i class="bi bi-trash action-icon"></i>
@@ -311,7 +312,7 @@
                 <thead class="table-secondary" >
                 <tr>
                   <th>Relationship</th>
-                  <th>Action</th>
+                  <th *ngIf="isManager(this.rights)">Action</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -324,7 +325,7 @@
                     </em></small>
                     </div>
                   </td>
-                  <td class="text-center">
+                  <td class="text-center" *ngIf="isManager(this.rights)">
                     <a (click)="deleteEpicLink(epicLink)" title="Delete" class="btn btn-sm btn-outline-info btn-tight-custom">
                       <i class="bi bi-trash action-icon"></i>
                     </a>
