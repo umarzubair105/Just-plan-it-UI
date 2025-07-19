@@ -56,10 +56,10 @@
             Release
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdownProductRel">
+            <li><a class="dropdown-item" routerLink="/execution" title="Releases in progress">Dashboard</a></li>
             <li><a class="dropdown-item" routerLink="/planning" title="Releases & Epics in planning process">Planning</a></li>
             <li><a class="dropdown-item" routerLink="/planned" title="Planned Releases">Planned</a></li>
-            <li><a class="dropdown-item" routerLink="/execution" title="Releases in progress">Execution</a></li>
-            <li><a class="dropdown-item" routerLink="/executed" title="Completed Releases">Executed</a></li>
+            <li><a class="dropdown-item" routerLink="/executed" title="Completed Releases">History</a></li>
             <li><a class="dropdown-item" routerLink="/planned-release" title="Planned Releases 2">Planned 2</a></li>
           </ul>
         </li>
@@ -76,6 +76,9 @@
             <li><a class="dropdown-item" routerLink="/section">Define Components</a></li>
             <li *ngIf="isManager(this.rights)"><a class="dropdown-item" routerLink="/edit-product">Products</a></li>
           </ul>
+        </li>
+        <li class="nav-item"  *ngIf="userName">
+          <a class="nav-link" routerLink="/p-dashboard" style="cursor: pointer;">My Dashboard</a>
         </li>
         <li class="nav-item"  *ngIf="userName">
           <a class="nav-link" (click)="openDialogForMyLeaves()" style="cursor: pointer;">My Leaves</a>

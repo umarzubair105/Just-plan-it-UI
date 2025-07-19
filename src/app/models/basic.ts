@@ -108,6 +108,7 @@ export class ContactUs  extends Basic {
 }
 
 export class ResourceRightBean {
+  public resourceId: number = 0;
   public products: Product[] = [];
   public teamResourceIds: number[] = [];
   public globalManager: boolean = false;

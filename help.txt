@@ -1,21 +1,29 @@
+Product based Document
+Release Documents
+Product/Project Epic Label changes
+Show dependentEpicCode, Related Epic Codes and status on Planning?planned
 
+------Estimate Pick run time
 
 Use/maintain/add reasource Lead
+ON Resource add/edit add/update ResourceRole based on designation
 
--left Bar
-Estimate Pick run time
+UI-left Bar
 
-project url in Epic, remove dependentEpicId
--ON Resource add/edit add/update ResourceRole based on designation
-Use loggedTime in UI for ResourceCapInRelease in planning/planned
+Epic Status
 
-Product/Project Epic Label changes
+UI-Use loggedTime in UI for ResourceCapInRelease in planning/planned
+
+
+
+Release Auto Start, Release Completed status Overdue
+
+
 Deployment in Production for Angular
-New System Roles & flexible Interconnectivity
-Task Search List
-Dashboard
 
+New System Roles & flexible Interconnectivity
 Buget
+Task Search List
 Country based Weekend end and Holidays fill
 Comments Reply and Edit
 Email

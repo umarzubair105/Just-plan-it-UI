@@ -18,14 +18,15 @@ export enum EpicAssignmentStatusEnum {
 export enum EpicDetailType {
   COMMENT="COMMENT",
   ATTACHED_FILE="ATTACHED_FILE",
-  REFERENCE="REFERENCE"
+  REFERENCE="REFERENCE",
+  URL="URL"
 }
 export enum EpicLinkType {
   RELATED_TO="RELATED_TO",
   DEPEND_ON="DEPEND_ON"
 }
 
-export class Epic extends Basic {
+export class Epic extends Audit {
   public productId: number = 0;
   public code: string = '';
   public title: string = '';
@@ -73,6 +74,7 @@ export class EpicBean extends Epic {
   public componentName: string | null = null;
   public raisedByResourceName: string | null = null;
   public dependOnEpicCode: string | null = null;
+  public release: Release | null = null;
   public estimates: EpicEstimateBean[] | null = null;
   public assignments: EpicAssignmentBean[] | null = null;
 }

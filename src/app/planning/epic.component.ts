@@ -1,8 +1,17 @@
 import {Component, inject, Inject, OnInit} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {FormsModule,} from '@angular/forms';
-import {Epic, EpicBean, EpicDetail, EpicDetailType, EpicEstimate, EpicLink, EpicLinkType} from '../models/planning';
-import {Priority, SubComponent} from '../models/basic';
+import {
+  Epic,
+  EpicBean,
+  EpicDetail,
+  EpicDetailType,
+  EpicEstimate,
+  EpicLink,
+  EpicLinkType,
+  Release
+} from '../models/planning';
+import {Audit, Priority, SubComponent} from '../models/basic';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ShowErrorsDirective} from '../directives/show-errors.directive';
 import {Utils} from '../utils/utils';
@@ -14,6 +23,7 @@ import {AppConstants} from '../configuration/app.constants';
 import {ResourceService} from '../services/resource.service';
 import {QuillEditorComponent} from 'ngx-quill';
 import {PrettyLabelPipe} from '../pipes/pretty.label';
+import {ReleaseService} from '../services/release.service';
 
 @Component({
   selector: 'epic',
@@ -32,10 +42,12 @@ export class EpicComponent implements OnInit {
   descriptionForFileUpload: string = '';
   files: EpicDetail[] = [];
   references: EpicDetail[] = [];
+  urls: EpicDetail[] = [];
   comments: EpicDetail[] = [];
   epicLinks: EpicLink[] = [];
   comment: EpicDetail = new EpicDetail();
   reference: EpicDetail = new EpicDetail();
+  url: EpicDetail = new EpicDetail();
   link: EpicLink = new EpicLink();
   resourceMap = new Map<number, string>();
   epicMap = new Map<number, string>();
@@ -78,6 +90,7 @@ export class EpicComponent implements OnInit {
           this.files = epicDetails.filter((e: EpicDetail)=>e.detailType===EpicDetailType.ATTACHED_FILE);
           this.comments = epicDetails.filter((e: EpicDetail)=>e.detailType===EpicDetailType.COMMENT);
           this.references = epicDetails.filter((e: EpicDetail)=>e.detailType===EpicDetailType.REFERENCE);
+          this.urls = epicDetails.filter((e: EpicDetail)=>e.detailType===EpicDetailType.URL);
         },
         error: (err) => (this.util.showErrorMessage(err)),
       });
@@ -107,29 +120,15 @@ export class EpicComponent implements OnInit {
     }
   }
 
-  getResourceName(epicDetail:EpicDetail) {
-    let rId = epicDetail.createdById;
+  getResourceName(audit:Audit) {
+    let rId = audit.createdById;
     if (this.resourceMap.has(rId)) {
-      epicDetail.createdByName = <string>this.resourceMap.get(rId);
+      audit.createdByName = <string>this.resourceMap.get(rId);
     } else {
       this.resourceService.getById(rId).subscribe({
         next: (data) => {
           this.resourceMap.set(rId, data.name);
-          epicDetail.createdByName = <string>this.resourceMap.get(rId);
-        },
-        error: (err) => (this.util.showErrorMessage(err)),
-      });
-    }
-  }
-  getResourceNameForLink(epicLink:EpicLink) {
-    let rId = epicLink.createdById;
-    if (this.resourceMap.has(rId)) {
-      epicLink.createdByName = <string>this.resourceMap.get(rId);
-    } else {
-      this.resourceService.getById(rId).subscribe({
-        next: (data) => {
-          this.resourceMap.set(rId, data.name);
-          epicLink.createdByName = <string>this.resourceMap.get(rId);
+          audit.createdByName = <string>this.resourceMap.get(rId);
         },
         error: (err) => (this.util.showErrorMessage(err)),
       });
@@ -156,7 +155,7 @@ export class EpicComponent implements OnInit {
         epicLink.active = true;
         this.epicService.createEpicLink(epicLink).subscribe({
           next: (data) => {
-            this.getResourceNameForLink(data);
+            this.getResourceName(data);
             data.details = details;
             this.epicLinks.push(data);
             this.link = new EpicLink();
@@ -205,6 +204,11 @@ export class EpicComponent implements OnInit {
             this.references.push(data);
             this.reference = new EpicDetail();
             this.util.showSuccessMessage('Reference is added.');
+          } else if (epicDetail.detailType === EpicDetailType.URL) {
+            this.getResourceName(data);
+            this.urls.push(data);
+            this.url = new EpicDetail();
+            this.util.showSuccessMessage('Repo Url is added.');
           }
         },
         error: (err) => (this.util.showErrorMessage(err)),
@@ -256,6 +260,8 @@ export class EpicComponent implements OnInit {
         this.comments = this.comments.filter(f => f.id !== epicDetail.id);
       } else if (epicDetail.detailType === EpicDetailType.REFERENCE) {
         this.references = this.references.filter(f => f.id !== epicDetail.id);
+      } else if (epicDetail.detailType === EpicDetailType.URL) {
+        this.urls = this.urls.filter(f => f.id !== epicDetail.id);
       }
 
 

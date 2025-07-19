@@ -71,7 +71,14 @@ export class PlanningDashboardService {
       catchError(handleError)
     );
   }
-
+  getResourceDashboard(resourceId:number): Observable<ReleaseDetailBean[]> {
+    let params = new HttpParams();
+    params = params.append('resourceId', resourceId);
+    return this.http.get<ReleaseDetailBean[]>(`${this.baseUrl}/findResourceDashboard`,
+      { params }).pipe(
+      catchError(handleError)
+    );
+  }
   planEpic(id: number): Observable<ScheduleEpic> {
     let params = new HttpParams();
     params = params.append('epicId', id);

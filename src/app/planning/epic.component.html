@@ -15,7 +15,7 @@
       <!-- Main Form Card -->
       <div class="card shadow-lg">
         <div class="card-header bg-primary text-white text-center">
-          <h2 class="h4 mb-0">{{epicBean.id==0?'Add New ':'Update '}} Deliverable</h2>
+          <h2 class="h4 mb-0">Deliverable</h2>
         </div>
 
         <div class="row">
@@ -28,7 +28,7 @@
               <div class=" mb-3 mt-3">
                 <label for="title">Title<span class="text-danger ms-1">*</span></label>
                 <span [innerHTML]="epicBean.title" *ngIf="!makeTitleEditable" (click)="makeTitleEditable=true;"
-                      class="span-quill-custom"></span>
+                      class="span-quill-custom fw-bold"></span>
                 <textarea class="form-control" [(ngModel)]="epicBean.title" name="title" id="title"
                        required
                        #title="ngModel"
@@ -153,6 +153,13 @@
           </div>
           </div>
           <div class="col-md-4">
+            <div class="card-body mb-0" *ngIf="epicBean.id>0">
+              Added By: {{ epicBean.createdByName }}
+              <br/>Added At: {{ epicBean.createdDate ? (epicBean.createdDate | date: AppConstants.DATE_TIME_FORMAT) : '-' }}
+              <br/>
+              <br/>Release: <span *ngIf="epicBean.release">{{epicBean.release.name}}</span><span *ngIf="!epicBean.release">Yet to plan</span>
+              <span *ngIf="epicBean.release"><br/>Release Status: {{epicBean.release.status}}</span>
+            </div>
             <div class="card-body" *ngIf="epicBean.id>0">
                 <div class="card-header bg-secondary text-white text-center mb-2">
                     <h2 class="h4 mb-0">Attachments</h2>
@@ -215,7 +222,44 @@
                   </div>
                 </form>
           </div>
+            <div class="card-body" *ngIf="epicBean.id>0">
+              <div class="card-header bg-secondary text-white text-center mb-2">
+                <h2 class="h4 mb-0">Repo Urls</h2>
+              </div>
 
+              <div class="table-responsive" *ngIf="urls.length>0">
+                <table class="table table-striped table-hover table-bordered table-sm-custom text-sm">
+                  <thead class="table-secondary" >
+                  <tr>
+                    <th>Url</th>
+                    <th>Action</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  <tr *ngFor="let epicDetail of urls">
+                    <td>Ref.: {{ epicDetail.name }}
+                      <div class="text-end">
+                        <small><em>
+                          Added By: {{ epicDetail.createdByName }}
+                          <br/>Added At: {{ epicDetail.createdDate ? (epicDetail.createdDate | date: AppConstants.DATE_TIME_FORMAT) : '-' }}
+                        </em></small>
+                      </div>
+                    </td>
+                    <td class="text-center">
+                      <a (click)="deleteEpicDetail(epicDetail)" title="Delete"
+                         class="btn btn-sm btn-outline-info btn-tight-custom">
+                        <i class="bi bi-trash action-icon"></i>
+                      </a>
+                    </td>
+                  </tbody>
+                </table>
+              </div>
+              <form class="d-flex align-items-center gap-2 mt-2" #urlForm="ngForm">
+                <input type="text" [(ngModel)]="url.name" name="name" placeholder="Url"
+                       class="form-control form-control-sm w-auto" required/>
+                <button type="submit" class="btn btn-sm btn-primary" [disabled]="urlForm.invalid"  (click)="addEpicDetail(url, EpicDetailType.URL)">Add</button>
+              </form>
+            </div>
             <div class="card-body" *ngIf="epicBean.id>0">
             <div class="card-header bg-secondary text-white text-center mb-2">
               <h2 class="h4 mb-0">References</h2>

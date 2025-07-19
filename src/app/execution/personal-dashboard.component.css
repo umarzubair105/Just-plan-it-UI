@@ -1,0 +1,35 @@
+.horizontal-list {
+  display: flex;
+  gap: 15px; /* Space between items */
+  list-style: none;
+  padding: 0;
+}
+
+#scrollable-div {
+  position: relative; /* Required for Scrollspy */
+  height: 400px;  /* Set a fixed height */
+  overflow-y: auto; /* Enable scrolling */
+  border: 1px solid #ccc;
+  padding: 10px;
+}
+.content-section {
+  height: 300px; /* Tall sections for scrolling */
+  padding: 20px;
+}
+
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+thead th {
+  background-color: #f2f2f2;
+  padding: 8px;
+  text-align: left;
+}
+
+tbody td {
+  border-bottom: 1px solid #ddd;
+  padding: 8px;
+}

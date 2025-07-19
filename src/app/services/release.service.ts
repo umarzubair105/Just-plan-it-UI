@@ -5,7 +5,8 @@ import { catchError } from 'rxjs/operators';
 import {PageResponse} from '../models/page.response';
 import {AppConstants} from '../configuration/app.constants';
 import {handleError} from '../utils/helper';
-import {ReleaseStatusEnum} from '../models/planning';
+import {Release, ReleaseStatusEnum} from '../models/planning';
+import {Resource} from '../models/basic';
 
 
 @Injectable({
@@ -15,6 +16,11 @@ export class ReleaseService {
   private readonly baseUrl = AppConstants.API_URL+'/releases'; // Base URL for the REST endpoint
   constructor(private http: HttpClient) {}
 
+  getById(id: number): Observable<Release> {
+    return this.http.get<Release>(`${this.baseUrl}/${id}`).pipe(
+      catchError(handleError)
+    );
+  }
   getByProductIdAndStatuses(productId:number, status: ReleaseStatusEnum[]): Observable<PageResponse> {
     let params = new HttpParams();
     params = params.append('productId', productId);
