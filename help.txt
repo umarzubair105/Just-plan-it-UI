@@ -1,15 +1,24 @@
-Product/Project Epic Label changes
+Release Auto Start, Release Completed status Overdue
+Epic Status
 Show dependentEpicCode, Related Epic Codes and status on Planning?planned
-
-------Estimate Pick run time
+Show specific Estimate Roles Only
+Product/Project Epic Label changes
+Add/Edit Designation
 
 Use/maintain/add reasource Lead
 ON Resource add/edit add/update ResourceRole based on designation
 
+
+Changes Release Dates manually
+
 UI-left Bar
 
-Epic Status
+------Estimate Pick run time
 
+
+
+
+Release Auto Start, Release Completed status Overdue
 UI-Use loggedTime in UI for ResourceCapInRelease in planning/planned
 
 

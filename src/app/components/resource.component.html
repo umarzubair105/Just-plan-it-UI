@@ -25,7 +25,7 @@
 
             <a
               class="btn btn-sm btn-outline-primary btn-tight-custom"
-              (click)="openModal(addResource)"
+              (click)="openModal(editResource)"
               title="Add" *ngIf="isGlobalHR(this.rights)">
               <i class="bi bi-plus"></i>
             </a>
@@ -56,8 +56,14 @@
                   <a
                     class="btn btn-sm btn-outline-primary btn-tight-custom me-1"
                     (click)="openModalEdit(editResource, wh.id)"
-                    title="Edit">
+                    title="Edit" *ngIf="isGlobalHR(this.rights)">
                     <i class="bi bi-pencil"></i>
+                  </a>
+                  <a
+                    class="btn btn-sm btn-outline-primary btn-tight-custom me-1"
+                    (click)="openModalEdit(editResource, wh.id)"
+                    title="View" *ngIf="!isGlobalHR(this.rights)">
+                    <i class="bi bi-eye"></i>
                   </a>
                   <a
                     class="btn btn-sm btn-outline-info btn-tight-custom"
@@ -75,73 +81,6 @@
     </div>
   </div>
 
-  <ng-template #addResource>
-    <div class="modal fade show d-block">
-      <div class="modal-dialog">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Add Resource</h5>
-            <button type="button" class="btn-close" (click)="closeModal()"></button>
-          </div>
-          <div class="modal-body">
-            <form  #resourceForm="ngForm" >
-              <div class="mb-3">
-                <label for="name" class="form-label">Name <span class="text-danger">*</span></label>
-                <input type="text" id="name" name="name" class="form-control" required
-                       placeholder="Resource name"
-                       [(ngModel)]="addResourceSetup.name" #name="ngModel"
-                       [ngClass]="{ 'is-invalid': name.invalid && (name.dirty || name.touched) }"
-                       [showErrors]="{ required: 'Name is required' }" />
-              </div>
-
-              <div class="mb-3">
-                <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                <input type="email" id="email" name="email" class="form-control" required
-                       autocomplete="email" placeholder="you@example.com" email
-                       [(ngModel)]="addResourceSetup.email" #email="ngModel"
-                       [ngClass]="{ 'is-invalid': email.invalid && (email.dirty || email.touched) }"
-                       [showErrors]="{ required: 'Email is required', email: 'Invalid email' }" />
-              </div>
-
-              <div class="mb-3">
-                <label for="designation" class="form-label">Designation <span class="text-danger">*</span></label>
-                <input type="text" id="designation" name="designation" class="form-control" required
-                       placeholder="e.g. Product Manager"
-                       [(ngModel)]="addResourceSetup.designation" #designation="ngModel"
-                       [ngClass]="{ 'is-invalid': designation.invalid && (designation.dirty || designation.touched) }"
-                       [showErrors]="{ required: 'Designation is required' }" />
-              </div>
-
-              <div class="mb-3">
-                <label for="mobileNumber" class="form-label">Mobile Number <span class="text-danger">*</span></label>
-                <input type="tel" id="mobileNumber" name="mobileNumber" class="form-control" required
-                       placeholder="+1 555-123-4567"
-                       [(ngModel)]="addResourceSetup.mobileNumber" #mobileNumber="ngModel"
-                       [ngClass]="{ 'is-invalid': mobileNumber.invalid && (mobileNumber.dirty || mobileNumber.touched) }"
-                       [showErrors]="{ required: 'Mobile Number is required' }" />
-              </div>
-              <div class="mb-3">
-                <label for="dateOfBirth" class="form-label">Date of Birth</label>
-                <input
-                  type="date"
-                  id="dateOfBirth"
-                  class="form-control"
-                  name="dateOfBirth"
-                  placeholder="Date of Birth"
-                  [(ngModel)]="addResourceSetup.dateOfBirthDate" #dateOfBirthDate="ngModel"
-                />
-              </div>
-
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button class="btn btn-success w-20" (click)="add()" [disabled]="resourceForm.invalid">Save</button>
-            <button class="btn btn-secondary w-20" (click)="closeModal()">Cancel</button>
-          </div>
-        </div>
-      </div>
-    </div>
-  </ng-template>
   <ng-template #editResource>
     <div class="modal fade show d-block">
       <div class="modal-dialog">
@@ -156,6 +95,7 @@
                 <label for="nameR" class="form-label">Name <span class="text-danger">*</span></label>
                 <input type="text" id="nameR" name="name" class="form-control" required
                        placeholder="Resource name"
+                       [readOnly]="!isGlobalHR(this.rights)"
                        [(ngModel)]="resource.name" #name="ngModel"
                        [ngClass]="{ 'is-invalid': name.invalid && (name.dirty || name.touched) }"
                        [showErrors]="{ required: 'Name is required' }" />
@@ -165,14 +105,67 @@
               <label for="emailR" class="form-label">Email <span class="text-danger">*</span></label>
               <input type="email" id="emailR" name="email" class="form-control" required
                      autocomplete="email" placeholder="you@example.com" email
+                     [readOnly]="!isGlobalHR(this.rights)"
                      [(ngModel)]="resource.email" #email="ngModel"
                      [ngClass]="{ 'is-invalid': email.invalid && (email.dirty || email.touched) }"
                      [showErrors]="{ required: 'Email is required', email: 'Invalid email' }" />
             </div>
+              <div class="mb-3">
+                <label for="mobileNumberR" class="form-label">Mobile Number <span class="text-danger">*</span></label>
+                <input type="tel" id="mobileNumberR" name="mobileNumber" class="form-control" required
+                       placeholder="+1 000-000-0000"
+                       [readOnly]="!isGlobalHR(this.rights)"
 
+                       [(ngModel)]="resource.mobileNumber" #mobileNumber="ngModel"
+                       [ngClass]="{ 'is-invalid': mobileNumber.invalid && (mobileNumber.dirty || mobileNumber.touched) }"
+                       [showErrors]="{ required: 'Mobile Number is required' }" />
+              </div>
+              <div class="mb-3">
+                <label for="dateOfBirthR" class="form-label">Date of Birth</label>
+                <input
+                  type="date"
+                  id="dateOfBirthR"
+                  class="form-control"
+                  name="dateOfBirth"
+                  placeholder="Date of Birth"
+                  [readOnly]="!isGlobalHR(this.rights)"
+
+                  [(ngModel)]="resource.dateOfBirth" #dateOfBirthDate="ngModel"
+                />
+              </div>
+              <div class="mb-3">
+                <label for="leadResourceId" class="form-label">Team Leader</label>
+                <select name="leadResourceId" id="leadResourceId"  [(ngModel)]="resource.leadResourceId" class="form-control"
+                        [disabled]="!isGlobalHR(this.rights)"
+
+                        #leadResourceId="ngModel"
+                        [ngClass]="{ 'is-invalid': leadResourceId.invalid && (leadResourceId.dirty || leadResourceId.touched) }"
+                        [showErrors]="{ required: 'Team Leader is required' }">
+                  <option *ngFor="let scope of leads" [value]="scope.id">
+                    {{ scope.name }}
+                  </option>
+                </select>
+              </div>
+              <div class="mb-3">
+                <input type="checkbox"
+                       name="lead"
+                       id="lead"
+                       [(ngModel)]="resource.lead"
+                       [readOnly]="!isGlobalHR(this.rights)"
+
+                       #lead="ngModel"
+                       class="form-check-input"
+                       [ngClass]="{ 'is-invalid': lead.invalid && (lead.dirty || lead.touched) }">
+                <label for="lead" class="form-label">Leading a team</label>
+                <div *ngIf="lead.invalid && (lead.dirty || lead.touched)" class="invalid-feedback">
+                  It is required
+                </div>
+              </div>
             <div class="mb-3">
               <label for="designationId" class="form-label">Designation <span class="text-danger">*</span></label>
               <select name="designationId" id="designationId"  [(ngModel)]="resource.designationId" class="form-control" required
+                      [disabled]="!isGlobalHR(this.rights)"
+
                       #designationId="ngModel"
                       [ngClass]="{ 'is-invalid': designationId.invalid && (designationId.dirty || designationId.touched) }"
                       [showErrors]="{ required: 'Designation is required' }">
@@ -182,29 +175,28 @@
               </select>
             </div>
 
-            <div class="mb-3">
-              <label for="mobileNumberR" class="form-label">Mobile Number <span class="text-danger">*</span></label>
-              <input type="tel" id="mobileNumberR" name="mobileNumber" class="form-control" required
-                     placeholder="+1 555-123-4567"
-                     [(ngModel)]="resource.mobileNumber" #mobileNumber="ngModel"
-                     [ngClass]="{ 'is-invalid': mobileNumber.invalid && (mobileNumber.dirty || mobileNumber.touched) }"
-                     [showErrors]="{ required: 'Mobile Number is required' }" />
-            </div>
-            <div class="mb-3">
-              <label for="dateOfBirthR" class="form-label">Date of Birth</label>
-              <input
-                type="date"
-                id="dateOfBirthR"
-                class="form-control"
-                name="dateOfBirth"
-                placeholder="Date of Birth"
-                [(ngModel)]="resource.dateOfBirth" #dateOfBirthDate="ngModel"
-              />
-            </div>
+              <div class="mb-3">
+                <label for="roleId" class="form-label">System Role <span class="text-danger">*</span></label>
+                <select name="roleId" id="roleId"  [(ngModel)]="resource.roleId" class="form-control" required
+                        [disabled]="!isGlobalHR(this.rights)"
+
+                        #roleId="ngModel"
+                        [ngClass]="{ 'is-invalid': roleId.invalid && (roleId.dirty || roleId.touched) }"
+                        [showErrors]="{ required: 'Role is required' }">
+                  <option *ngFor="let scope of roles" [value]="scope.id">
+                    {{ scope.name }}
+                  </option>
+                </select>
+              </div>
+
+
+
 
               <div class="mb-3">
                 <label class="form-label">Status<span class="text-danger ms-1">*</span></label>
                 <select name="status"  [(ngModel)]="resource.status" class="form-control" required
+                        [disabled]="!isGlobalHR(this.rights)"
+
                         #status="ngModel"
                         [ngClass]="{ 'is-invalid': status.invalid && (status.dirty || status.touched) }"
                         [showErrors]="{ required: 'Type is required' }">
@@ -213,10 +205,25 @@
                   </option>
                 </select>
               </div>
+
+              <div class="mb-3">
+                <label for="lastWorkingDate" class="form-label">Last Working Date</label>
+                <input
+                  type="date"
+                  [readOnly]="!isGlobalHR(this.rights)"
+
+                  id="lastWorkingDate"
+                  class="form-control"
+                  name="lastWorkingDate"
+                  placeholder="Last Working Date"
+                  [(ngModel)]="resource.lastWorkingDate" #lastWorkingDate="ngModel"
+                />
+              </div>
             </form>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-success w-20" (click)="update()" [disabled]="resourceForm.invalid">Save</button>
+            <button class="btn btn-success w-20" (click)="add()" [disabled]="resourceForm.invalid" *ngIf="resource.id==0 && isGlobalHR(this.rights)">Save</button>
+            <button class="btn btn-success w-20" (click)="update()" [disabled]="resourceForm.invalid" *ngIf="resource.id>0 && isGlobalHR(this.rights)">Save</button>
             <button class="btn btn-secondary w-20" (click)="closeModal()">Cancel</button>
           </div>
         </div>

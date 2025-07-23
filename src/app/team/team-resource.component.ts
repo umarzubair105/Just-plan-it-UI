@@ -35,9 +35,6 @@ export class TeamResourceComponent implements OnInit {
   resources: Resource[] = [];
   roles: Role[] = [];
   selectedRoles: { [resourceId: number]: number } = {};
-  //roleColumns: { [name: string]: number } = {};
-  //roleColumns: any = {};
-  selectedResourceRoles: ResourceRole[] = [];
   productResources: ProductResource[] = [];
   productId! : number;
   isAnyThingChanged = false;

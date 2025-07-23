@@ -48,8 +48,8 @@ export class Resource extends Audit {
   public designationId: number = 0;
   public leadResourceId: number = 0;
   public countryId: number = 0;
+  public roleId: number = 0;
   public lead: boolean = true;
-  public individualCapacity: boolean = true;
   public dateOfBirth: Date | null = null;
   public lastWorkingDate: Date | null = null;
   public status: ResourceStatus = ResourceStatus.ACTIVE;

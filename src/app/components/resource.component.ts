@@ -71,8 +71,8 @@ export class ResourceComponent implements OnInit {
   roleService = inject(RoleService);
   designationService = inject(DesignationService);
   //constructor(private companyService: CompanyService) {}
-  addResourceSetup: AddResource = new AddResource();
   resources: Resource[] = [];
+  leads: Resource[] = [];
   resource: Resource = new Resource();
   authService = inject(AuthService);
   rights  = new ResourceRightBean();
@@ -115,26 +115,6 @@ export class ResourceComponent implements OnInit {
     //this.loadCompanies();
   }
 
-  onSubmit() {
-    if (this.myForm.valid && this.companyId!=null) {
-      console.log('Form Data:', this.myForm.value);
-      this.addResourceSetup = this.myForm.value;
-      this.addResourceSetup.companyId = this.companyId; // Hardcoding companyId for now.
-      this.companyService.addResourceMultiple(this.addResourceSetup).subscribe({
-        next: (data) => {
-          // action: string = 'Close'
-          this.utils.showSuccessMessage(data[0].message);
-          if (sessionStorage.getItem('wizard')) {
-            this.router.navigate(['/product']);
-          }
-          //this.newCompany = { id: 0, name: '', sample: false };
-        },
-        error: (err) => {this.errorMessage = err;this.utils.showErrorMessage(err);},
-      });
-    } else {
-      console.error('Form is invalid');
-    }
-  }
 
 
   loadRoles(): void {
@@ -158,6 +138,7 @@ export class ResourceComponent implements OnInit {
     this.resourceService.getByCompanyId(this.companyId).subscribe({
       next: (data) => {
         var tempR : Resource[] = data._embedded.resources;
+        this.leads = tempR.filter(t=> t.lead);
         const loggedUserId = this.authService.getUserId();
         if (!isGlobalHR(this.rights)) {
           tempR = tempR.filter(t=> t.id==loggedUserId || t.leadResourceId==loggedUserId);
@@ -188,8 +169,8 @@ export class ResourceComponent implements OnInit {
 
 
   add() {
-    this.addResourceSetup.companyId=this.companyId;
-    return this.companyService.addResource(this.addResourceSetup).subscribe({
+    this.resource.companyId=this.companyId;
+    return this.companyService.addResource(this.resource).subscribe({
       next: (data) => {
         this.loadResources();
         this.utils.showSuccessMessage('Data is inserted. Email is sent to user for password.');
@@ -202,6 +183,10 @@ export class ResourceComponent implements OnInit {
     this.resourceService.updateSpecificFieldsPasses(this.resource.id,
       {name: this.resource.name,designationId: this.resource.designationId,
         dateOfBirth:this.resource.dateOfBirth,mobileNumber:this.resource.mobileNumber,
+        roleId:this.resource.roleId,lead:this.resource.lead,
+        email:this.resource.email,
+        leadResourceId:this.resource.leadResourceId,
+        lastWorkingDate:this.resource.lastWorkingDate,
         status: this.resource.status}
     ).subscribe({
       next: (data) => {
@@ -213,7 +198,6 @@ export class ResourceComponent implements OnInit {
     });
   }
   openModal(template: TemplateRef<any>) {
-    this.addResourceSetup = new AddResource();
     this.resource = new Resource();
     this.modalRef = this.modalService.show(template);
   }

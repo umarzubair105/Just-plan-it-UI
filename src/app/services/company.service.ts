@@ -4,7 +4,7 @@ import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {PageResponse} from '../models/page.response';
 import {ReleaseIteration} from '../utils/helper';
-import {AuthResponse, Company, ContactUs, ResourceRightBean} from '../models/basic';
+import {AuthResponse, Company, ContactUs, Resource, ResourceRightBean} from '../models/basic';
 import {AppConstants} from '../configuration/app.constants';
 
 // Define the Company interface
@@ -51,6 +51,7 @@ export class AddResource {
   dateOfBirth: string ='';
   dateOfBirthDate: Date | null = null;
   lead: string ='';
+  leadResourceId: number = 0;
   dateFormat: string = '';
 }
 
@@ -144,11 +145,11 @@ export class CompanyService {
       catchError(this.handleError)
     );
   }
-  addResource(resource: AddResource): Observable<CommonResp> {
+  addResource(resource: Resource): Observable<CommonResp> {
     console.log(resource);
-    //const { id, ...payload } = company;
+    const { id, ...payload } = resource;
     //console.log(payload);
-    return this.http.post<CommonResp>(this.baseUrlComDashboard+'/add-resource', resource).pipe(
+    return this.http.post<CommonResp>(this.baseUrlComDashboard+'/add-resource', payload).pipe(
       catchError(this.handleError)
     );
   }
