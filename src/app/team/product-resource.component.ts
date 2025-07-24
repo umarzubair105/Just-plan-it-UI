@@ -59,7 +59,7 @@ export class ProductResourceComponent implements OnInit {
         this.products = data._embedded.products;
         this.products.sort((a, b) => a.name.localeCompare(b.name));
         // fill selectedRoles using productResources
-        this.resourceService.getByProductId(this.productId).subscribe({
+        this.resourceService.findActiveNonSystemOnlyResourcesByProductId(this.productId).subscribe({
           next: (data) => {
             this.resources = data._embedded.resources;
             this.resources.sort((a, b) => a.name.localeCompare(b.name));

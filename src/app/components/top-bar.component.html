@@ -22,13 +22,15 @@
         <li class="nav-item dropdown"  *ngIf="userName">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
              role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            HR
+            Resource Management
           </a>
           <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
             <li *ngIf="isGlobalHR(this.rights)"><a class="dropdown-item" href="upload-resource#">Upload Resources</a></li>
             <li *ngIf="isGlobalHR(this.rights)"><a class="dropdown-item" href="mapping-roles-designation#">Role Mapping</a></li>
             <li><a class="dropdown-item" href="company-calendar#">Calendar</a></li>
             <li><a class="dropdown-item" href="resource#">Resource</a></li>
+            <li><a class="dropdown-item" href="designation#">Designation</a></li>
+            <li><a class="dropdown-item" href="role#">Role</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="#">Something else</a></li>
           </ul>

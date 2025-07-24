@@ -12,6 +12,7 @@ import {forkJoin, of, tap} from 'rxjs';
 import {catchError} from 'rxjs/operators';
 import {convertToMinutes, isManager, transformToDhM} from '../utils/helper';
 import {AuthService} from '../services/auth.service';
+import {RoleService} from '../services/role.service';
 
 @Component({
   selector: 'epic-estimate',
@@ -21,9 +22,10 @@ import {AuthService} from '../services/auth.service';
 })
 export class EpicEstimateComponent implements OnInit {
   epicBean!: EpicBean;
-  roles!: Role[];
+  roles: Role[] = [];
   epicEstimatBeans: EpicEstimateBean[] = [];
   epicEstimateService: EpicEstimateService = inject(EpicEstimateService);
+  roleService: RoleService = inject(RoleService);
   authService = inject(AuthService);
   rights  = new ResourceRightBean();
   constructor(public dialogRef: MatDialogRef<EpicEstimateComponent>,
@@ -35,26 +37,35 @@ export class EpicEstimateComponent implements OnInit {
 
     if (this.epicBean) {
       this.epicEstimatBeans = this.epicBean.estimates || [];
-      this.roles.filter(r=>r.taskAssignable).forEach(r => {
-        if (this.epicEstimatBeans.find(e=>e.roleId==r.id)===undefined) {
-          let newB = new EpicEstimateBean();
-          newB.roleName = r.name;
-          console.log('EpicEstimate:'+newB.roleName);
-          newB.roleId = r.id;
-          newB.resources = 1;
-          newB.estimate = 0;
-          newB.estimateStr = '';
-          newB.id=0;
-          newB.active = true;
-          newB.epicId = this.epicBean.id;
-          this.epicEstimatBeans.push(newB);
-        } else {
-          console.log('EpicEstimate Found'+r.name)
-        }
+      this.roleService.getActiveNonSystemOnlyRolesByProductId(this.epicBean.productId).subscribe({
+        next: (data) => {
+          this.roles = data._embedded.roles;
+          this.roles.sort((a, b) => a.name.localeCompare(b.name));
+
+          this.roles.filter(r=>!r.systemRole).forEach(r => {
+            if (this.epicEstimatBeans.find(e=>e.roleId==r.id)===undefined) {
+              let newB = new EpicEstimateBean();
+              newB.roleName = r.name;
+              console.log('EpicEstimate:'+newB.roleName);
+              newB.roleId = r.id;
+              newB.resources = 1;
+              newB.estimate = 0;
+              newB.estimateStr = '';
+              newB.id=0;
+              newB.active = true;
+              newB.epicId = this.epicBean.id;
+              this.epicEstimatBeans.push(newB);
+            } else {
+              console.log('EpicEstimate Found'+r.name)
+            }
+          });
+          this.epicEstimatBeans.forEach(e=> {
+            e.estimateStr = transformToDhM(e.estimate);
+          });
+        },
+        error: (err) => (this.util.showErrorMessage(err)),
       });
-      this.epicEstimatBeans.forEach(e=> {
-        e.estimateStr = transformToDhM(e.estimate);
-      });
+
       this.authService.getResourceRightsByProductId(this.epicBean.productId).subscribe({
         next: (data) => {
           this.rights = data;

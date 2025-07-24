@@ -19,6 +19,7 @@ import { ShowErrorsDirective } from '../directives/show-errors.directive';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Utils} from '../utils/utils';
 import {
+  Designation,
   LeaveStatus,
   LeaveType,
   Resource,
@@ -33,7 +34,7 @@ import {DataTableColumnCellDirective, DataTableColumnDirective, DatatableCompone
 import {EpicEstimateComponent} from '../planning/epic-estimate.component';
 import {MatDialog} from '@angular/material/dialog';
 import {ResourceLeaveComponent} from '../leaves/resource.leave.component';
-import {Designation, DesignationService} from '../services/designation.service';
+import {DesignationService} from '../services/designation.service';
 import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
 import {ReleaseStatusEnum} from '../models/planning';
 import {FormatDatePipe} from '../pipes/format.date';

@@ -26,8 +26,8 @@ export class ResourceService {
       catchError(handleError)
     );
   }
-  getByProductId(productId:number): Observable<PageResponse> {
-    return this.http.get<PageResponse>(`${this.baseUrl}/search/findResourcesByProductId?productId=${productId}`).pipe(
+  findActiveNonSystemOnlyResourcesByProductId(productId:number): Observable<PageResponse> {
+    return this.http.get<PageResponse>(`${this.baseUrl}/search/findActiveNonSystemOnlyResourcesByProductId?productId=${productId}`).pipe(
       catchError(handleError)
     );
   }

@@ -24,6 +24,11 @@ export class RoleService {
       catchError(this.handleError)
     );
   }
+  getActiveNonSystemOnlyRolesByProductId(productId:number): Observable<PageResponse> {
+    return this.http.get<PageResponse>(`${this.baseUrl}/search/findActiveNonSystemOnlyRolesByProductId?productId=${productId}`).pipe(
+      catchError(this.handleError)
+    );
+  }
   // Get by ID
   getById(id: number): Observable<Role> {
     return this.http.get<Role>(`${this.baseUrl}/${id}`).pipe(
@@ -40,9 +45,8 @@ export class RoleService {
   }
 
   // Update an existing record
-  update(pkId: number, model: Role): Observable<Role> {
-    const { id, ...payload } = model;
-    return this.http.put<Role>(`${this.baseUrl}/${pkId}`, payload).pipe(
+  update(pkId: number, fieldsToUpdate: Partial<{}>): Observable<Role> {
+    return this.http.patch<Role>(`${this.baseUrl}/${pkId}`, fieldsToUpdate).pipe(
       catchError(this.handleError)
     );
   }

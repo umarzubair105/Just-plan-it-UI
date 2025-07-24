@@ -82,6 +82,7 @@ export class TopBarComponent implements OnInit {
   onProductChange(productId: number) {
     console.log('Selected Product ID:', productId);
     this.authService.setSelectedProductId(productId);
+    this.router.navigate(['/home']);
     // Add your logic here, e.g., fetch product details
   }
   openDialogForMyLeaves(): void {

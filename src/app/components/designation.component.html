@@ -1,0 +1,131 @@
+<div class="container-lg mt-4">
+  <div class="row">
+    <div class="col-md-12 offset-md-0">
+
+      <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white text-center">
+          <h2 class="h4 mb-0">Designation</h2>
+        </div>
+        <div class="container mt-2">
+          <div class="d-flex align-items-center mb-2">
+            <h5 class="mb-0 me-2">Company Designation</h5>
+            <a
+              class="btn btn-sm btn-outline-primary btn-tight-custom"
+              (click)="openModal(modelC)"
+              title="Add">
+              <i class="bi bi-plus"></i>
+            </a>
+          </div>
+          <div class="table-responsive">
+            <table class="table table-striped table-hover table-bordered table-sm-custom text-sm">
+              <thead class="table-secondary" >
+
+              <tr>
+                <th>Name</th>
+                <th>Created Date</th>
+                <th>Action</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let row of models;">
+                <td>{{ row.name }}</td>
+                <td>{{ row.createdDate | formatDate }}</td>
+                <td class="text-center">
+                  <a (click)="openModalEdit(modelC, row.id)" title="Edit">
+                    <i class="bi bi-pencil action-icon"></i>
+                  </a>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+  <ng-template #modelC>
+    <div class="modal fade show d-block">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Add/Update Designation</h5>
+            <button type="button" class="btn-close" (click)="closeModal()"></button>
+          </div>
+          <div class="modal-body">
+            <form  #resourceForm="ngForm" >
+              <div class="mb-3">
+                <label class="form-label">Name<span class="text-danger ms-1">*</span></label>
+                <input type="text" class="form-control" [(ngModel)]="model.name" name="name" required
+                       #name="ngModel"
+                       [ngClass]="{ 'is-invalid': name.invalid && (name.dirty || name.touched) }"
+                       [showErrors]="{ required: 'Name is required' }">
+              </div>
+              <div class="mb-3">
+                <label for="roleId" class="form-label">System Role <span class="text-danger">*</span></label>
+                <select name="roleId" id="roleId"  [(ngModel)]="model.roleId" class="form-control"
+                        #roleId="ngModel"
+                        [ngClass]="{ 'is-invalid': roleId.invalid && (roleId.dirty || roleId.touched) }"
+                        [showErrors]="{ required: 'Role is required' }">
+                  <option *ngFor="let scope of roles" [value]="scope.id">
+                    {{ scope.name }}
+                  </option>
+                </select>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-success w-20" (click)="update()" *ngIf="model.id>0" [disabled]="resourceForm.invalid">Save</button>
+            <button class="btn btn-success w-20" (click)="add()" *ngIf="model.id===0" [disabled]="resourceForm.invalid">Save</button>
+            <button class="btn btn-secondary w-20" (click)="closeModal()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-template>
+</div>
+
+
+
+<!--
+<div class="container">
+  <h2>Components</h2>
+
+  &lt;!&ndash; Error Message &ndash;&gt;
+  <div *ngIf="errorMessage" class="alert alert-danger">
+    {{ errorMessage }}
+  </div>
+
+  &lt;!&ndash; SubComponent List &ndash;&gt;
+  <ul>
+    <li *ngFor="let subComponent of subComponents" (click)="selectSubComponent(subComponent)">
+      {{ subComponent.name }}
+      <button (click)="deleteSubComponent(subComponent.id); $event.stopPropagation()">Delete</button>
+    </li>
+  </ul>
+
+  &lt;!&ndash; Selected SubComponent Details &ndash;&gt;
+  <div *ngIf="selectedSubComponent">
+    <h3>SubComponent Details</h3>
+    <p>ID: {{ selectedSubComponent.id }}</p>
+    <p>
+      Name: <input [(ngModel)]="selectedSubComponent.name" />
+    </p>
+
+    <button (click)="updateSubComponent(selectedSubComponent)">Update</button>
+  </div>
+
+  &lt;!&ndash; Add New SubComponent &ndash;&gt;
+  <div>
+    <h3>Add New SubComponent</h3>
+    <p>
+      Name: <input [(ngModel)]="newSubComponent.name" />
+    </p>
+    <p>
+      Name: <input [(ngModel)]="newSubComponent.companyId" />
+    </p>
+    <button (click)="addSubComponent()">Add SubComponent</button>
+  </div>
+&lt;!&ndash;  <button (click)="emitEvent()">Go Back</button>&ndash;&gt;
+</div>
+-->

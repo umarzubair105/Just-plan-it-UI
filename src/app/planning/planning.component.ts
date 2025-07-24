@@ -43,7 +43,7 @@ export class PlanningComponent implements OnInit {
 
   priorities: Priority[] = [];
   subComponents: SubComponent[] = [];
-  roles: Role[] = [];
+  //roles: Role[] = [];
 
   unplannedEpics: EpicBean[] = [];
   editEpic: EpicBean = new EpicBean();
@@ -110,13 +110,7 @@ export class PlanningComponent implements OnInit {
       },
       error: (err) => (this.util.showErrorMessage(err)),
     });
-    this.roleService.getByCompanyId(this.companyId).subscribe({
-      next: (data) => {
-        this.roles = data._embedded.roles;
-        this.roles.sort((a, b) => a.name.localeCompare(b.name));
-      },
-      error: (err) => (this.util.showErrorMessage(err)),
-    });
+
   }
   planRelease(releaseDetail: ReleaseDetailBean) {
     console.log('Planning it:'+releaseDetail.release?.name);
@@ -386,7 +380,7 @@ export class PlanningComponent implements OnInit {
       height: '70%',
       maxHeight: '80vh', // 80% of viewport height
       disableClose: true,
-      data: { epicBean: row, roles: this.roles },
+      data: { epicBean: row},
     });
 
     dialogRef.afterClosed().subscribe(result => {

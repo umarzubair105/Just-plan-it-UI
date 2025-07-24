@@ -29,10 +29,12 @@ export class Priority extends Basic{
   public priorityLevel: number = 20;
 }
 
-export class Role extends Basic{
+export class Role extends Audit {
   public name: string = '';
+  public code: RoleCode = RoleCode.TR;
   public companyId: number = 0;
-  public taskAssignable: boolean = false;
+  public systemRole: boolean = false;
+  public required: boolean = false;
 }
 
 export class ResourceRole extends Basic{
@@ -55,6 +57,11 @@ export class Resource extends Audit {
   public status: ResourceStatus = ResourceStatus.ACTIVE;
 }
 
+export class Designation extends Audit {
+  public name: string = '';
+  public roleId: number | null = null;
+  public companyId: number = 0;
+}
 export class ResourceProjection {
   public id: number = 0;
   public name: string = '';
@@ -75,7 +82,9 @@ export class ProductResourceBean extends ProductResource {
   public productName: string = '';
   public resourceName: string = '';
 }
-
+export enum RoleCode {
+  ADMIN="ADMIN", HR="HR", PM="PM", TR="TR"
+}
 export enum LeaveStatus {
   PENDING="PENDING", APPROVED="APPROVED", REJECTED="REJECTED"
 }

@@ -73,6 +73,12 @@ export const routes: Routes = [
   { path: 'p-dashboard', loadComponent: ()=>import(
       './execution/personal-dashboard.component').then((m)=>m.PersonalDashboardComponent),
     canActivate: [AuthGuard]},
+  { path: 'designation', loadComponent: ()=>import(
+      './components/designation.component').then((m)=>m.DesignationComponent),
+    canActivate: [AuthGuard]},
+  { path: 'role', loadComponent: ()=>import(
+      './components/role.component').then((m)=>m.RoleComponent),
+    canActivate: [AuthGuard]},
   { path: 'contact-us', loadComponent: ()=>import(
       './components/contactus.component').then((m)=>m.ContactUsComponent)},
   { path: 'home', redirectTo: '' },  // Catch-all route (redirect to home for invalid URLs)

@@ -13,10 +13,10 @@ import {
   moveItemInArray
 } from '@angular/cdk/drag-drop';
 import {RoleService} from '../services/role.service';
-import {DesignationService, Designation} from '../services/designation.service';
+import {DesignationService} from '../services/designation.service';
 import {CompanyService, MapDesignation} from '../services/company.service';
 import {Utils} from '../utils/utils';
-import {Role} from '../models/basic';
+import {Designation, Role} from '../models/basic';
 @Component({
   selector: 'app-mapping-roles-designation',
   standalone: true,
