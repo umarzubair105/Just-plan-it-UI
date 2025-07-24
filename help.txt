@@ -1,12 +1,9 @@
-Role- Code(System Role),Part of Product Management,IsRequired
-On Product Page, ask to select all system roles with Part Of Product Management
-On Team Defintion, just show non system Role
-
-Release Auto Start, Release Completed status Overdue
 Epic Status
 Show dependentEpicCode, Related Epic Codes and status on Planning?planned
-Show specific Estimate Roles Only
 Product/Project Epic Label changes
+
+On Product Page, ask to select all system roles with Part Of Product Management
+
 
 
 Changes Release Dates manually
@@ -15,6 +12,7 @@ UI-left Bar
 
 ------Estimate Pick run time
 
+Release Auto Start, Release Completed status Overdue
 
 
 

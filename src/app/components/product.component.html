@@ -76,23 +76,7 @@
               [showErrors]="{ required: 'Product Manager Email is required', email: 'Product Manager Email is not valid' }"
             />
           </div>
-          <div class="mb-3 col-md-4">
-            <label for="emailProductOwner" class="form-label">Product Owner Email<span class="text-danger ms-1">*</span></label>
-            <input
-              type="email"
-              id="emailProductOwner"
-              class="form-control"
-              name="emailProductOwner"
-              required
-              email
-              placeholder="Enter Product Owner email"
-              [(ngModel)]="addProduct.emailProductOwner"
-              #emailProductOwner="ngModel"
-              [ngClass]="{ 'is-invalid': emailProductOwner.invalid && (emailProductOwner.dirty || emailProductOwner.touched) }"
 
-              [showErrors]="{ required: 'Product Owner Email is required', email: 'Product Owner Email is not valid' }"
-            />
-          </div>
           <div class="mb-3 col-md-4">
             <label for="otherActivitiesPercentTime" class="form-label">Non Productive Time %<span class="text-danger ms-1">*</span></label>
             <input
