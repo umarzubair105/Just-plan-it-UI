@@ -19,23 +19,26 @@
       <div class="">
         <div class="card-header release-info-card">
           <ul class="release-info-list">
-            <li><strong>Release:</strong> {{ releaseDetail.release?.name }}</li>
-            <li><strong>Start Date:</strong> {{ releaseDetail.release?.startDate }}</li>
-            <li><strong>End Date:</strong> {{ releaseDetail.release?.endDate }}</li>
-            <li><strong>Working Days:</strong> {{ releaseDetail.release?.workingDays }}</li>
+            <li><strong>Release:</strong> {{ releaseDetail.release.name }}</li>
+            <li><strong>Start Date:</strong> {{ releaseDetail.release.startDate }}</li>
+            <li><strong>End Date:</strong> {{ releaseDetail.release.endDate }}</li>
+            <li><strong>Working Days:</strong> {{ releaseDetail.release.workingDays }}</li>
             <li><strong>Status:</strong>
-              <span [ngClass]="releaseStatusClass(releaseDetail.release?.status)">
-                {{ releaseDetail.release?.status }}
+              <span [ngClass]="releaseStatusClass(releaseDetail.release.status)">
+                {{ releaseDetail.release.status }}
               </span>
             </li>
             <li>
-              <a (click)="expand(releaseDetail)" title="Expand the release" class="btn btn-sm btn-outline-success">
+              <a (click)="expand(releaseDetail)" title="Expand the release" class="btn btn-sm btn-outline-success" *ngIf="!releaseDetail.expanded">
                 <i class="bi bi-arrows-angle-expand"></i> Expand
+              </a>
+              <a (click)="releaseDetail.expanded=false;" title="Expand the release" class="btn btn-sm btn-outline-success" *ngIf="releaseDetail.expanded">
+                <i class="bi bi-arrows-angle-contract"></i> Collapse
               </a>
             </li>
           </ul>
         </div>
-        <div class="card-body"  *ngIf="releaseDetail.epics.length>0">
+        <div class="card-body"  *ngIf="releaseDetail.expanded && releaseDetail.epics && releaseDetail.epics.length>0">
             <h5 class="card-title">Deliverables</h5>
             <div class="col-md-12 table-responsive">
               <ngx-datatable
@@ -51,12 +54,8 @@
 
                 <ngx-datatable-column name="Code" prop="code" [sortable]="true" [width]="80" [minWidth]="80" [maxWidth]="80"></ngx-datatable-column>
                 <ngx-datatable-column name="Title" prop="title" ></ngx-datatable-column>
-                <ngx-datatable-column name="Priority" prop="priorityLevel" [sortable]="true" [width]="120" [minWidth]="120" [maxWidth]="120">
-                  <ng-template let-row="row" ngx-datatable-cell-template>
-                    {{row.priorityName}}
-                  </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column name="Assignment" [width]="300" [minWidth]="300" [maxWidth]="300">
+                <ngx-datatable-column name="Status" prop="status" [maxWidth]="100"></ngx-datatable-column>
+                <ngx-datatable-column name="Assignment" [width]="500" [minWidth]="500" [maxWidth]="500">
                   <ng-template let-row="row" ngx-datatable-cell-template>
 <!--
                     <div [innerHTML]="showAssignments(row.assignments)"></div>
@@ -85,7 +84,7 @@
             </div>
 
         </div>
-        <div class="card-body"  *ngIf="releaseDetail.epics.length>0">
+        <div class="card-body"  *ngIf="releaseDetail.expanded && releaseDetail.epics && releaseDetail.epics.length>0">
           <h5 class="card-title">Resource Allocation</h5>
           <div class="col-md-12">
             <ngx-datatable

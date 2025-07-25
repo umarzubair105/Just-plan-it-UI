@@ -1,6 +1,12 @@
 import {Audit, Basic, Priority} from './basic';
 import {ReleaseIteration} from '../utils/helper';
 
+export enum EpicStatusEnum {
+  OPEN="OPEN",
+  RESOLVED="RESOLVED",
+  DELETED="DELETED",
+  REOPEN="REOPEN"
+}
 export enum ReleaseStatusEnum {
   UNPLANNED="UNPLANNED",
   PLANNED="PLANNED",
@@ -40,7 +46,7 @@ export class Epic extends Audit {
   public title: string = '';
   public details: string = '';
   public raisedByResourceId: number | null = null;
-  public dependOnEpicId: number | null = null;
+  public status: EpicStatusEnum = EpicStatusEnum.OPEN;
   public componentId: number | null = null;
   public requiredBy: Date | null = null;
   public priorityId: number | null = null;
@@ -63,9 +69,8 @@ export function EpicBeanCopyPasteUpdatedValues(source: EpicBean, target: EpicBea
   target.priorityLevel = source.priorityLevel;
   target.raisedByResourceId = source.raisedByResourceId;
   target.raisedByResourceName = source.raisedByResourceName;
-  target.dependOnEpicCode = source.dependOnEpicCode;
-  target.dependOnEpicId = source.dependOnEpicId;
   target.componentId = source.componentId;
+  target.status = source.status;
   target.componentName = source.componentName;
   target.requiredBy = source.requiredBy;
   target.releaseId = source.releaseId;
@@ -81,7 +86,6 @@ export class EpicBean extends Epic {
   public priorityLevel: number = 0;
   public componentName: string | null = null;
   public raisedByResourceName: string | null = null;
-  public dependOnEpicCode: string | null = null;
   public release: Release | null = null;
   public estimates: EpicEstimateBean[] | null = null;
   public assignments: EpicAssignmentBean[] | null = null;
@@ -107,9 +111,10 @@ export class EpicEstimate extends Basic {
 export class EpicEstimateBean extends EpicEstimate {
   public roleName: string | null = null;
 }
-export class EpicAssignment extends Basic {
+export class EpicAssignment extends Audit {
   public epicId: number = 0;
   public resourceId: number = 0;
+  public releaseId: number = 0;
   public estimate: number = 0;
   public roleId: number = 0;
   public status: EpicAssignmentStatusEnum = EpicAssignmentStatusEnum.OPEN;
@@ -150,6 +155,7 @@ export class ReleaseDetailBean {
   public release: Release = new Release();
   public resourceCaps: ResourceCapInRelease[] = [];
   public epics: EpicBean[] = [];
+  public expanded: boolean = false;
 }
 
 export class ResourceCapInRelease {

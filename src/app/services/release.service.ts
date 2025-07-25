@@ -7,6 +7,7 @@ import {AppConstants} from '../configuration/app.constants';
 import {handleError} from '../utils/helper';
 import {Release, ReleaseStatusEnum} from '../models/planning';
 import {Resource} from '../models/basic';
+import {CommonResp} from './company.service';
 
 
 @Injectable({
@@ -14,6 +15,7 @@ import {Resource} from '../models/basic';
 })
 export class ReleaseService {
   private readonly baseUrl = AppConstants.API_URL+'/releases'; // Base URL for the REST endpoint
+  private readonly planUrl = AppConstants.API_URL+'/planning-dashboard'; // Base URL for the REST endpoint
   constructor(private http: HttpClient) {}
 
   getById(id: number): Observable<Release> {
@@ -32,6 +34,17 @@ export class ReleaseService {
   }
   updateSpecificFieldsPasses(id: number, fieldsToUpdate: Partial<{}>): Observable<any> {
     return this.http.patch(`${this.baseUrl}/${id}`, fieldsToUpdate).pipe(
+      catchError(handleError)
+    );
+  }
+  startRelease(id: number): Observable<CommonResp> {
+    return this.http.post<CommonResp>(`${this.planUrl}/startRelease?releaseId=${id}`,{}).pipe(
+      catchError(handleError)
+    );
+  }
+
+  completeRelease(id: number): Observable<CommonResp> {
+    return this.http.post<CommonResp>(`${this.planUrl}/completeRelease?releaseId=${id}`,{}).pipe(
       catchError(handleError)
     );
   }

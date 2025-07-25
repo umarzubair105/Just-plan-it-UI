@@ -116,7 +116,6 @@ export class ExecutedComponent implements OnInit {
   loadReleases(): void {
     this.planningService.getOldReleasesByProductId(this.productId).subscribe({
       next: (data) => {
-        console.log(data);
         this.releases = data;
       },
       error: (err) => (this.util.showErrorMessage(err)),
@@ -126,13 +125,18 @@ export class ExecutedComponent implements OnInit {
   expand(releaseDetail: ReleaseDetailBean): void {
     let releaseId = releaseDetail.release?.id;
     if (releaseId) {
-      this.planningService.getReleaseDetailByReleaseId(releaseId).subscribe({
-        next: (data) => {
-          releaseDetail.resourceCaps = data.resourceCaps;
-          releaseDetail.epics = data.epics;
-        },
-        error: (err) => (this.util.showErrorMessage(err)),
-      });
+      if (!releaseDetail.epics) {
+        this.planningService.getReleaseDetailByReleaseId(releaseId).subscribe({
+          next: (data) => {
+            releaseDetail.resourceCaps = data.resourceCaps;
+            releaseDetail.epics = data.epics;
+            releaseDetail.expanded = true;
+          },
+          error: (err) => (this.util.showErrorMessage(err)),
+        });
+      } else {
+        releaseDetail.expanded = true;
+      }
   }
   }
 

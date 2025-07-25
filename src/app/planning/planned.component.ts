@@ -130,7 +130,7 @@ export class PlannedComponent implements OnInit {
 
   startRelease(releaseDetail: ReleaseDetailBean) {
     if (releaseDetail.release) {
-      this.releaseService.updateSpecificFieldsPasses(releaseDetail.release.id, {status: ReleaseStatusEnum.STARTED}).subscribe({
+      this.releaseService.startRelease(releaseDetail.release.id).subscribe({
         next: (data) => {
           this.util.showSuccessMessage('Release is started to work upon.');
           this.releases = this.releases.filter(wh => wh.release?.id !== releaseDetail.release?.id);

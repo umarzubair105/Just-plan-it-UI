@@ -1,14 +1,14 @@
-Epic Status
+Epic Status open/closed/reopen , releaseepic table entry on start release
 Show dependentEpicCode, Related Epic Codes and status on Planning?planned
 Product/Project Epic Label changes
-
-On Product Page, ask to select all system roles with Part Of Product Management
-
+UI-left Bar
 
 
+
+
+Export in Excel Release plan
 Changes Release Dates manually
 
-UI-left Bar
 
 ------Estimate Pick run time
 

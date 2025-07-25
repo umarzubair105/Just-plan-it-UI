@@ -125,10 +125,10 @@ export class ExecutionComponent implements OnInit {
       error: (err) => (this.util.showErrorMessage(err)),
     });
   }
-  closeRelease(releaseDetail: ReleaseDetailBean) {
+  completeRelease(releaseDetail: ReleaseDetailBean) {
     console.log('Planning it:'+releaseDetail.release?.name);
     if (releaseDetail.release) {
-      this.releaseService.updateSpecificFieldsPasses(releaseDetail.release.id, {status: ReleaseStatusEnum.COMPLETED}).subscribe({
+      this.releaseService.completeRelease(releaseDetail.release.id).subscribe({
         next: (data) => {
           this.util.showSuccessMessage('Release is closed.');
           this.releases = this.releases.filter(wh => wh.release?.id !== releaseDetail.release?.id);

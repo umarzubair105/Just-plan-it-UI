@@ -155,7 +155,8 @@
           </div>
           <div class="col-md-4">
             <div class="card-body mb-0" *ngIf="epicBean.id>0">
-              Added By: {{ epicBean.createdByName }}
+              Status: <strong>{{ epicBean.status }}</strong>
+              <br/>Added By: {{ epicBean.createdByName }}
               <br/>Added At: {{ epicBean.createdDate ? (epicBean.createdDate | date: AppConstants.DATE_TIME_FORMAT) : '-' }}
               <br/>
               <br/>Release: <span *ngIf="epicBean.release">{{epicBean.release.name}}</span><span *ngIf="!epicBean.release">Yet to plan</span>
