@@ -1,5 +1,3 @@
-Epic Status open/closed/reopen , releaseepic table entry on start release
-Show dependentEpicCode, Related Epic Codes and status on Planning?planned
 Product/Project Epic Label changes
 UI-left Bar
 

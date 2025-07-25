@@ -1,7 +1,7 @@
 import {HttpErrorResponse} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {AppConstants} from '../configuration/app.constants';
-import {ReleaseStatusEnum} from '../models/planning';
+import {EpicLinkType, EpicStatusEnum, RelatedEpicDetailBean, ReleaseStatusEnum} from '../models/planning';
 import {ResourceRightBean} from '../models/basic';
 
 
@@ -115,4 +115,29 @@ export function releaseStatusClass(status: ReleaseStatusEnum | undefined): strin
   } else {
     return 'release-status-badge release-status-'+status.toLowerCase();
   }
+}
+
+export function relationData(epics:RelatedEpicDetailBean[] | null, linkType: EpicLinkType): string {
+  if (!epics || epics.length==0) {
+    return '';
+  }
+  var str = ''
+  if (linkType==EpicLinkType.RELATED_TO) {
+    str = "Related To: "
+  } else if (linkType==EpicLinkType.DEPEND_ON) {
+    str = "Depends On: "
+  }
+  epics.forEach(e=> {
+    var classStr = 'link-open';
+    var byDate = '';
+    if (e.status==EpicStatusEnum.RESOLVED) {
+      classStr = 'link-resolved';
+    } else if (e.releaseDate!=null) {
+      classStr = 'link-planned';
+      byDate = ` - Planned by ${e.releaseDate}`
+    }
+    str += `<span class="${classStr}" title="${e.title}">${e.code}:${e.status}${byDate}</span>&nbsp;&nbsp;`
+  });
+  return str;
+
 }

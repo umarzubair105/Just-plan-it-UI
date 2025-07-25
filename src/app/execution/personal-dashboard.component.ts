@@ -5,10 +5,11 @@ import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
 import {Utils} from '../utils/utils';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {
+  EntityType,
   Epic, EpicAssignmentBean, EpicAssignmentStatusEnum,
   EpicBean,
   EpicBeanCopyPasteUpdatedValues,
-  EpicEstimateBean,
+  EpicEstimateBean, EpicLinkType,
   Release,
   ReleaseDetailBean, ReleaseStatusEnum, TimeLogging
 } from '../models/planning';
@@ -28,9 +29,10 @@ import {ReleaseService} from '../services/release.service';
 import {DecimalToTimePipe} from '../pipes/decimal.to.time';
 import {EpicAssignmentService} from '../services/epic.assignment.service';
 import {TimeLoggingService} from '../services/time.logging.service';
-import {convertToMinutes, getLocalDate, isManager, releaseStatusClass} from '../utils/helper';
+import {convertToMinutes, getLocalDate, isManager, relationData, releaseStatusClass} from '../utils/helper';
 import {TruncateNumberPipe} from "../pipes/truncate.number";
 import {AuthService} from '../services/auth.service';
+import {EntityDetailComponent} from '../planning/entity-detail.component';
 @Component({
   selector: 'app-personal-dashboard',
   standalone: true,
@@ -121,6 +123,21 @@ export class PersonalDashboardComponent implements OnInit {
         this.roles.sort((a, b) => a.name.localeCompare(b.name));
       },
       error: (err) => (this.util.showErrorMessage(err)),
+    });
+  }
+
+  openDialogForEntityDetail(release: Release): void {
+    const dialogRef = this.dialog.open(EntityDetailComponent, {
+      width: '50%',
+      maxWidth: '90vw', // 90% of viewport width
+      height: '70%',
+      maxHeight: '80vh', // 80% of viewport height
+      disableClose: true,
+      data: { entityId: release.id, entityType: EntityType.RELEASE, entityName: release.name },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
     });
   }
   closeRelease(releaseDetail: ReleaseDetailBean) {
@@ -302,4 +319,6 @@ export class PersonalDashboardComponent implements OnInit {
   protected readonly EpicAssignmentStatusEnum = EpicAssignmentStatusEnum;
   protected readonly releaseStatusClass = releaseStatusClass;
     protected readonly isManager = isManager;
+    protected readonly relationData = relationData;
+    protected readonly EpicLinkType = EpicLinkType;
 }

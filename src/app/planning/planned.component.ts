@@ -5,12 +5,12 @@ import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
 import {Utils} from '../utils/utils';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {
-  Epic, EpicAssignmentBean,
-  EpicBean,
-  EpicBeanCopyPasteUpdatedValues,
-  EpicEstimateBean,
-  Release,
-  ReleaseDetailBean, ReleaseStatusEnum
+    Epic, EpicAssignmentBean,
+    EpicBean,
+    EpicBeanCopyPasteUpdatedValues,
+    EpicEstimateBean, EpicLinkType,
+    Release,
+    ReleaseDetailBean, ReleaseStatusEnum
 } from '../models/planning';
 import {EpicService} from '../services/epic.service';
 import {Priority, ResourceRightBean, Role, SubComponent} from '../models/basic';
@@ -25,7 +25,7 @@ import { MatDialog } from '@angular/material/dialog';
 import {EpicComponent} from './epic.component';
 import {PlanningDashboardService} from '../services/planning-dashboard.service';
 import {ReleaseService} from '../services/release.service';
-import {isManager, releaseStatusClass, transformToDhM} from '../utils/helper';
+import {isManager, relationData, releaseStatusClass, transformToDhM} from '../utils/helper';
 import {DecimalToTimePipe} from '../pipes/decimal.to.time';
 import {TruncateNumberPipe} from '../pipes/truncate.number';
 import {AuthService} from '../services/auth.service';
@@ -251,4 +251,6 @@ export class PlannedComponent implements OnInit {
   protected readonly EpicBean = EpicBean;
   protected readonly releaseStatusClass = releaseStatusClass;
     protected readonly isManager = isManager;
+    protected readonly relationData = relationData;
+    protected readonly EpicLinkType = EpicLinkType;
 }

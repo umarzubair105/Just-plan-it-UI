@@ -150,7 +150,7 @@ export class EpicComponent implements OnInit {
     }
     this.anythingChanged = true;
 
-    this.epicService.getByCompanyIdAndCode(this.util.getCompanyId(), epicLink.details).subscribe({
+    this.epicService.getByCompanyIdAndCode(this.util.getCompanyId(), epicLink.details.trim()).subscribe({
       next: (data) => {
         console.log("found:"+data._embedded.epics);
         if (data._embedded.epics.length==0) {

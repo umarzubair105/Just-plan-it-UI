@@ -55,7 +55,13 @@
                 >
 
                 <ngx-datatable-column name="Code" prop="code" [sortable]="true" [width]="80" [minWidth]="80" [maxWidth]="80"></ngx-datatable-column>
-                <ngx-datatable-column name="Title" prop="title"></ngx-datatable-column>
+                <ngx-datatable-column name="Title" prop="title">
+                  <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{row.title}}
+                    <div [innerHTML]="relationData(row.dependsOn, EpicLinkType.DEPEND_ON)" *ngIf="row.dependsOn && row.dependsOn.length>0"></div>
+                    <div [innerHTML]="relationData(row.relatedTo, EpicLinkType.RELATED_TO)" *ngIf="row.relatedTo && row.relatedTo.length>0"></div>
+                  </ng-template>
+                </ngx-datatable-column>
                 <ngx-datatable-column name="Priority" prop="priorityLevel" [sortable]="true" [width]="120" [minWidth]="120" [maxWidth]="120">
                   <ng-template let-row="row" ngx-datatable-cell-template>
                     {{row.priorityName}}
@@ -70,6 +76,8 @@
 
                   </ng-template>
                 </ngx-datatable-column>
+                <ngx-datatable-column name="Required By" prop="requiredBy" [maxWidth]="100"></ngx-datatable-column>
+                <ngx-datatable-column name="Value Gain" prop="valueGain" [maxWidth]="80"></ngx-datatable-column>
                 <ngx-datatable-column name="Assignment" [width]="300" [minWidth]="300" [maxWidth]="300">
                   <ng-template let-row="row" ngx-datatable-cell-template>
                     <div [innerHTML]="showAssignments(row.assignments)"></div>

@@ -89,6 +89,8 @@ export class EpicBean extends Epic {
   public release: Release | null = null;
   public estimates: EpicEstimateBean[] | null = null;
   public assignments: EpicAssignmentBean[] | null = null;
+  public dependsOn: RelatedEpicDetailBean[] | null = null;
+  public relatedTo: RelatedEpicDetailBean[] | null = null;
 }
 
 export class Release extends Basic{
@@ -150,7 +152,13 @@ export class ScheduleEpic {
   public epicId: number = 0;
   public releaseToAddIn: Release | null = null;
 }
-
+export class RelatedEpicDetailBean {
+  public id: number = 0;
+  public code: string | null = null;
+  public title: string | null = null;
+  public status: EpicStatusEnum | null = null;
+  public releaseDate: Date | null = null;
+}
 export class ReleaseDetailBean {
   public release: Release = new Release();
   public resourceCaps: ResourceCapInRelease[] = [];

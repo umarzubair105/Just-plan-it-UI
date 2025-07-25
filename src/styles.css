@@ -354,6 +354,23 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   color: #b71c1c;             /* dark red */
 }
 
+
+
+.link-planned {
+  background-color: #fff4e5;  /* soft orange */
+  color: #a15c00;             /* warm amber */
+}
+
+.link-resolved {
+  background-color: #e6f4ea;  /* light green */
+  color: #2d6a4f;             /* strong green */
+}
+
+.link-open {
+  background-color: #fdecea;  /* soft red */
+  color: #b71c1c;             /* dark red */
+}
+
 .time-bar-container {
   display: flex;
   height: 12px;

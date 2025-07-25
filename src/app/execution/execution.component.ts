@@ -5,13 +5,13 @@ import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
 import {Utils} from '../utils/utils';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {
-  EntityType,
-  Epic, EpicAssignmentBean, EpicAssignmentStatusEnum,
-  EpicBean,
-  EpicBeanCopyPasteUpdatedValues,
-  EpicEstimateBean,
-  Release,
-  ReleaseDetailBean, ReleaseStatusEnum, TimeLogging
+    EntityType,
+    Epic, EpicAssignmentBean, EpicAssignmentStatusEnum,
+    EpicBean,
+    EpicBeanCopyPasteUpdatedValues,
+    EpicEstimateBean, EpicLinkType,
+    Release,
+    ReleaseDetailBean, ReleaseStatusEnum, TimeLogging
 } from '../models/planning';
 import {EpicService} from '../services/epic.service';
 import {Priority, ResourceRightBean, Role, SubComponent} from '../models/basic';
@@ -29,7 +29,7 @@ import {ReleaseService} from '../services/release.service';
 import {DecimalToTimePipe} from '../pipes/decimal.to.time';
 import {EpicAssignmentService} from '../services/epic.assignment.service';
 import {TimeLoggingService} from '../services/time.logging.service';
-import {convertToMinutes, getLocalDate, isManager, releaseStatusClass} from '../utils/helper';
+import {convertToMinutes, getLocalDate, isManager, relationData, releaseStatusClass} from '../utils/helper';
 import {TruncateNumberPipe} from "../pipes/truncate.number";
 import {AuthService} from '../services/auth.service';
 import {EntityDetailComponent} from '../planning/entity-detail.component';
@@ -300,4 +300,6 @@ export class ExecutionComponent implements OnInit {
   protected readonly EpicAssignmentStatusEnum = EpicAssignmentStatusEnum;
   protected readonly releaseStatusClass = releaseStatusClass;
     protected readonly isManager = isManager;
+    protected readonly relationData = relationData;
+    protected readonly EpicLinkType = EpicLinkType;
 }
