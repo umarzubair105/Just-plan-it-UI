@@ -91,6 +91,9 @@ export enum LeaveStatus {
 export enum ResourceStatus {
   ACTIVE="ACTIVE", INACTIVE="INACTIVE"
 }
+export enum CompanyType {
+  IT_PRODUCT_BASE="IT_PRODUCT_BASE", IT_PROJECT_BASE="IT_PROJECT_BASE", OTHERS="OTHERS"
+}
 export enum LeaveType {
   SICK_LEAVE, CASUAL_LEAVE, ANNUAL_LEAVE, COMPENSATION_LEAVE,
   SHORT_LEAVE
@@ -129,6 +132,7 @@ export class ResourceRightBean {
   public leadId: number | null = null;
   public globalRoleId: number | null = null;
   public productRoleId: number | null = null;
+  public companyType: CompanyType | null = null;
 }
 
 export class AuthResponse {

@@ -1,7 +1,35 @@
 /* You can add global styles to this file, and also import other style files */
 
 html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
+  background-color: #f8f9fa;
+}
+
+.navbar {
+  background-color: #ffffff;
+  border-bottom: 1px solid #eaeaea;
+}
+
+:root {
+/*  --bs-primary: 121212; !* Your custom color *!*/
+}
+
+.bg-primary {
+/*  background-color: #121212 !important;*/
+}
+
+
+body.dark-mode {
+  background-color: #121212;
+  color: #e0e0e0;
+}
+.navbar.dark-mode {
+  background-color: #1f1f1f !important;
+}
+
+
+
 
 .form-label{margin-bottom:.1rem}
 
@@ -429,3 +457,6 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   padding: 0;
   display: block;
 }
+
+
+

@@ -28,8 +28,15 @@ export class TopBarComponent implements OnInit {
   search: string = '';
   epicSearch: Epic = new Epic();
   products: Product[] = [];
-  selectedProductId: number = 0
+  selectedProductId: number = 0;
+  selectedProduct: Product | undefined;
   rights  = new ResourceRightBean();
+
+  notificationCount = 3;
+  selectedLang = 'en';
+  isSyncing = false;
+  darkMode = false;
+  username = 'Umar';
   constructor(private authService: AuthService,
               private utils: Utils,
               private productService: ProductService,
@@ -52,6 +59,7 @@ export class TopBarComponent implements OnInit {
             this.rights = data;
             this.products = data.products;
             this.products.sort((a, b) => a.name.localeCompare(b.name));
+            this.selectedProduct = this.products.find(p=>p.id==this.selectedProductId);
           },
           error: (err) => {this.utils.showErrorMessage(err);},
         });
@@ -81,8 +89,17 @@ export class TopBarComponent implements OnInit {
   }
   onProductChange(productId: number) {
     console.log('Selected Product ID:', productId);
+    this.selectedProductId = productId;
+    this.selectedProduct = this.products.find(p=>p.id==this.selectedProductId);
     this.authService.setSelectedProductId(productId);
     this.router.navigate(['/home']);
+    // Add your logic here, e.g., fetch product details
+  }
+  addProduct() {
+    this.selectedProductId = 0;
+    this.selectedProduct = undefined;
+    this.authService.setSelectedProductId(0);
+    this.router.navigate(['/product']);
     // Add your logic here, e.g., fetch product details
   }
   openDialogForMyLeaves(): void {
@@ -125,7 +142,6 @@ export class TopBarComponent implements OnInit {
   }
   onSubmit():void {
     this.search = this.epicSearch.code;
-    alert('s:'+this.search);
     if (this.search  && this.search.trim()) {
       this.epicService.getEpicBeanByCompanyIdAndCode(this.utils.getCompanyId(), this.search.trim()).subscribe({
         next: (data) => {
@@ -156,4 +172,24 @@ export class TopBarComponent implements OnInit {
     protected readonly isGlobalHR = isGlobalHR;
     protected readonly isGlobalManager = isGlobalManager;
     protected readonly isManager = isManager;
+
+  switchLang(lang: string) {
+    this.selectedLang = lang;
+    // switch translation service if needed
+  }
+
+  openNotifications() {
+    // open notifications modal
+  }
+
+  openQuickAdd() {
+    // open quick task/project form
+  }
+
+  toggleDarkMode() {
+    this.darkMode = !this.darkMode;
+    document.body.classList.toggle('dark-mode', this.darkMode);
+  }
+
+
 }

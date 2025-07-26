@@ -1,4 +1,4 @@
-<div class="d-flex flex-column min-vh-100">
+<div class="d-flex flex-column min-vh-100  bg-light">
   <app-top-bar></app-top-bar>
   <router-outlet></router-outlet>
 
@@ -20,6 +20,11 @@
   </mat-sidenav-content>
 </mat-sidenav-container>-->
 </div>
+<!--<style>
+  .spacer {
+    flex: 1 1 auto;
+  }
+</style>-->
 <!--
   <app-top-bar></app-top-bar>
 <button (click)="toggleSidebar()" class="btn btn-info">Toggle Sidebar</button>
@@ -370,11 +375,7 @@ this.dialog.open(DialogExample);
   `
   })
 export class DialogExample {}-->
-<style>
-  .spacer {
-    flex: 1 1 auto;
-  }
-</style>
+
 
 <!--
 <app-section companyId=1 (outputEvent)="onEventEmit($event)"></app-section>

@@ -1,6 +1,6 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
-import {Router, RouterOutlet} from '@angular/router';
+import {Router, RouterLink, RouterOutlet} from '@angular/router';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {CompanyService} from '../services/company.service';
@@ -20,7 +20,7 @@ import {AuthResponse} from '../models/basic';
   standalone: true,
   imports: [FormsModule, CommonModule, HttpClientModule, ReactiveFormsModule,
     ShowErrorsDirective,
-    MatButtonModule, MatIcon, MatInputModule, MatFormFieldModule, RouterOutlet], // Include FormsModule here
+    MatButtonModule, MatIcon, MatInputModule, MatFormFieldModule, RouterOutlet, RouterLink], // Include FormsModule here
   templateUrl:'login.component.html',
 styleUrl:'common.css',
 })

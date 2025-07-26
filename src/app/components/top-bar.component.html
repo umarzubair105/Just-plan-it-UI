@@ -1,3 +1,407 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light px-3 shadow-sm">
+  <div class="container-fluid">
+
+    <a class="navbar-brand d-flex align-items-center" href="#">
+      <i class="bi bi-kanban me-2"></i> AutoPlan
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#topNav" aria-controls="topNav" aria-expanded="false"
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="topNav">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0" *ngIf="userName">
+        <li class="nav-item"><a class="nav-link" routerLink="/p-dashboard" *ngIf="rights.products.length>0"><i
+          class="bi bi-house-door me-1"></i>My Dashboard</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/upload-resource" *ngIf="isGlobalHR(this.rights)"><i
+          class="bi bi-upload me-1"></i>Upload Resources</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/mapping-roles-designation"
+                                *ngIf="isGlobalHR(this.rights)"><i class="bi bi-list-check me-1"></i>Role Mapping</a>
+        </li>
+        <li class="nav-item"><a class="nav-link" routerLink="/company-calendar"><i
+          class="bi bi-calendar-event me-1"></i>Calendar</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/resource"
+                                *ngIf="isGlobalHR(this.rights) || rights.teamResourceIds.length>0"><i
+          class="bi bi-people me-1"></i>Resources</a></li>
+
+        <li class="nav-item dropdown" *ngIf="isGlobalHR(this.rights) || isGlobalManager(this.rights)">
+          <a class="nav-link dropdown-toggle" href="#" id="userMenu3" role="button" data-bs-toggle="dropdown"
+             aria-expanded="false">
+            <i class="bi bi-gear me-1"></i>Metadata
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" routerLink="/priority">Priorities</a></li>
+            <li><a class="dropdown-item" routerLink="/section">Components</a></li>
+            <li><a class="dropdown-item" routerLink="/role">Roles</a></li>
+            <li><a class="dropdown-item" routerLink="/designation">Designation</a></li>
+          </ul>
+        </li>
+
+        <li class="nav-item"><a class="nav-link" routerLink="/reports" *ngIf="rights.products.length>100"><i
+          class="bi bi-graph-up me-1"></i>Reports</a></li>
+
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="userMenu1" role="button" data-bs-toggle="dropdown"
+             aria-expanded="false">
+            <i class="bi bi-folder2-open me-1"></i>Products
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li *ngFor="let p of products;let i = index"><a class="dropdown-item"
+                                                            (click)="onProductChange(p.id)">{{ p.name }}</a></li>
+            <li *ngIf="isGlobalManager(this.rights)">
+              <hr class="dropdown-divider">
+            </li>
+            <li *ngIf="isGlobalManager(this.rights)"><a class="dropdown-item text-bg-secondary"
+                                                        (click)="addProduct()"><i class="bi bi-plus-circle"></i> Add
+              product</a></li>
+            <li *ngIf="isGlobalManager(this.rights)"><a class="dropdown-item"
+                                                        routerLink="/edit-product"><i class="bi bi-list"></i>
+              Products</a></li>
+          </ul>
+        </li>
+
+      </ul>
+
+      <ul class="navbar-nav ms-auto flex-wrap align-items-center gap-2">
+        <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+        <li class="nav-item" *ngIf="!userName"><a class="nav-link" href="#">About Us</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/contact-us">Contact Us</a></li>
+      </ul>
+      <form class="d-flex me-3" role="search" #useForm="ngForm" (ngSubmit)="onSubmit()" *ngIf="userName">
+        <input class="form-control form-control-sm me-2" type="search" placeholder="Search deliverables..."
+               aria-label="Search">
+        <button class="btn btn-outline-dark btn-sm" type="submit"><i class="bi bi-search"></i></button>
+      </form>
+
+
+      <ul class="navbar-nav">
+        <li class="nav-item"><a class="nav-link" routerLink="/login" *ngIf="!userName"><i
+          class="bi bi-box-arrow-in-right me-1"></i>Login</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/company" *ngIf="!userName"><i
+          class="bi bi-box-arrow-in-right me-1"></i>Company Sign Up</a></li>
+
+        <li class="nav-item dropdown" *ngIf="userName">
+          <a class="nav-link dropdown-toggle" href="#" id="userMenu" role="button" data-bs-toggle="dropdown"
+             aria-expanded="false">
+            <i class="bi bi-person-circle me-1"></i> {{ userName }}
+          </a>
+          <ul class="dropdown-menu dropdown-menu-end">
+            <li><a class="dropdown-item" routerLink="/profile"><i class="bi bi-person"></i> Profile</a></li>
+            <li><a class="dropdown-item" (click)="openDialogForMyLeaves()"><i class="bi bi-gear"></i> Leaves</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item text-danger" (click)="logout()"><i class="bi bi-box-arrow-right"></i> Logout</a>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+  </div>
+
+
+</nav>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light px-3 shadow-sm" *ngIf="userName">
+  <div class="container-fluid">
+
+    <a class="navbar-brand d-flex align-items-center" href="#" *ngIf="selectedProduct">
+      <i class="bi bi-kanban me-2" ></i> {{ selectedProduct.name }}
+    </a>
+    <a class="navbar-brand d-flex align-items-center" href="#" *ngIf="!selectedProduct">
+      <i class="bi bi-kanban me-2" ></i> Select a Product
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#topNav" aria-controls="topNav" aria-expanded="false"
+            aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="topNav4">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-center"  *ngIf="userName">
+
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/execution"
+             [class.disabled]="!(selectedProductId > 0)"
+             [style.pointer-events]="selectedProductId > 0 ? 'auto' : 'none'"
+             [attr.aria-disabled]="!(selectedProductId > 0)"><i class="bi bi-house-door me-1"></i>Dashboard</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/planning"
+             [class.disabled]="!(selectedProductId > 0)"
+             [style.pointer-events]="selectedProductId > 0 ? 'auto' : 'none'"
+             [attr.aria-disabled]="!(selectedProductId > 0)"><i class="bi bi-clipboard-data me-1"></i>Planning</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/planned"
+             [class.disabled]="!(selectedProductId > 0)"
+             [style.pointer-events]="selectedProductId > 0 ? 'auto' : 'none'"
+             [attr.aria-disabled]="!(selectedProductId > 0)"><i class="bi bi-box me-1"></i>Planned</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/executed"
+             [class.disabled]="!(selectedProductId > 0)"
+             [style.pointer-events]="selectedProductId > 0 ? 'auto' : 'none'"
+             [attr.aria-disabled]="!(selectedProductId > 0)"><i class="bi bi-book me-1"></i>History</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/upload-epic"
+             [class.disabled]="!(selectedProductId > 0)"
+             [style.pointer-events]="selectedProductId > 0 ? 'auto' : 'none'"
+             [attr.aria-disabled]="!(selectedProductId > 0)"><i class="bi bi-upload me-1"></i>Upload Deliverables</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/team-resource"
+             [class.disabled]="!(selectedProductId > 0 && isManager(this.rights))"
+             [style.pointer-events]="selectedProductId > 0 && isManager(this.rights) ? 'auto' : 'none'"
+             [attr.aria-disabled]="!(selectedProductId > 0 && isManager(this.rights))"><i class="bi bi-puzzle me-1"></i>Define Team</a>
+        </li>
+        <li class="nav-item" *ngIf="isManager(this.rights)">
+          <a class="nav-link" routerLink="/product-resource"
+             [class.disabled]="!(selectedProductId > 0)"
+             [style.pointer-events]="selectedProductId > 0 ? 'auto' : 'none'"
+             [attr.aria-disabled]="!(selectedProductId > 0)"><i class="bi bi-hourglass-split me-1"></i>Time Allocation</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" (click)="openDialogForEntityDetail()"
+             [class.disabled]="!(selectedProductId > 0)"
+             [style.pointer-events]="selectedProductId > 0 ? 'auto' : 'none'"
+             [attr.aria-disabled]="!(selectedProductId > 0)"
+          >
+            <i class="bi bi-paperclip me-1"></i>Product Docs</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<!--<nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm px-3">
+  <div class="container-fluid">
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarContent" aria-controls="navbarContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarContent">
+      <div class="d-flex flex-column w-100">
+
+
+        <ul class="navbar-nav flex-wrap mb-2 gap-2 me-auto ms-auto flex-wrap align-items-center">
+          <li class="nav-item" *ngIf="companyName">
+            <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">{{ companyName }}</a>
+          </li>
+
+          <li class="nav-item" *ngIf="userName && isGlobalHR(this.rights)">
+            <a class="nav-link" href="upload-resource#">Upload Resources</a>
+          </li>
+          <li class="nav-item" *ngIf="userName && isGlobalHR(this.rights)">
+            <a class="nav-link" href="mapping-roles-designation#">Role Mapping</a>
+          </li>
+          <li class="nav-item" *ngIf="userName">
+            <a class="nav-link" href="company-calendar#">Calendar</a>
+          </li>
+          <li class="nav-item" *ngIf="userName">
+            <a class="nav-link" href="resource#">Resource</a>
+          </li>
+          <li class="nav-item" *ngIf="userName">
+            <a class="nav-link" href="designation#">Designation</a>
+          </li>
+          <li class="nav-item" *ngIf="userName">
+            <a class="nav-link" href="role#">Role</a>
+          </li>
+          <li class="nav-item" *ngIf="userName && isGlobalManager(this.rights)">
+            <a class="nav-link" routerLink="/product">Add new Product</a>
+          </li>
+          <li class="nav-item d-flex align-items-center" *ngIf="userName">
+            <label class="me-1 small fw-bold" for="productSelect">Product:</label>
+            <select class="form-select form-select-sm"
+                    id="productSelect"
+                    [(ngModel)]="selectedProductId"
+                    (ngModelChange)="onProductChange($event)">
+              <option value="0" disabled>Select a product</option>
+              <option *ngFor="let p of products" [value]="p.id">{{ p.name }}</option>
+            </select>
+          </li>
+        </ul>
+
+
+        <ul class="navbar-nav flex-wrap gap-2 me-auto">
+          <li class="nav-item" *ngIf="selectedProductId > 0">
+            <a class="nav-link" routerLink="/execution">Dashboard</a>
+          </li>
+          <li class="nav-item" *ngIf="selectedProductId > 0">
+            <a class="nav-link" routerLink="/planning">Planning</a>
+          </li>
+          <li class="nav-item" *ngIf="selectedProductId > 0">
+            <a class="nav-link" routerLink="/planned">Planned</a>
+          </li>
+          <li class="nav-item" *ngIf="selectedProductId > 0">
+            <a class="nav-link" routerLink="/executed">History</a>
+          </li>
+          <li class="nav-item" *ngIf="selectedProductId > 0">
+            <a class="nav-link" routerLink="/planned-release">Planned 2</a>
+          </li>
+
+          <li class="nav-item" *ngIf="selectedProductId > 0">
+            <a class="nav-link" routerLink="/upload-epic">Upload Deliverables</a>
+          </li>
+          <li class="nav-item" *ngIf="selectedProductId > 0 && isManager(this.rights)">
+            <a class="nav-link" routerLink="/team-resource">Define Team</a>
+          </li>
+          <li class="nav-item" *ngIf="selectedProductId > 0 && isManager(this.rights)">
+            <a class="nav-link" routerLink="/product-resource">Time Allocation</a>
+          </li>
+          <li class="nav-item" *ngIf="selectedProductId > 0 && isManager(this.rights)">
+            <a class="nav-link" routerLink="/priority">Define Priorities</a>
+          </li>
+          <li class="nav-item" *ngIf="selectedProductId > 0">
+            <a class="nav-link" routerLink="/section">Define Components</a>
+          </li>
+          <li class="nav-item" *ngIf="selectedProductId > 0 && isManager(this.rights)">
+            <a class="nav-link" routerLink="/edit-product">Products</a>
+          </li>
+
+          <li class="nav-item" *ngIf="userName">
+            <a class="nav-link" routerLink="/p-dashboard">My Dashboard</a>
+          </li>
+          <li class="nav-item" *ngIf="userName">
+            <a class="nav-link" (click)="openDialogForMyLeaves()" style="cursor: pointer;">My Leaves</a>
+          </li>
+          <li class="nav-item" *ngIf="userName && selectedProductId>0">
+            <a class="nav-link" (click)="openDialogForEntityDetail()" style="cursor: pointer;">Product Docs</a>
+          </li>
+        </ul>
+
+
+        <ul class="navbar-nav ms-auto flex-wrap align-items-center gap-2">
+          <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
+          <li class="nav-item" *ngIf="!userName"><a class="nav-link" href="#">About Us</a></li>
+          <li class="nav-item"><a class="nav-link" routerLink="/contact-us">Contact Us</a></li>
+
+          <li class="nav-item me-3" *ngIf="userName">
+            <form #useForm1="ngForm" class="d-flex" role="search" (ngSubmit)="onSubmit()">
+              <input class="form-control form-control-sm me-1" type="search" placeholder="Search"
+                     name="search" [(ngModel)]="epicSearch.code" #search="ngModel">
+              <button class="btn btn-outline-primary btn-sm" type="submit">Search</button>
+            </form>
+          </li>
+
+          <li class="nav-item" *ngIf="userName">
+            <span class="nav-link text-dark">Hi, {{ userName }}</span>
+          </li>
+          <li class="nav-item" *ngIf="userName">
+            <button class="btn btn-sm btn-outline-danger ms-2" (click)="logout()">Logout</button>
+          </li>
+          <li class="nav-item" *ngIf="!userName">
+            <a class="nav-link" href="login#">
+              <i class="bi bi-box-arrow-in-right me-1"></i> Login
+            </a>
+          </li>
+          <li class="nav-item" *ngIf="!userName">
+            <a class="nav-link" href="company#">Company Sign Up</a>
+          </li>
+        </ul>
+
+      </div>
+    </div>
+  </div>
+</nav>-->
+<!--
+
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
+  <a class="navbar-brand" routerLink="/">📁 ProjectManager</a>
+
+  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" id="navbarContent">
+    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+      &lt;!&ndash; Common navigation &ndash;&gt;
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/dashboard">Dashboard</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" routerLink="/projects">Projects</a>
+      </li>
+
+      &lt;!&ndash; Product-specific navigation &ndash;&gt;
+      <ng-container *ngIf="selectedProductId>0">
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/product/overview">Overview</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/product/metadata">Metadata</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/product/deliverables">Deliverables</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" routerLink="/product/settings">Settings</a>
+        </li>
+      </ng-container>
+    </ul>
+
+
+    <ul class="navbar-nav d-flex align-items-center">
+      <li class="nav-item me-3">
+        <a class="nav-link position-relative" href="#" (click)="openNotifications()">
+          <i class="bi bi-bell"></i>
+          <span *ngIf="notificationCount > 0" class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+            {{ notificationCount }}
+          </span>
+        </a>
+      </li>
+
+      <li class="nav-item dropdown me-3">
+        <a class="nav-link dropdown-toggle" href="#" id="langDropdown" data-bs-toggle="dropdown">
+          <i class="bi bi-translate"></i> {{ selectedLang.toUpperCase() }}
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="langDropdown">
+          <li><a class="dropdown-item" (click)="switchLang('en')">English</a></li>
+          <li><a class="dropdown-item" (click)="switchLang('ar')">Arabic</a></li>
+        </ul>
+      </li>
+
+      <li class="nav-item me-3">
+        <button class="btn btn-sm btn-primary" (click)="openQuickAdd()">
+          <i class="bi bi-plus-circle me-1"></i> Quick Add
+        </button>
+      </li>
+
+      <li class="nav-item me-3" *ngIf="isSyncing">
+        <div class="spinner-border spinner-border-sm text-info" role="status">
+          <span class="visually-hidden">Syncing...</span>
+        </div>
+      </li>
+
+      <li class="nav-item me-3">
+        <button class="btn btn-sm btn-outline-light" (click)="toggleDarkMode()">
+          <i class="bi" [ngClass]="darkMode ? 'bi-moon-fill' : 'bi-brightness-high'"></i>
+        </button>
+      </li>
+
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="userDropdown" data-bs-toggle="dropdown">
+          <i class="bi bi-person-circle me-1"></i> {{ username }}
+        </a>
+        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+          <li><a class="dropdown-item" routerLink="/profile">Profile</a></li>
+          <li><hr class="dropdown-divider" /></li>
+          <li><a class="dropdown-item" (click)="logout()">Logout</a></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</nav>
+
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light shadow-sm px-3">
 
   <div class="container-fluid">
@@ -10,15 +414,11 @@
     </button>
 
     <div class="collapse navbar-collapse" id="navbarContent">
-      <!-- Left-side nav -->
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item" *ngIf="companyName">
           <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">{{ companyName }}</a>
         </li>
 
-<!--
-        <a class="nav-link" routerLink="/home" routerLinkActive="active">Home</a>
--->
         <li class="nav-item dropdown"  *ngIf="userName">
           <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown"
              role="button" data-bs-toggle="dropdown" aria-expanded="false">
@@ -89,16 +489,8 @@
           <a class="nav-link" (click)="openDialogForEntityDetail()" style="cursor: pointer;">Product Docs</a>
         </li>
 
-<!--        <li class="nav-item" *ngIf="companyName">
-          Company Name
-          <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">{{ companyName }}</a>
-        </li>-->
       </ul>
-      <!-- Centered company name -->
-  <!--    <span *ngIf="companyName" class="position-absolute top-50 start-50 translate-middle text-muted fw-semibold">
-          {{ companyName }}
-       </span>-->
-      <!-- Right-side user info and search -->
+
       <ul class="navbar-nav mb-2 mb-lg-0 d-flex align-items-center">
         <li class="nav-item"><a class="nav-link" href="#" >Home</a></li>
         <li class="nav-item"><a class="nav-link" href="#" *ngIf="!userName">About Us</a></li>
@@ -132,5 +524,11 @@
     </div>
   </div>
 </nav>
+
+
+-->
+
+
+
 
 
