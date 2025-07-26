@@ -1,7 +1,6 @@
 Product/Project Epic Label changes
-UI-left Bar
 Add Due date of epicAssignment
-
+Add Role/Priority
 
 
 Export in Excel Release plan

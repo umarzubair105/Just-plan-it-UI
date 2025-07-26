@@ -1,0 +1,154 @@
+<div class="container-lg mt-4">
+  <div class="row">
+    <div class="col-md-8 offset-md-2">
+
+
+      <!-- Main Form Card -->
+      <div class="card shadow-lg">
+        <div class="card-header bg-primary text-white text-center">
+          <h2 class="h4 mb-0">My profile</h2>
+        </div>
+        <div class="card-body">
+          <form  #resourceForm="ngForm" >
+            <div class="mb-3">
+              <label for="nameR" class="form-label">Name <span class="text-danger">*</span></label>
+              <input type="text" id="nameR" name="name" class="form-control" required
+                     placeholder="Resource name"
+                     [(ngModel)]="resource.name" #name="ngModel"
+                     [ngClass]="{ 'is-invalid': name.invalid && (name.dirty || name.touched) }"
+                     [showErrors]="{ required: 'Name is required' }" />
+            </div>
+
+            <div class="mb-3">
+              <label for="emailR" class="form-label">Email <span class="text-danger">*</span></label>
+              <input type="email" id="emailR" name="email" class="form-control" required
+                     autocomplete="email" placeholder="you@example.com" email
+                     [readOnly]="!isGlobalHR(this.rights)"
+                     [(ngModel)]="resource.email" #email="ngModel"
+                     [ngClass]="{ 'is-invalid': email.invalid && (email.dirty || email.touched) }"
+                     [showErrors]="{ required: 'Email is required', email: 'Invalid email' }" />
+            </div>
+            <div class="mb-3">
+              <label for="mobileNumberR" class="form-label">Mobile Number <span class="text-danger">*</span></label>
+              <input type="tel" id="mobileNumberR" name="mobileNumber" class="form-control" required
+                     placeholder="+1 000-000-0000"
+
+                     [(ngModel)]="resource.mobileNumber" #mobileNumber="ngModel"
+                     [ngClass]="{ 'is-invalid': mobileNumber.invalid && (mobileNumber.dirty || mobileNumber.touched) }"
+                     [showErrors]="{ required: 'Mobile Number is required' }" />
+            </div>
+            <div class="mb-3">
+              <label for="dateOfBirthR" class="form-label">Date of Birth</label>
+              <input
+                type="date"
+                id="dateOfBirthR"
+                class="form-control"
+                name="dateOfBirth"
+                placeholder="Date of Birth"
+
+                [(ngModel)]="resource.dateOfBirth" #dateOfBirthDate="ngModel"
+              />
+            </div>
+            <div class="mb-3">
+              <label for="leadResourceId" class="form-label">Team Leader</label>
+              <select name="leadResourceId" id="leadResourceId"  [(ngModel)]="resource.leadResourceId" class="form-control"
+                      [disabled]="!isGlobalHR(this.rights)"
+
+                      #leadResourceId="ngModel"
+                      [ngClass]="{ 'is-invalid': leadResourceId.invalid && (leadResourceId.dirty || leadResourceId.touched) }"
+                      [showErrors]="{ required: 'Team Leader is required' }">
+                <option *ngFor="let scope of leads" [value]="scope.id">
+                  {{ scope.name }}
+                </option>
+              </select>
+            </div>
+            <div class="mb-3">
+              <input type="checkbox"
+                     name="lead"
+                     id="lead"
+                     [(ngModel)]="resource.lead"
+                     [readOnly]="!isGlobalHR(this.rights)"
+
+                     #lead="ngModel"
+                     class="form-check-input"
+                     [ngClass]="{ 'is-invalid': lead.invalid && (lead.dirty || lead.touched) }">
+              <label for="lead" class="form-label">Leading a team</label>
+              <div *ngIf="lead.invalid && (lead.dirty || lead.touched)" class="invalid-feedback">
+                It is required
+              </div>
+            </div>
+            <div class="mb-3">
+              <label for="designationId" class="form-label">Designation <span class="text-danger">*</span></label>
+              <select name="designationId" id="designationId"  [(ngModel)]="resource.designationId" class="form-control" required
+                      [disabled]="!isGlobalHR(this.rights)"
+
+                      #designationId="ngModel"
+                      [ngClass]="{ 'is-invalid': designationId.invalid && (designationId.dirty || designationId.touched) }"
+                      [showErrors]="{ required: 'Designation is required' }">
+                <option *ngFor="let scope of designations" [value]="scope.id">
+                  {{ scope.name }}
+                </option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="roleId" class="form-label">System Role <span class="text-danger">*</span></label>
+              <select name="roleId" id="roleId"  [(ngModel)]="resource.roleId" class="form-control" required
+                      [disabled]="!isGlobalHR(this.rights)"
+
+                      #roleId="ngModel"
+                      [ngClass]="{ 'is-invalid': roleId.invalid && (roleId.dirty || roleId.touched) }"
+                      [showErrors]="{ required: 'Role is required' }">
+                <option *ngFor="let scope of roles" [value]="scope.id">
+                  {{ scope.name }}
+                </option>
+              </select>
+            </div>
+
+
+
+
+            <div class="mb-3">
+              <label class="form-label">Status<span class="text-danger ms-1">*</span></label>
+              <select name="status"  [(ngModel)]="resource.status" class="form-control" required
+                      [disabled]="!isGlobalHR(this.rights)"
+
+                      #status="ngModel"
+                      [ngClass]="{ 'is-invalid': status.invalid && (status.dirty || status.touched) }"
+                      [showErrors]="{ required: 'Type is required' }">
+                <option *ngFor="let scope of statuses" [value]="scope.viewValue">
+                  {{ scope.value }}
+                </option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="lastWorkingDate" class="form-label">Last Working Date</label>
+              <input
+                type="date"
+                [readOnly]="!isGlobalHR(this.rights)"
+
+                id="lastWorkingDate"
+                class="form-control"
+                name="lastWorkingDate"
+                placeholder="Last Working Date"
+                [(ngModel)]="resource.lastWorkingDate" #lastWorkingDate="ngModel"
+              />
+            </div>
+          </form>
+        </div>
+        <div class="text-center mb-2 d-flex justify-content-center gap-2">
+          <button class="btn btn-primary w-20" (click)="update()" [disabled]="resourceForm.invalid" *ngIf="resource.id>0 && isGlobalHR(this.rights)">Save</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+
+</div>
+
+
+
+
+

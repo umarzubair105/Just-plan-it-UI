@@ -17,9 +17,6 @@
           class="bi bi-house-door me-1"></i>My Dashboard</a></li>
         <li class="nav-item"><a class="nav-link" routerLink="/upload-resource" *ngIf="isGlobalHR(this.rights)"><i
           class="bi bi-upload me-1"></i>Upload Resources</a></li>
-        <li class="nav-item"><a class="nav-link" routerLink="/mapping-roles-designation"
-                                *ngIf="isGlobalHR(this.rights)"><i class="bi bi-list-check me-1"></i>Role Mapping</a>
-        </li>
         <li class="nav-item"><a class="nav-link" routerLink="/company-calendar"><i
           class="bi bi-calendar-event me-1"></i>Calendar</a></li>
         <li class="nav-item"><a class="nav-link" routerLink="/resource"
@@ -36,6 +33,7 @@
             <li><a class="dropdown-item" routerLink="/section">Components</a></li>
             <li><a class="dropdown-item" routerLink="/role">Roles</a></li>
             <li><a class="dropdown-item" routerLink="/designation">Designation</a></li>
+            <li><a class="dropdown-item" routerLink="/mapping-roles-designation">Role Mapping</a></li>
           </ul>
         </li>
 
@@ -64,10 +62,9 @@
 
       </ul>
 
-      <ul class="navbar-nav ms-auto flex-wrap align-items-center gap-2">
-        <li class="nav-item"><a class="nav-link" href="#">Home</a></li>
-        <li class="nav-item" *ngIf="!userName"><a class="nav-link" href="#">About Us</a></li>
-        <li class="nav-item"><a class="nav-link" routerLink="/contact-us">Contact Us</a></li>
+      <ul class="navbar-nav ms-auto flex-wrap align-items-center gap-0">
+        <li class="nav-item"><a class="nav-link" href="#"><i class="bi 	bi-house me-1"></i>Home</a></li>
+        <li class="nav-item"><a class="nav-link" routerLink="/contact-us"><i class="bi bi-envelope me-1"></i>Contact Us</a></li>
       </ul>
       <form class="d-flex me-3" role="search" #useForm="ngForm" (ngSubmit)="onSubmit()" *ngIf="userName">
         <input class="form-control form-control-sm me-2" type="search" placeholder="Search deliverables..."
@@ -106,29 +103,27 @@
 </nav>
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light px-3 shadow-sm" *ngIf="userName">
-  <div class="container-fluid">
+  <div class="container-fluid d-flex justify-content-center align-items-center">
 
-    <a class="navbar-brand d-flex align-items-center" href="#" *ngIf="selectedProduct">
-      <i class="bi bi-kanban me-2" ></i> {{ selectedProduct.name }}
-    </a>
-    <a class="navbar-brand d-flex align-items-center" href="#" *ngIf="!selectedProduct">
-      <i class="bi bi-kanban me-2" ></i> Select a Product
-    </a>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
-            data-bs-target="#topNav" aria-controls="topNav" aria-expanded="false"
-            aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
 
-    <div class="collapse navbar-collapse" id="topNav4">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0 align-items-center"  *ngIf="userName">
 
+
+    <div id="topNav4">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0 d-flex flex-wrap justify-content-center align-items-center"  *ngIf="userName">
+        <li class="nav-item">
+          <a class="nav-link" *ngIf="selectedProduct">
+            <i class="bi bi-star-fill me-1" ></i>{{ selectedProduct.name }}
+          </a>
+          <a class="nav-link" *ngIf="!selectedProduct">
+            <i class="bi me-1" ></i>Select a Product
+          </a>
+        </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="/execution"
              [class.disabled]="!(selectedProductId > 0)"
              [style.pointer-events]="selectedProductId > 0 ? 'auto' : 'none'"
-             [attr.aria-disabled]="!(selectedProductId > 0)"><i class="bi bi-house-door me-1"></i>Dashboard</a>
+             [attr.aria-disabled]="!(selectedProductId > 0)"><i class="bi bi-kanban me-1"></i>Dashboard</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" routerLink="/planning"

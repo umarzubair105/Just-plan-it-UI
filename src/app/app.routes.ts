@@ -79,6 +79,9 @@ export const routes: Routes = [
   { path: 'role', loadComponent: ()=>import(
       './components/role.component').then((m)=>m.RoleComponent),
     canActivate: [AuthGuard]},
+  { path: 'profile', loadComponent: ()=>import(
+      './components/profile.component').then((m)=>m.ProfileComponent),
+    canActivate: [AuthGuard]},
   { path: 'contact-us', loadComponent: ()=>import(
       './components/contactus.component').then((m)=>m.ContactUsComponent)},
   { path: 'home', redirectTo: '' },  // Catch-all route (redirect to home for invalid URLs)
