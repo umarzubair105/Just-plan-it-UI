@@ -29,7 +29,14 @@ import {ReleaseService} from '../services/release.service';
 import {DecimalToTimePipe} from '../pipes/decimal.to.time';
 import {EpicAssignmentService} from '../services/epic.assignment.service';
 import {TimeLoggingService} from '../services/time.logging.service';
-import {convertToMinutes, getLocalDate, isManager, relationData, releaseStatusClass} from '../utils/helper';
+import {
+  convertToMinutes,
+  getLocalDate,
+  isManager,
+  messageChange,
+  relationData,
+  releaseStatusClass
+} from '../utils/helper';
 import {TruncateNumberPipe} from "../pipes/truncate.number";
 import {AuthService} from '../services/auth.service';
 import {EntityDetailComponent} from '../planning/entity-detail.component';
@@ -302,4 +309,5 @@ export class ExecutionComponent implements OnInit {
     protected readonly isManager = isManager;
     protected readonly relationData = relationData;
     protected readonly EpicLinkType = EpicLinkType;
+  protected readonly messageChange = messageChange;
 }

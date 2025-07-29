@@ -1,7 +1,7 @@
 import {inject, Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {AppConstants} from '../configuration/app.constants';
-import {ResourceRightBean} from '../models/basic';
+import {AuthResponse, ResourceRightBean} from '../models/basic';
 import {catchError} from 'rxjs/operators';
 import {HttpClient} from '@angular/common/http';
 import {handleError} from '../utils/helper';
@@ -38,14 +38,15 @@ export class AuthService {
     );
   }
   // Call this method after user logs in
-  login(token: string) {
-    this.saveToken(token);
-    var decodedT = this.decodeToken(token);
+  login(resp: AuthResponse) {
+    this.saveToken(resp.token);
+    var decodedT = this.decodeToken(resp.token);
     var userName = decodedT.name;
     localStorage.setItem('loggedUser', userName);
     localStorage.setItem('userId', decodedT.id);
     localStorage.setItem('companyId', decodedT.companyId);
     localStorage.setItem('companyName', decodedT.companyName);
+    localStorage.setItem('companyType', resp.details.company.type);
     localStorage.setItem('email', decodedT.email);
     console.log('AuthService login:'+userName);
     this.userNameSubject.next(userName);
@@ -58,6 +59,7 @@ export class AuthService {
     localStorage.removeItem('userId');
     localStorage.removeItem('companyId');
     localStorage.removeItem('companyName');
+    localStorage.removeItem('companyType');
     localStorage.removeItem('email');
     localStorage.removeItem('productId');
     sessionStorage.removeItem('wizard');
@@ -79,6 +81,12 @@ export class AuthService {
       return Number(localStorage.getItem('companyId'));
     else
       return 0;
+  }
+  getCompanyType(): string | null {
+    if (localStorage.getItem('companyType'))
+      return localStorage.getItem('companyType');
+    else
+      return '';
   }
   getEmail(): string | null {
     return localStorage.getItem('email');

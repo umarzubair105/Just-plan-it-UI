@@ -5,9 +5,9 @@
       <!-- Intro Card -->
       <div class="card shadow-sm mb-3">
         <div class="card-body">
-          <h5 class="card-title">Product</h5>
+          <h5 class="card-title">{{ messageChange('Product') }}</h5>
           <p class="card-text">
-            Define the product which your company want to deliver.
+            Define the {{ messageChange('product') }} which your company want to deliver.
           </p>
         </div>
       </div>
@@ -15,13 +15,13 @@
       <!-- Main Form Card -->
       <div class="card shadow-lg">
         <div class="card-header bg-primary text-white text-center">
-          <h2 class="h4 mb-0">Products</h2>
+          <h2 class="h4 mb-0">{{ messageChange('Products') }}</h2>
         </div>
 
         <div class="">
           <div class="card-body">
             <div class="d-flex align-items-center">
-              <h5 class="mb-0 me-2">Products</h5>
+              <h5 class="mb-0 me-2">{{ messageChange('Products') }}</h5>
 
               <a
                 class="btn btn-sm btn-outline-primary btn-tight-custom"
@@ -83,7 +83,7 @@
       <div class="modal-dialog">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Update Product</h5>
+            <h5 class="modal-title">Update {{messageChange('Product')}}</h5>
             <button type="button" class="btn-close" (click)="closeModal()"></button>
           </div>
           <div class="modal-body">
@@ -91,7 +91,7 @@
               <div class="mb-3">
                 <label for="nameR" class="form-label">Name <span class="text-danger">*</span></label>
                 <input type="text" id="nameR" name="name" class="form-control" required
-                       placeholder="Product name"
+                       placeholder="Name"
                        [(ngModel)]="model.name" #name="ngModel"
                        [ngClass]="{ 'is-invalid': name.invalid && (name.dirty || name.touched) }"
                        [showErrors]="{ required: 'Name is required' }" />
@@ -100,7 +100,7 @@
             <div class="mb-3">
               <label for="codeR" class="form-label">Code <span class="text-danger">*</span></label>
               <input type="text" id="codeR" name="code" class="form-control" required
-                     placeholder="Product Code" readonly
+                     placeholder="Code" readonly
                      [(ngModel)]="model.code" #code="ngModel"
                      [ngClass]="{ 'is-invalid': code.invalid && (code.dirty || code.touched) }"
                      [showErrors]="{ required: 'Code is required' }" />

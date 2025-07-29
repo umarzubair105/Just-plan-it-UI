@@ -44,7 +44,7 @@ export class LoginComponent {
       console.log('Form Data:', this.myForm.value);
       this.companyService.login(this.myForm.value)
         .subscribe((resp: AuthResponse) => {
-          this.authService.login(resp.token);
+          this.authService.login(resp);
             if (resp.details && resp.details.route) {
               this.router.navigate([resp.details.route]); // Redirect to a secure page
             } else {

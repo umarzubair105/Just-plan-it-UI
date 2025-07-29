@@ -12,8 +12,9 @@ import {EntityType, Epic, EpicBeanCopyPasteUpdatedValues, EpicLink, Product, Rel
 import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import {EpicService} from '../services/epic.service';
 import {EpicComponent} from '../planning/epic.component';
-import {isGlobalHR, isGlobalManager, isManager} from "../utils/helper";
+import {isGlobalHR, isGlobalManager, isManager, messageChange} from "../utils/helper";
 import {EntityDetailComponent} from '../planning/entity-detail.component';
+import { Location } from '@angular/common';
 
 @Component({
   selector: 'app-top-bar',
@@ -42,7 +43,8 @@ export class TopBarComponent implements OnInit {
               private productService: ProductService,
               private epicService: EpicService,
               private dialog: MatDialog,
-              public router: Router) {}
+              public router: Router,
+              private location: Location) {}
 
   ngOnInit() {
     console.log('TopBarComponent');
@@ -92,7 +94,9 @@ export class TopBarComponent implements OnInit {
     this.selectedProductId = productId;
     this.selectedProduct = this.products.find(p=>p.id==this.selectedProductId);
     this.authService.setSelectedProductId(productId);
-    this.router.navigate(['/home']);
+    this.location.go(this.location.path()); // push current path
+    window.location.reload();
+    //this.router.navigate(['/home']);
     // Add your logic here, e.g., fetch product details
   }
   addProduct() {
@@ -192,4 +196,5 @@ export class TopBarComponent implements OnInit {
   }
 
 
+  protected readonly messageChange = messageChange;
 }

@@ -43,7 +43,7 @@
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="userMenu1" role="button" data-bs-toggle="dropdown"
              aria-expanded="false">
-            <i class="bi bi-folder2-open me-1"></i>Products
+            <i class="bi bi-folder2-open me-1"></i>{{ messageChange('Products') }}
           </a>
           <ul class="dropdown-menu dropdown-menu-end">
             <li *ngFor="let p of products;let i = index"><a class="dropdown-item"
@@ -53,10 +53,10 @@
             </li>
             <li *ngIf="isGlobalManager(this.rights)"><a class="dropdown-item text-bg-secondary"
                                                         (click)="addProduct()"><i class="bi bi-plus-circle"></i> Add
-              product</a></li>
+              {{ messageChange('Product') }}</a></li>
             <li *ngIf="isGlobalManager(this.rights)"><a class="dropdown-item"
                                                         routerLink="/edit-product"><i class="bi bi-list"></i>
-              Products</a></li>
+              {{ messageChange('Products') }}</a></li>
           </ul>
         </li>
 
@@ -116,7 +116,7 @@
             <i class="bi bi-star-fill me-1" ></i>{{ selectedProduct.name }}
           </a>
           <a class="nav-link" *ngIf="!selectedProduct">
-            <i class="bi me-1" ></i>Select a Product
+            <i class="bi me-1" ></i>Select a {{ messageChange('Product') }}
           </a>
         </li>
         <li class="nav-item">
@@ -167,7 +167,7 @@
              [style.pointer-events]="selectedProductId > 0 ? 'auto' : 'none'"
              [attr.aria-disabled]="!(selectedProductId > 0)"
           >
-            <i class="bi bi-paperclip me-1"></i>Product Docs</a>
+            <i class="bi bi-paperclip me-1"></i>{{ messageChange('Product') }} Docs</a>
         </li>
       </ul>
     </div>

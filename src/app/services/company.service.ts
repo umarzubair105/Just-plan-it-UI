@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {PageResponse} from '../models/page.response';
-import {ReleaseIteration} from '../utils/helper';
+import {handleError, messageChange, ReleaseIteration} from '../utils/helper';
 import {AuthResponse, Company, ContactUs, Resource, ResourceRightBean} from '../models/basic';
 import {AppConstants} from '../configuration/app.constants';
 
@@ -96,7 +96,7 @@ export class CompanyService {
     //const { id, ...payload } = company;
     //console.log(payload);
     return this.http.post<AuthResponse>(this.baseAuthUrl+'/authenticate', body).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
 
@@ -105,13 +105,13 @@ export class CompanyService {
     //const { id, ...payload } = company;
     //console.log(payload);
     return this.http.post<any>(this.baseAuthUrl+'/reset-password', body).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
   contactUs(model: ContactUs): Observable<CommonResp> {
     const { id, ...payload } = model;
     return this.http.post<CommonResp>(this.baseAuthUrl+'/contact-us', payload).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
   addCompany(company: AddCompany): Observable<CommonResp> {
@@ -119,13 +119,13 @@ export class CompanyService {
     //const { id, ...payload } = company;
     //console.log(payload);
     return this.http.post<CommonResp>(this.baseUrlComDashboard+'/add-company', company).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
 
   mapDesignation(model: MapDesignation): Observable<CommonResp> {
     return this.http.post<CommonResp>(this.baseUrlComDashboard+'/map-designation', model).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
   addProduct(model: AddProduct): Observable<CommonResp> {
@@ -133,7 +133,7 @@ export class CompanyService {
     //const { id, ...payload } = company;
     //console.log(payload);
     return this.http.post<CommonResp>(this.baseUrlComDashboard+'/add-product', model).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
   addResourceMultiple(resource: AddResource): Observable<CommonResp[]> {
@@ -141,7 +141,7 @@ export class CompanyService {
     //const { id, ...payload } = company;
     //console.log(payload);
     return this.http.post<CommonResp[]>(this.baseUrlComDashboard+'/add-resource-multiple', resource).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
   addResource(resource: Resource): Observable<CommonResp> {
@@ -149,54 +149,54 @@ export class CompanyService {
     const { id, ...payload } = resource;
     //console.log(payload);
     return this.http.post<CommonResp>(this.baseUrlComDashboard+'/add-resource', payload).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
   addEpics(models: AddEpic[]): Observable<CommonResp[]> {
     return this.http.post<CommonResp[]>(this.baseUrlComDashboard+'/add-epics', models).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
   addResources(models: AddResource[]): Observable<CommonResp[]> {
     return this.http.post<CommonResp[]>(this.baseUrlComDashboard+'/add-resources', models).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
   getResourceRights(resourceId: number, productId: number|null): Observable<ResourceRightBean> {
     return this.http.get<ResourceRightBean>(`${this.baseUrlComDashboard}/get-rights?resourceId=${resourceId}&productId=${productId}`).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
   getAllCountries(): Observable<PageResponse> {
     return this.http.get<PageResponse>(this.baseHost+"/countries?active=1").pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
   getMetadata(): Observable<any> {
     return this.http.get<any>(this.baseHost+"/api/auth/metadata").pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
   getRoles(companyId:number): Observable<PageResponse> {
     return this.http.get<PageResponse>(`${this.baseHost}/roles/search/findByCompanyIdAndActive?companyId=${companyId}&active=1`).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
   // Get all companies
   getAllCompanies(): Observable<PageResponse> {
     return this.http.get<PageResponse>(this.baseUrl).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
  /* getAllCompanies(): Observable<Company[]> {
     return this.http.get<Company[]>(this.baseUrl).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }*/
   // Get a single company by ID
   getCompanyById(id: number): Observable<Company> {
     return this.http.get<Company>(`${this.baseUrl}/${id}`).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
 
@@ -206,43 +206,22 @@ export class CompanyService {
     const { id, ...payload } = company;
     console.log(payload);
     return this.http.post<Company>(this.baseUrl, payload).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
 
   // Update an existing company
   updateCompany(id: number, company: Company): Observable<Company> {
     return this.http.put<Company>(`${this.baseUrl}/${id}`, company).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
 
   // Delete a company
   deleteCompany(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
 
-  // Error handling
-  private handleError(error: HttpErrorResponse): Observable<never> {
-    let errorMessage = 'An unknown error occurred!';
-    console.log(error);
-    if (error.error instanceof ErrorEvent) {
-      // Client-side error
-      console.log('>>>>>>>>>>>>'+error.error);
-      errorMessage = `Error--: ${error.error.message}`;
-    } else {
-      // Server-side error
-      console.log('>>>'+error.error.error);
-      console.log('>>>'+error.error.message);
-      if (error.error.error) {
-        errorMessage = error.error.error;
-      } else {
-        errorMessage = error.error.message;
-      }
-      //errorMessage = `Error Code-----: ${error.status}\nMessage: ${error.message}`;
-    }
-    return throwError(errorMessage);
-  }
 }

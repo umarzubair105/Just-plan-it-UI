@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import {PageResponse} from '../models/page.response';
 import {Role} from '../models/basic';
 import {AppConstants} from '../configuration/app.constants';
+import {handleError} from '../utils/helper';
 
 // Define the interface
 
@@ -21,18 +22,18 @@ export class RoleService {
   }
   getByCompanyId(companyId:number): Observable<PageResponse> {
     return this.http.get<PageResponse>(`${this.baseUrl}/search/findByCompanyIdAndActive?companyId=${companyId}&active=1&sort=name,asc`).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
   getActiveNonSystemOnlyRolesByProductId(productId:number): Observable<PageResponse> {
     return this.http.get<PageResponse>(`${this.baseUrl}/search/findActiveNonSystemOnlyRolesByProductId?productId=${productId}`).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
   // Get by ID
   getById(id: number): Observable<Role> {
     return this.http.get<Role>(`${this.baseUrl}/${id}`).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
 
@@ -40,34 +41,24 @@ export class RoleService {
   create(model: Role): Observable<Role> {
     const { id, ...payload } = model;
     return this.http.post<Role>(this.baseUrl, payload).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
 
   // Update an existing record
   update(pkId: number, fieldsToUpdate: Partial<{}>): Observable<Role> {
     return this.http.patch<Role>(`${this.baseUrl}/${pkId}`, fieldsToUpdate).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
 
   // Delete a record
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
 
   // Error handling
-  private handleError(error: HttpErrorResponse): Observable<never> {
-    let errorMessage = 'An unknown error occurred!';
-    if (error.error instanceof ErrorEvent) {
-      // Client-side error
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      // Server-side error
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-    }
-    return throwError(errorMessage);
-  }
+
 }

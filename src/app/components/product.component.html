@@ -5,9 +5,9 @@
       <!-- Intro Card -->
       <div class="card shadow-sm mb-3">
         <div class="card-body">
-          <h5 class="card-title">Product Setup</h5>
+          <h5 class="card-title">{{messageChange('Product')}} Setup</h5>
           <p class="card-text">
-            Provide basic information about your new product to get started.
+            Provide basic information about your new {{messageChange('product')}} to get started.
             <strong>Release Iteration</strong> & <strong>First Working Date</strong> will help you to auto create Release with
             start date and end date based on working days and weekend already defined. Once deliverable and their respective
             time estimates will be defined in following steps, plan of deliverables to possible release will be
@@ -20,7 +20,7 @@
       <!-- Main Form Card -->
       <div class="card shadow-lg">
         <div class="card-header bg-primary text-white text-center">
-          <h2 class="h4 mb-0">Product</h2>
+          <h2 class="h4 mb-0">{{messageChange('Product')}}</h2>
         </div>
         <form #useForm="ngForm" (ngSubmit)="onSubmit()">
         <div class="card-body">
@@ -28,39 +28,39 @@
             {{ errorMessage }}
           </div>
           <div class="mb-3 col-md-4">
-            <label for="name" class="form-label">Product Name<span class="text-danger ms-1">*</span></label>
+            <label for="name" class="form-label">{{messageChange('Product')}} Name<span class="text-danger ms-1">*</span></label>
             <input
               type="text"
               id="name"
               class="form-control"
               name="name"
               required
-              placeholder="Enter your product name"
+              placeholder="Enter your {{messageChange('product')}} name"
               [(ngModel)]="addProduct.name"
               #name="ngModel"
               [ngClass]="{ 'is-invalid': name.invalid && (name.dirty || name.touched) }"
 
-              [showErrors]="{ required: 'Product Name is required' }"
+              [showErrors]="{ required: 'Name is required' }"
             />
           </div>
           <div class="mb-3 col-md-4">
-            <label for="code" class="form-label">Product Code<span class="text-danger ms-1">*</span></label>
+            <label for="code" class="form-label">{{messageChange('Product')}} Code<span class="text-danger ms-1">*</span></label>
             <input
               type="text"
               id="code"
               class="form-control"
               name="code"
               required
-              placeholder="Enter your product code"
+              placeholder="Enter your {{messageChange('product')}} code"
               [(ngModel)]="addProduct.code"
               #code="ngModel"
               [ngClass]="{ 'is-invalid': code.invalid && (code.dirty || code.touched) }"
 
-              [showErrors]="{ required: 'Product Code is required' }"
+              [showErrors]="{ required: 'Code is required' }"
             />
           </div>
           <div class="mb-3 col-md-4">
-            <label for="emailProductManager" class="form-label">Product Manager Email<span class="text-danger ms-1">*</span></label>
+            <label for="emailProductManager" class="form-label">{{messageChange('Product')}} Manager Email<span class="text-danger ms-1">*</span></label>
             <input
               type="email"
               id="emailProductManager"
@@ -68,12 +68,12 @@
               name="emailProductManager"
               required
               email
-              placeholder="Enter Product Manager email"
+              placeholder="Enter {{messageChange('Product')}} Manager email"
               [(ngModel)]="addProduct.emailProductManager"
               #emailProductManager="ngModel"
               [ngClass]="{ 'is-invalid': emailProductManager.invalid && (emailProductManager.dirty || name.touched) }"
 
-              [showErrors]="{ required: 'Product Manager Email is required', email: 'Product Manager Email is not valid' }"
+              [showErrors]="{ required: 'Manager Email is required', email: 'Manager Email is not valid' }"
             />
           </div>
 

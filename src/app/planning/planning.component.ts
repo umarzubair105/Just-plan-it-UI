@@ -25,7 +25,7 @@ import { MatDialog } from '@angular/material/dialog';
 import {EpicComponent} from './epic.component';
 import {PlanningDashboardService} from '../services/planning-dashboard.service';
 import {ReleaseService} from '../services/release.service';
-import {isManager, relationData, releaseStatusClass, transformToDhM} from '../utils/helper';
+import {isManager, messageChange, relationData, releaseStatusClass, transformToDhM} from '../utils/helper';
 import {DecimalToTimePipe} from '../pipes/decimal.to.time';
 import {TruncateNumberPipe} from '../pipes/truncate.number';
 import {AuthService} from '../services/auth.service';
@@ -403,4 +403,5 @@ export class PlanningComponent implements OnInit {
   protected readonly isManager = isManager;
   protected readonly relationData = relationData;
     protected readonly EpicLinkType = EpicLinkType;
+  protected readonly messageChange = messageChange;
 }

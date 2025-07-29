@@ -28,7 +28,7 @@ import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
 import {Product, ReleaseStatusEnum} from '../models/planning';
 import {FormatDatePipe} from '../pipes/format.date';
 import {ProductService} from '../services/product.service';
-import {ReleaseIteration} from '../utils/helper';
+import {messageChange, ReleaseIteration} from '../utils/helper';
 import {DecimalToTimePipe} from "../pipes/decimal.to.time";
 
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -120,4 +120,5 @@ export class EditProductComponent implements OnInit {
     this.modalRef?.hide();
   }
 
+  protected readonly messageChange = messageChange;
 }

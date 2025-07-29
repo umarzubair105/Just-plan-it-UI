@@ -25,6 +25,7 @@ import { ShowErrorsDirective } from '../directives/show-errors.directive';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ExcelService} from '../services/excel.service';
 import {Utils} from '../utils/utils';
+import {messageChange} from "../utils/helper";
 
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -212,5 +213,5 @@ export class UploadEpicComponent implements OnInit {
   }*/
 
 
-
+    protected readonly messageChange = messageChange;
 }

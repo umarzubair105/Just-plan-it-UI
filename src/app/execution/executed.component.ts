@@ -28,7 +28,7 @@ import {ReleaseService} from '../services/release.service';
 import {DecimalToTimePipe} from '../pipes/decimal.to.time';
 import {EpicAssignmentService} from '../services/epic.assignment.service';
 import {TimeLoggingService} from '../services/time.logging.service';
-import {getLocalDate, relationData, releaseStatusClass} from '../utils/helper';
+import {getLocalDate, messageChange, relationData, releaseStatusClass} from '../utils/helper';
 @Component({
   selector: 'app-planning',
   standalone: true,
@@ -158,4 +158,5 @@ export class ExecutedComponent implements OnInit {
     protected readonly releaseStatusClass = releaseStatusClass;
   protected readonly relationData = relationData;
   protected readonly EpicLinkType = EpicLinkType;
+  protected readonly messageChange = messageChange;
 }

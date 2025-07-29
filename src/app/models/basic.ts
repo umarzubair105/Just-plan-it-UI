@@ -17,6 +17,7 @@ export class Audit extends Basic {
 export class Company  extends Basic {
   public name: string = '';
   public sample: boolean = false;
+  public type: CompanyType = CompanyType.OTHERS;
 }
 
 export class SubComponent extends Audit{

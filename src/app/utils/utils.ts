@@ -2,22 +2,29 @@ import { Injectable } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {AuthService} from '../services/auth.service';
 import {ActivatedRoute, Router} from '@angular/router';
+import {AuthResponse} from '../models/basic';
+import {LabelService} from './labels';
+import {messageChange} from './helper';
 @Injectable({
   providedIn: 'root' // ✅ Available throughout the app
 })
 export class Utils {
   constructor(private snackBar: MatSnackBar, private authService: AuthService,
+              //private labelService: LabelService,
               private router: Router) { }
 
 
   navigateToResource(rout: string) {
     this.router.navigate([rout]);
   }
-  saveToken(token: string) {
-    this.authService.login(token);
+  saveToken(resp: AuthResponse) {
+    this.authService.login(resp);
   }
   getCompanyId():number{
     return this.authService.getCompanyId();
+  }
+  getCompanyType():string|null{
+    return this.authService.getCompanyType();
   }
   getSelectedProductId():number{
     return this.authService.getSelectedProductId();
@@ -42,10 +49,13 @@ export class Utils {
   }
 
   showMessage(message: string, action: string) {
-    this.snackBar.open(message, action, {
+    this.snackBar.open(messageChange(message), action, {
       duration: 3000, // 3 seconds
       horizontalPosition: 'right',
       verticalPosition: 'top',
     });
   }
+  /*label(key: string):string | undefined {
+    return this.labelService.get(key);
+  }*/
 }

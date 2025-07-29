@@ -5,6 +5,7 @@ import { catchError } from 'rxjs/operators';
 import {PageResponse} from '../models/page.response';
 import {Priority} from '../models/basic';
 import {AppConstants} from '../configuration/app.constants';
+import {handleError} from '../utils/helper';
 
 // Define the interface
 
@@ -21,13 +22,13 @@ export class PriorityService {
   }
   getByCompanyId(companyId:number): Observable<PageResponse> {
     return this.http.get<PageResponse>(`${this.baseUrl}/search/findByCompanyIdAndActive?companyId=${companyId}&active=1&sort=priorityLevel,asc`).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
   // Get by ID
   getById(id: number): Observable<Priority> {
     return this.http.get<Priority>(`${this.baseUrl}/${id}`).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
 
@@ -35,7 +36,7 @@ export class PriorityService {
   create(model: Priority): Observable<Priority> {
     const { id, ...payload } = model;
     return this.http.post<Priority>(this.baseUrl, payload).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
 
@@ -43,27 +44,15 @@ export class PriorityService {
   update(pkId: number, model: Priority): Observable<Priority> {
     const { id, ...payload } = model;
     return this.http.put<Priority>(`${this.baseUrl}/${pkId}`, payload).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
 
   // Delete a record
   delete(id: number): Observable<void> {
     return this.http.delete<void>(`${this.baseUrl}/${id}`).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
 
-  // Error handling
-  private handleError(error: HttpErrorResponse): Observable<never> {
-    let errorMessage = 'An unknown error occurred!';
-    if (error.error instanceof ErrorEvent) {
-      // Client-side error
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      // Server-side error
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-    }
-    return throwError(errorMessage);
-  }
 }

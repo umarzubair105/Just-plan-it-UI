@@ -1,0 +1,6 @@
+{
+  "HOME": {
+    "TITLE": "Welcome",
+    "GREETING": "Hello, {{name}}!"
+  }
+}

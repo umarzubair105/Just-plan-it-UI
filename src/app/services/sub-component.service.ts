@@ -18,30 +18,30 @@ export class SubComponentService {
   }
   getByCompanyId(companyId:number): Observable<PageResponse> {
     return this.http.get<PageResponse>(`${this.baseUrl}/search/findByCompanyIdAndActiveIsTrue?companyId=${companyId}`).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
 
   getAll(): Observable<PageResponse> {
     return this.http.get<PageResponse>(this.baseUrl).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
   getById(id: number): Observable<SubComponent> {
     return this.http.get<SubComponent>(`${this.baseUrl}/${id}`).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
   create(model: SubComponent): Observable<SubComponent> {
     const { id, ...payload } = model;
     return this.http.post<SubComponent>(this.baseUrl, payload).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
   update(idPk: number, model: SubComponent): Observable<SubComponent> {
     const { id, ...payload } = model;
     return this.http.put<SubComponent>(`${this.baseUrl}/${idPk}`, payload).pipe(
-      catchError(this.handleError)
+      catchError(handleError)
     );
   }
 
@@ -53,15 +53,5 @@ export class SubComponentService {
   }
 
   // Error handling
-  private handleError(error: HttpErrorResponse): Observable<never> {
-    let errorMessage = 'An unknown error occurred!';
-    if (error.error instanceof ErrorEvent) {
-      // Client-side error
-      errorMessage = `Error: ${error.error.message}`;
-    } else {
-      // Server-side error
-      errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
-    }
-    return throwError(errorMessage);
-  }
+
 }

@@ -82,7 +82,7 @@
               <div class="mb-3 col-md-4">
                 <label for="designation" class="form-label">Designation <span class="text-danger">*</span></label>
                 <input type="text" id="designation" name="designation" class="form-control" required
-                       placeholder="e.g. Product Manager"
+                       placeholder="e.g. Manager"
                        [(ngModel)]="addCompany.designation" #designation="ngModel"
                        [ngClass]="{ 'is-invalid': designation.invalid && (designation.dirty || designation.touched) }"
                        [showErrors]="{ required: 'Designation is required' }" />

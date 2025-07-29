@@ -2,7 +2,7 @@ import {HttpErrorResponse} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {AppConstants} from '../configuration/app.constants';
 import {EpicLinkType, EpicStatusEnum, RelatedEpicDetailBean, ReleaseStatusEnum} from '../models/planning';
-import {ResourceRightBean} from '../models/basic';
+import {CompanyType, ResourceRightBean} from '../models/basic';
 
 
 export enum ReleaseIteration {
@@ -50,7 +50,7 @@ export function handleError(error: HttpErrorResponse): Observable<never> {
     // Server-side error
     errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
   }
-  return throwError(errorMessage);
+  return throwError(messageChange(errorMessage));
 }
 
 export function getLocalDate(): Date {
@@ -140,4 +140,33 @@ export function relationData(epics:RelatedEpicDetailBean[] | null, linkType: Epi
   });
   return str;
 
+}
+
+export function messageChange(input:string): string {
+  var companyType = localStorage.getItem('companyType');
+  if (!companyType || companyType==undefined) {
+    return input;
+  } else if (companyType==CompanyType.IT_PROJECT_BASE) {
+    let output = input.replace(/\bProject\b/g, 'Product');
+    output = output.replace(/\bProjects\b/g, 'Products');
+    output = output.replace(/\bprojects\b/g, 'products');
+    output = output.replace(/\bproject\b/g, 'product');
+    output = output.replace(/\BPROJECT\b/g, 'PRODUCT');
+    return output;
+  } else if (companyType==CompanyType.IT_PRODUCT_BASE) {
+    let output = input.replace(/\bProduct\b/g, 'Project');
+    output = output.replace(/\bProducts\b/g, 'Projects');
+    output = output.replace(/\bproducts\b/g, 'projects');
+    output = output.replace(/\bproduct\b/g, 'project');
+    output = output.replace(/\bPRODUCT\b/g, 'PROJECT');
+    return output;
+  } else if (companyType==CompanyType.OTHERS) {
+    let output = input.replace(/\bProduct\b/g, 'Project');
+    output = output.replace(/\bProducts\b/g, 'Projects');
+    output = output.replace(/\bproducts\b/g, 'projects');
+    output = output.replace(/\bproduct\b/g, 'project');
+    output = output.replace(/\bPRODUCT\b/g, 'PROJECT');
+    return output;
+  }
+  return input;
 }

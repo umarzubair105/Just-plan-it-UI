@@ -14,6 +14,7 @@ import {FormsModule} from '@angular/forms';
 import {NgFor, NgIf, TitleCasePipe} from '@angular/common';
 import {ActivatedRoute, Router} from '@angular/router';
 import {lastValueFrom} from 'rxjs';
+import {messageChange} from '../utils/helper';
 
 @Component({
   selector: 'app-team-resource',
@@ -137,4 +138,6 @@ export class TeamResourceComponent implements OnInit {
     });
     console.log('selected:'+this.selectedResourceRoles);*/
   }
+
+  protected readonly messageChange = messageChange;
 }
