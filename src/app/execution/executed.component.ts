@@ -28,7 +28,14 @@ import {ReleaseService} from '../services/release.service';
 import {DecimalToTimePipe} from '../pipes/decimal.to.time';
 import {EpicAssignmentService} from '../services/epic.assignment.service';
 import {TimeLoggingService} from '../services/time.logging.service';
-import {getLocalDate, messageChange, relationData, releaseStatusClass} from '../utils/helper';
+import {
+  assignmentStatusClass,
+  assignmentStatusShow,
+  getLocalDate,
+  messageChange,
+  relationData,
+  releaseStatusClass
+} from '../utils/helper';
 @Component({
   selector: 'app-planning',
   standalone: true,
@@ -117,6 +124,9 @@ export class ExecutedComponent implements OnInit {
     this.planningService.getOldReleasesByProductId(this.productId).subscribe({
       next: (data) => {
         this.releases = data;
+        this.releases.forEach(r=>{
+          r.epics.forEach(e=>e.expanded=false);
+        })
       },
       error: (err) => (this.util.showErrorMessage(err)),
     });
@@ -142,10 +152,16 @@ export class ExecutedComponent implements OnInit {
 
   rowIndex: number=0;
   getRowClass(row: any): string {
+    const epic = row as EpicBean;
+    if (epic.assignments && epic.assignments.filter(a => a.status != EpicAssignmentStatusEnum.COMPLETED).length == 0){
+      return 'completed-row';
+    }
     this.rowIndex = this.rowIndex +1;
     return this.rowIndex % 2 === 0 ? 'even-row' : 'odd-row';
   }
-
+  toggleAssignments(epic: EpicBean): void {
+    epic.expanded = !epic.expanded;
+  }
   getLoggedPercentage(row: any): number {
     const total = row.prodBasedAssignableTime;
     if (!total || total <= 0) return 0;
@@ -159,4 +175,6 @@ export class ExecutedComponent implements OnInit {
   protected readonly relationData = relationData;
   protected readonly EpicLinkType = EpicLinkType;
   protected readonly messageChange = messageChange;
+  protected readonly assignmentStatusShow = assignmentStatusShow;
+  protected readonly assignmentStatusClass = assignmentStatusClass;
 }

@@ -1,9 +1,11 @@
-Product/Project Epic Label changes
-Add Due date of epicAssignment
+Edit Estimate Directly
 Add Role/Priority
-
-
 Export in Excel Release plan
+UI
+Home Page Content
+Insert meta data for Sample Companies
+
+
 Changes Release Dates manually
 
 

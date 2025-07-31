@@ -1,14 +1,14 @@
 <div class="container mt-4">
-  <h2 class="mb-4">Welcome to Project Manager :{{ss}}</h2>
+  <h2 class="mb-4">Welcome to AutoPlan - {{messageChange('Project Management Solution')}}</h2>
 
   <div class="row">
     <div class="col-md-4 mb-3" *ngFor="let feature of features">
       <div class="card h-100 shadow-sm text-center">
         <div class="card-body">
           <div class="mb-2 display-4">{{ feature.icon }}</div>
-          <h5 class="card-title">{{ feature.title }}</h5>
-          <p class="card-text">{{ feature.description }}</p>
-          <a [routerLink]="feature.link" class="btn btn-primary btn-sm">Go to {{ feature.title }}</a>
+          <h5 class="card-title">{{ messageChange(feature.title) }}</h5>
+          <p class="card-text">{{ messageChange(feature.description) }}</p>
+          <a [routerLink]="feature.link" class="btn btn-primary btn-sm">Go to {{ messageChange(feature.title) }}</a>
         </div>
       </div>
     </div>

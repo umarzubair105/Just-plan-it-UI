@@ -1,28 +1,30 @@
-import {ChangeDetectorRef, Component, inject, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, OnInit, TemplateRef} from '@angular/core';
 import {CommonModule, NgFor, NgIf, ViewportScroller} from '@angular/common'; // ✅ Use CommonModule
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
 import {Utils} from '../utils/utils';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {
-    EntityType,
-    Epic, EpicAssignmentBean, EpicAssignmentStatusEnum,
-    EpicBean,
-    EpicBeanCopyPasteUpdatedValues,
-    EpicEstimateBean, EpicLinkType,
-    Release,
-    ReleaseDetailBean, ReleaseStatusEnum, TimeLogging
+  EntityType,
+  EpicAssignmentBean,
+  EpicAssignmentStatusEnum,
+  EpicBean,
+  EpicBeanCopyPasteUpdatedValues,
+  EpicEstimateBean,
+  EpicLinkType,
+  Release,
+  ReleaseDetailBean,
+  TimeLogging
 } from '../models/planning';
 import {EpicService} from '../services/epic.service';
 import {Priority, ResourceRightBean, Role, SubComponent} from '../models/basic';
-import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import {NgxDatatableModule} from '@swimlane/ngx-datatable';
 import {PriorityService} from '../services/priority.service';
 import {SubComponentService} from '../services/sub-component.service';
 import {RoleService} from '../services/role.service';
-import {EpicEstimateService} from '../services/epic-estimate.service';
 import {WorkingHourEnum} from '../services/leave.service';
 import {EpicEstimateComponent} from '../planning/epic-estimate.component';
-import { MatDialog } from '@angular/material/dialog';
+import {MatDialog} from '@angular/material/dialog';
 import {EpicComponent} from '../planning/epic.component';
 import {PlanningDashboardService} from '../services/planning-dashboard.service';
 import {ReleaseService} from '../services/release.service';
@@ -30,6 +32,8 @@ import {DecimalToTimePipe} from '../pipes/decimal.to.time';
 import {EpicAssignmentService} from '../services/epic.assignment.service';
 import {TimeLoggingService} from '../services/time.logging.service';
 import {
+  assignmentStatusClass,
+  assignmentStatusShow,
   convertToMinutes,
   getLocalDate,
   isManager,
@@ -40,6 +44,7 @@ import {
 import {TruncateNumberPipe} from "../pipes/truncate.number";
 import {AuthService} from '../services/auth.service';
 import {EntityDetailComponent} from '../planning/entity-detail.component';
+
 @Component({
   selector: 'app-planning',
   standalone: true,
@@ -149,6 +154,9 @@ export class ExecutionComponent implements OnInit {
       next: (data) => {
         console.log(data);
         this.releases = data;
+        this.releases.forEach(r=>{
+          r.epics.forEach(e=>this.toggleAssignmentsCheck(e));
+        })
       },
       error: (err) => (this.util.showErrorMessage(err)),
     });
@@ -159,6 +167,25 @@ export class ExecutionComponent implements OnInit {
       next: (data) => {
         assignment.status = data.status;
         this.util.showSuccessMessage('Status is updated to '+data.status);
+        this.closeModal();
+      },
+      error: (err) => (this.util.showErrorMessage(err)),
+    });
+  }
+  changeAssignmentDeliveryDate(assignment: EpicAssignmentBean, newDate: string) {
+    let dt: Date | null = null;
+    if (newDate) {
+      dt = new Date(newDate);
+    }
+    this.epicAssignmentService.updateSpecificFieldsPasses(assignment.id, {expectedDeliveryDate:dt}).subscribe({
+      next: (data) => {
+        if (data.expectedDeliveryDate) {
+          assignment.expectedDeliveryDate = data.expectedDeliveryDate;
+          this.util.showSuccessMessage('Due Date is updated to ' + data.expectedDeliveryDate+".");
+        } else {
+          assignment.expectedDeliveryDate = null;
+          this.util.showSuccessMessage('Due Date is removed. ');
+        }
         this.closeModal();
       },
       error: (err) => (this.util.showErrorMessage(err)),
@@ -241,8 +268,22 @@ export class ExecutionComponent implements OnInit {
   }
   rowIndex: number=0;
   getRowClass(row: any): string {
+    const epic = row as EpicBean;
+    if (epic.assignments && epic.assignments.filter(a => a.status != EpicAssignmentStatusEnum.COMPLETED).length == 0){
+      return 'completed-row';
+    }
     this.rowIndex = this.rowIndex +1;
     return this.rowIndex % 2 === 0 ? 'even-row' : 'odd-row';
+    /*switch (row.status) {
+      case 'COMPLETED':
+        return 'row-completed';
+      case 'ON_HOLD':
+        return 'row-holded';
+      case 'OVERDUE':
+        return 'row-overdue';
+      default:
+        return '';
+    }*/
   }
 
 
@@ -297,6 +338,26 @@ export class ExecutionComponent implements OnInit {
 
     });
   }
+  toggleAssignments(epic: EpicBean): void {
+    epic.expanded = !epic.expanded;
+  }
+
+  toggleAssignmentsCheck(epic: EpicBean): void {
+    if (epic.assignments) {
+      if (epic.assignments.filter(a=>a.status!=EpicAssignmentStatusEnum.COMPLETED).length>0) {
+        epic.expanded = true;
+      } else {
+        epic.expanded = false;
+      }
+    }
+  }
+
+  assignmentsDone(epic: EpicBean): boolean {
+    if (epic.assignments) {
+      return epic.assignments.filter(a => a.status != EpicAssignmentStatusEnum.COMPLETED).length == 0;
+    }
+    return false;
+  }
   getLoggedPercentage(row: any): number {
     const total = row.prodBasedAssignableTime;
     if (!total || total <= 0) return 0;
@@ -310,4 +371,6 @@ export class ExecutionComponent implements OnInit {
     protected readonly relationData = relationData;
     protected readonly EpicLinkType = EpicLinkType;
   protected readonly messageChange = messageChange;
+  protected readonly assignmentStatusClass = assignmentStatusClass;
+  protected readonly assignmentStatusShow = assignmentStatusShow;
 }

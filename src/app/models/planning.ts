@@ -91,6 +91,8 @@ export class EpicBean extends Epic {
   public assignments: EpicAssignmentBean[] | null = null;
   public dependsOn: RelatedEpicDetailBean[] | null = null;
   public relatedTo: RelatedEpicDetailBean[] | null = null;
+  public expanded: boolean = true;
+//  public : boolean = true;
 }
 
 export class Release extends Basic{
@@ -119,6 +121,7 @@ export class EpicAssignment extends Audit {
   public releaseId: number = 0;
   public estimate: number = 0;
   public roleId: number = 0;
+  public expectedDeliveryDate: Date | null = null;
   public status: EpicAssignmentStatusEnum = EpicAssignmentStatusEnum.OPEN;
 }
 export class EpicAssignmentBean extends EpicAssignment {

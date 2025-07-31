@@ -65,25 +65,26 @@
                 <ngx-datatable-column name="Value Gain" prop="valueGain" [maxWidth]="80"></ngx-datatable-column>
                 <ngx-datatable-column name="Assignment" [width]="500" [minWidth]="500" [maxWidth]="500">
                   <ng-template let-row="row" ngx-datatable-cell-template>
-<!--
-                    <div [innerHTML]="showAssignments(row.assignments)"></div>
--->
-
-                    <table>
+                    <a (click)="toggleAssignments(row)" class="text-primary" style="cursor:pointer">
+                      <i [ngClass]="{'bi bi-chevron-down': row.expanded, 'bi bi-chevron-right': !row.expanded}"></i>
+                    </a>
+                    <table *ngIf="row.expanded">
                       <thead>
                       <tr>
                         <th>Resource</th>
                         <th>Estimate</th>
                         <th>Logged</th>
                         <th>Status</th>
+                        <th>Due Date</th>
                       </tr>
                       </thead>
                       <tbody>
-                      <tr *ngFor="let assignment of row.assignments">
+                      <tr *ngFor="let assignment of row.assignments" class="{{assignmentStatusClass(assignment)}}">
                         <td>{{ assignment.resourceName }}</td>
                         <td>{{ assignment.estimate | decimalToTime }}</td>
                         <td>{{ assignment.minutesLogged | decimalToTime }}</td>
-                        <td>{{ assignment.status }}</td>
+                        <td [innerHTML]="assignmentStatusShow(assignment)"></td>
+                        <td>{{ assignment.expectedDeliveryDate }}</td>
                       </tbody>
                     </table>
                   </ng-template>

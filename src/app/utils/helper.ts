@@ -1,7 +1,14 @@
 import {HttpErrorResponse} from '@angular/common/http';
 import {Observable, throwError} from 'rxjs';
 import {AppConstants} from '../configuration/app.constants';
-import {EpicLinkType, EpicStatusEnum, RelatedEpicDetailBean, ReleaseStatusEnum} from '../models/planning';
+import {
+  EpicAssignmentBean,
+  EpicAssignmentStatusEnum,
+  EpicLinkType,
+  EpicStatusEnum,
+  RelatedEpicDetailBean,
+  ReleaseStatusEnum
+} from '../models/planning';
 import {CompanyType, ResourceRightBean} from '../models/basic';
 
 
@@ -140,6 +147,39 @@ export function relationData(epics:RelatedEpicDetailBean[] | null, linkType: Epi
   });
   return str;
 
+}
+
+export function assignmentStatusClass(assignment: EpicAssignmentBean): string {
+  var classStr = '';
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);  // strip time
+  if (assignment.status==EpicAssignmentStatusEnum.COMPLETED) {
+    classStr = 'link-resolved';
+  } else if (assignment.expectedDeliveryDate && new Date(assignment.expectedDeliveryDate) < today) {
+    classStr = 'link-open'
+  } else if (assignment.status==EpicAssignmentStatusEnum.ON_HOLD || assignment.status==EpicAssignmentStatusEnum.OVERDUE) {
+    classStr = 'link-planned';
+  }
+  return classStr;
+  //return `<span class="${classStr}" title="${e.title}">${e.code}:${e.status}${byDate}</span>&nbsp;&nbsp;`
+}
+
+export function assignmentStatusShow(assignment: EpicAssignmentBean): string {
+  var iconStr = '';
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);  // strip time
+  if (assignment.status==EpicAssignmentStatusEnum.COMPLETED) {
+    iconStr = 'bi-check-circle';
+  } else if (assignment.status==EpicAssignmentStatusEnum.ON_HOLD) {
+    iconStr = 'bi-slash-circle';
+  } else if (assignment.status==EpicAssignmentStatusEnum.OVERDUE) {
+    iconStr = 'bi-x-octagon';
+  } else if (assignment.status==EpicAssignmentStatusEnum.STARTED) {
+    iconStr = 'bi-hourglass-split';
+  } else if (assignment.status==EpicAssignmentStatusEnum.OPEN) {
+    iconStr = 'bi-unlock';
+  }
+  return `<span><i class="bi ${iconStr}" title="${assignment.status}"></i></span>`
 }
 
 export function messageChange(input:string): string {

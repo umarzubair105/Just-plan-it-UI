@@ -399,6 +399,10 @@ body.dark-mode {
   color: #b71c1c;             /* dark red */
 }
 
+.completed-row {
+  background-color: #e6f4ea !important;  /* light green */
+  color: #2d6a4f !important;             /* strong green */
+}
 .time-bar-container {
   display: flex;
   height: 12px;

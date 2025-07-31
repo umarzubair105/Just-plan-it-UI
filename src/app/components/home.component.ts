@@ -1,6 +1,7 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {RouterLink} from '@angular/router';
 import {NgForOf} from '@angular/common';
+import {messageChange} from '../utils/helper';
 
 @Component({
   selector: 'app-home',
@@ -12,13 +13,12 @@ import {NgForOf} from '@angular/common';
   ]
 })
 export class HomeComponent {
-  ss:string = 'sss';
   features = [
     {
       title: 'Projects',
       description: 'Create and manage your projects',
       icon: '📁',
-      link: '/projects'
+      link: '/product'
     },
     {
       title: 'Tasks',
@@ -28,7 +28,7 @@ export class HomeComponent {
     },
     {
       title: 'Team',
-      description: 'Manage your team members',
+      description: 'Upload Team Resources through Excel. Manage Resource Availability across Projects. Manage resource leave plan. Manage resource role for different projects.Upload Team Resources through Excel. Manage Resource Availability across Projects. Manage resource leave plan. Manage resource role for different projects',
       icon: '👥',
       link: '/team'
     },
@@ -51,4 +51,5 @@ export class HomeComponent {
       link: '/settings'
     }
   ];
+  protected readonly messageChange = messageChange;
 }
