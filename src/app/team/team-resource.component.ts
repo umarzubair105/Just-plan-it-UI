@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import {ProductResource, Resource, ResourceRole, Role} from '../models/basic';
+import {Component, OnInit} from '@angular/core';
+import {ProductResource, Resource, Role, RoleCode} from '../models/basic';
 import {RoleService} from '../services/role.service';
 import {ResourceService} from '../services/resource.service';
 import {ProductResourceService} from '../services/product.resource.service';
@@ -62,6 +62,7 @@ export class TeamResourceComponent implements OnInit {
     this.roleService.getByCompanyId(companyId).subscribe({
       next: (data) => {
         this.roles = data._embedded.roles;
+        this.roles = this.roles.filter(r=>r.code!=RoleCode.ADMIN);
         this.roles.sort((a, b) => a.name.localeCompare(b.name));
       },
       error: (err) => (this.util.showErrorMessage(err)),

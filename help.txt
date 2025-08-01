@@ -1,5 +1,4 @@
 Edit Estimate Directly
-Add Role/Priority
 Export in Excel Release plan
 UI
 Home Page Content
