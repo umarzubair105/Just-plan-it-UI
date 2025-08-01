@@ -1,21 +1,22 @@
-import {Component, EventEmitter, inject, Input, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
-import {FormBuilder, FormsModule} from '@angular/forms';
-import { CommonModule } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
+import {Component, inject, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {FormsModule} from '@angular/forms';
+import {CommonModule} from '@angular/common';
+import {HttpClientModule} from '@angular/common/http';
 import {ActivatedRoute, Router} from '@angular/router';
 import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
 import {FormatDatePipe} from '../pipes/format.date';
 import {ShowErrorsDirective} from '../directives/show-errors.directive';
-import {Designation, Role} from '../models/basic';
+import {Designation, Role, RoleCode} from '../models/basic';
 import {DesignationService} from '../services/designation.service';
 import {Utils} from '../utils/utils';
 import {RoleService} from '../services/role.service';
 import {isGlobalHR} from '../utils/helper';
+import {NgSelectComponent, NgSelectModule} from "@ng-select/ng-select";
 
 @Component({
   selector: 'app-designation',
   standalone: true,
-  imports: [FormsModule, CommonModule, ModalModule, HttpClientModule, FormatDatePipe, ShowErrorsDirective], // Include FormsModule here
+    imports: [NgSelectModule,FormsModule, CommonModule, ModalModule, HttpClientModule, FormatDatePipe, ShowErrorsDirective, NgSelectComponent], // Include FormsModule here
   //template:`Hello`,
   templateUrl: './designation.component.html',
   providers: [BsModalService]
@@ -110,7 +111,29 @@ export class DesignationComponent implements OnInit {
       });
     }
   }
+  addNewRole = (newName: string) => {
+    if (!newName) {
+      return;
+    }
+    let role:Role = new Role();
+    role.name = newName;
+    role.companyId = this.companyId;
+    role.active = true;
+    role.systemRole = false;
+    role.code = RoleCode.TR;
+    role.required = false;
+    //const newPriority = { id: newId, name: newPriorityName };
+    this.roleService.create(role).subscribe({
+      next: (data) => {
+        this.utils.showSuccessMessage('New role is added.')
 
+        this.roles = [...this.roles, data];
+        this.model.roleId = data.id;
+        return data;
+      },
+      error: (err) => (this.utils.showErrorMessage(err)),
+    });
+  };
   openModal(template: TemplateRef<any>) {
     this.model = new Designation();
     this.modalRef = this.modalService.show(template);

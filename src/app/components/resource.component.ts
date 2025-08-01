@@ -26,7 +26,7 @@ import {
   ResourceLeave,
   ResourceRightBean,
   ResourceStatus,
-  Role
+  Role, RoleCode
 } from '../models/basic';
 import {ResourceService} from '../services/resource.service';
 import {RoleService} from '../services/role.service';
@@ -40,16 +40,17 @@ import {ReleaseStatusEnum} from '../models/planning';
 import {FormatDatePipe} from '../pipes/format.date';
 import {AuthService} from '../services/auth.service';
 import {isGlobalHR} from '../utils/helper';
+import {NgSelectComponent, NgSelectModule} from '@ng-select/ng-select';
 
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({
   selector: 'app-resource',
   standalone: true,
-  imports: [FormsModule, CommonModule, HttpClientModule, SubComponentComponent,
+  imports: [NgSelectModule, FormsModule, CommonModule, HttpClientModule, SubComponentComponent,
     MatButtonModule, MatToolbarModule, MatInputModule,
     MatCheckboxModule, MatFormFieldModule, ModalModule,
-    MatListItem, MatList, MatIcon, ReactiveFormsModule, ShowErrorsDirective, DataTableColumnCellDirective, DataTableColumnDirective, DatatableComponent, FormatDatePipe
+    MatListItem, MatList, MatIcon, ReactiveFormsModule, ShowErrorsDirective, DataTableColumnCellDirective, DataTableColumnDirective, DatatableComponent, FormatDatePipe, NgSelectComponent
   ], // Include FormsModule here
   //template:`Hello`,
   //templateUrl: './company.component.html',
@@ -73,6 +74,7 @@ export class ResourceComponent implements OnInit {
   designationService = inject(DesignationService);
   //constructor(private companyService: CompanyService) {}
   resources: Resource[] = [];
+  allleads: Resource[] = [];
   leads: Resource[] = [];
   resource: Resource = new Resource();
   authService = inject(AuthService);
@@ -139,7 +141,7 @@ export class ResourceComponent implements OnInit {
     this.resourceService.getByCompanyId(this.companyId).subscribe({
       next: (data) => {
         var tempR : Resource[] = data._embedded.resources;
-        this.leads = tempR.filter(t=> t.lead);
+        this.allleads = tempR.filter(t=> t.lead);
         const loggedUserId = this.authService.getUserId();
         if (!isGlobalHR(this.rights)) {
           tempR = tempR.filter(t=> t.id==loggedUserId || t.leadResourceId==loggedUserId);
@@ -198,12 +200,59 @@ export class ResourceComponent implements OnInit {
       error: (err) => (this.utils.showErrorMessage(err)),
     });
   }
+
+  addNewRole = (newName: string) => {
+    if (!newName) {
+      return;
+    }
+    let role:Role = new Role();
+    role.name = newName;
+    role.companyId = this.companyId;
+    role.active = true;
+    role.systemRole = false;
+    role.code = RoleCode.TR;
+    role.required = false;
+    //const newPriority = { id: newId, name: newPriorityName };
+    this.roleService.create(role).subscribe({
+      next: (data) => {
+        this.utils.showSuccessMessage('New role is added.')
+
+        this.roles = [...this.roles, data];
+        this.resource.roleId = data.id;
+        return data;
+      },
+      error: (err) => (this.utils.showErrorMessage(err)),
+    });
+  };
+
+  addNewDesignation = (newName: string) => {
+    if (!newName) {
+      return;
+    }
+    let d:Designation = new Designation();
+    d.name = newName;
+    d.companyId = this.companyId;
+    d.active = true;
+    d.roleId = null;
+    //const newPriority = { id: newId, name: newPriorityName };
+    this.designationService.create(d).subscribe({
+      next: (data) => {
+        this.utils.showSuccessMessage('New designation is added.')
+
+        this.designations = [...this.designations, data];
+        this.resource.designationId = data.id;
+        return data;
+      },
+      error: (err) => (this.utils.showErrorMessage(err)),
+    });
+  };
   openModal(template: TemplateRef<any>) {
     this.resource = new Resource();
     this.modalRef = this.modalService.show(template);
   }
   openModalEdit(template: TemplateRef<any>, id: number) {
     if (id) {
+      this.leads =  this.allleads.filter(t=> t.id!=id);
       this.resource = this.resources.find((x) => x.id === id)
         ?? new Resource();
       this.modalRef = this.modalService.show(template);

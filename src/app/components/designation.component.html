@@ -63,14 +63,30 @@
               </div>
               <div class="mb-3">
                 <label for="roleId" class="form-label">System Role <span class="text-danger">*</span></label>
-                <select name="roleId" id="roleId"  [(ngModel)]="model.roleId" class="form-control"
+                <ng-select
+                  [items]="roles"
+                  id="roleId"
+                  name="roleId"
+                  bindLabel="name"
+                  bindValue="id"
+                  class="form-control"
+                  [(ngModel)]="model.roleId"
+                  [searchable]="true"
+                  [clearable]="true"
+                  [addTag]="addNewRole"
+                  appendTo="body"
+                  [ngClass]="{ 'is-invalid': roleId.invalid && (roleId.dirty || roleId.touched) }"
+                  #roleId="ngModel"
+                >
+                </ng-select>
+<!--                <select name="roleId" id="roleId"  [(ngModel)]="model.roleId" class="form-control"
                         #roleId="ngModel"
                         [ngClass]="{ 'is-invalid': roleId.invalid && (roleId.dirty || roleId.touched) }"
                         [showErrors]="{ required: 'Role is required' }">
                   <option *ngFor="let scope of roles" [value]="scope.id">
                     {{ scope.name }}
                   </option>
-                </select>
+                </select>-->
               </div>
             </form>
           </div>

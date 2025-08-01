@@ -162,7 +162,25 @@
               </div>
             <div class="mb-3">
               <label for="designationId" class="form-label">Designation <span class="text-danger">*</span></label>
-              <select name="designationId" id="designationId"  [(ngModel)]="resource.designationId" class="form-control" required
+              <ng-select
+                [disabled]="!isGlobalHR(this.rights)"
+                [items]="designations"
+                id="designationId"
+                name="designationId"
+                bindLabel="name"
+                bindValue="id"
+                class="form-control"
+                [(ngModel)]="resource.designationId"
+                [searchable]="true"
+                [clearable]="true"
+                [addTag]="addNewDesignation"
+                appendTo="body"
+                required
+                [ngClass]="{ 'is-invalid': designationId.invalid && (designationId.dirty || designationId.touched) }"
+                #designationId="ngModel"
+              >
+              </ng-select>
+              <!--<select name="designationId" id="designationId"  [(ngModel)]="resource.designationId" class="form-control" required
                       [disabled]="!isGlobalHR(this.rights)"
 
                       #designationId="ngModel"
@@ -171,12 +189,29 @@
                 <option *ngFor="let scope of designations" [value]="scope.id">
                   {{ scope.name }}
                 </option>
-              </select>
+              </select>-->
             </div>
 
               <div class="mb-3">
                 <label for="roleId" class="form-label">System Role <span class="text-danger">*</span></label>
-                <select name="roleId" id="roleId"  [(ngModel)]="resource.roleId" class="form-control" required
+                <ng-select
+                  [disabled]="!isGlobalHR(this.rights)"
+                  [items]="roles"
+                  id="roleId"
+                  name="roleId"
+                  bindLabel="name"
+                  bindValue="id"
+                  class="form-control"
+                  [(ngModel)]="resource.roleId"
+                  [searchable]="true"
+                  [clearable]="true"
+                  [addTag]="addNewRole"
+                  appendTo="body"
+                  [ngClass]="{ 'is-invalid': roleId.invalid && (roleId.dirty || roleId.touched) }"
+                  #roleId="ngModel"
+                >
+                </ng-select>
+                <!--<select name="roleId" id="roleId"  [(ngModel)]="resource.roleId" class="form-control" required
                         [disabled]="!isGlobalHR(this.rights)"
 
                         #roleId="ngModel"
@@ -185,7 +220,7 @@
                   <option *ngFor="let scope of roles" [value]="scope.id">
                     {{ scope.name }}
                   </option>
-                </select>
+                </select>-->
               </div>
 
 
