@@ -36,6 +36,11 @@
                 <i class="bi bi-arrows-angle-contract"></i> Collapse
               </a>
             </li>
+            <li>
+              <a (click)="openDialogForEntityDetail(releaseDetail.release)" title="Doc" class="btn btn-sm btn-outline-success">
+                <i class="bi bi-upload"></i> Docs
+              </a>
+            </li>
           </ul>
         </div>
         <div class="card-body"  *ngIf="releaseDetail.expanded && releaseDetail.epics && releaseDetail.epics.length>0">

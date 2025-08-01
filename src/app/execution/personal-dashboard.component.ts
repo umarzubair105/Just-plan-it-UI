@@ -29,7 +29,14 @@ import {ReleaseService} from '../services/release.service';
 import {DecimalToTimePipe} from '../pipes/decimal.to.time';
 import {EpicAssignmentService} from '../services/epic.assignment.service';
 import {TimeLoggingService} from '../services/time.logging.service';
-import {convertToMinutes, getLocalDate, isManager, relationData, releaseStatusClass} from '../utils/helper';
+import {
+  assignmentStatusClass, assignmentStatusShow,
+  convertToMinutes,
+  getLocalDate,
+  isManager,
+  relationData,
+  releaseStatusClass
+} from '../utils/helper';
 import {TruncateNumberPipe} from "../pipes/truncate.number";
 import {AuthService} from '../services/auth.service';
 import {EntityDetailComponent} from '../planning/entity-detail.component';
@@ -140,10 +147,10 @@ export class PersonalDashboardComponent implements OnInit {
 
     });
   }
-  closeRelease(releaseDetail: ReleaseDetailBean) {
+  completeRelease(releaseDetail: ReleaseDetailBean) {
     console.log('Planning it:'+releaseDetail.release?.name);
     if (releaseDetail.release) {
-      this.releaseService.updateSpecificFieldsPasses(releaseDetail.release.id, {status: ReleaseStatusEnum.COMPLETED}).subscribe({
+      this.releaseService.completeRelease(releaseDetail.release.id).subscribe({
         next: (data) => {
           this.util.showSuccessMessage('Release is closed.');
           this.releases = this.releases.filter(wh => wh.release?.id !== releaseDetail.release?.id);
@@ -157,6 +164,9 @@ export class PersonalDashboardComponent implements OnInit {
       next: (data) => {
         console.log(data);
         this.releases = data;
+        this.releases.forEach(r=>{
+          r.epics.forEach(e=>this.toggleAssignmentsCheck(e));
+        })
       },
       error: (err) => (this.util.showErrorMessage(err)),
     });
@@ -167,6 +177,25 @@ export class PersonalDashboardComponent implements OnInit {
       next: (data) => {
         assignment.status = data.status;
         this.util.showSuccessMessage('Status is updated to '+data.status);
+        this.closeModal();
+      },
+      error: (err) => (this.util.showErrorMessage(err)),
+    });
+  }
+  changeAssignmentDeliveryDate(assignment: EpicAssignmentBean, newDate: string) {
+    let dt: Date | null = null;
+    if (newDate) {
+      dt = new Date(newDate);
+    }
+    this.epicAssignmentService.updateSpecificFieldsPasses(assignment.id, {expectedDeliveryDate:dt}).subscribe({
+      next: (data) => {
+        if (data.expectedDeliveryDate) {
+          assignment.expectedDeliveryDate = data.expectedDeliveryDate;
+          this.util.showSuccessMessage('Due Date is updated to ' + data.expectedDeliveryDate+".");
+        } else {
+          assignment.expectedDeliveryDate = null;
+          this.util.showSuccessMessage('Due Date is removed. ');
+        }
         this.closeModal();
       },
       error: (err) => (this.util.showErrorMessage(err)),
@@ -249,6 +278,10 @@ export class PersonalDashboardComponent implements OnInit {
   }
   rowIndex: number=0;
   getRowClass(row: any): string {
+    const epic = row as EpicBean;
+    if (epic.assignments && epic.assignments.filter(a => a.status != EpicAssignmentStatusEnum.COMPLETED).length == 0){
+      return 'completed-row';
+    }
     this.rowIndex = this.rowIndex +1;
     return this.rowIndex % 2 === 0 ? 'even-row' : 'odd-row';
   }
@@ -290,24 +323,18 @@ export class PersonalDashboardComponent implements OnInit {
       // Handle the result here
     });
   }
-  openDialogForEstimates(row: EpicBean): void {
-    console.log("Planning estimates:"+row.estimates?.length);
-    const dialogRef = this.dialog.open(EpicEstimateComponent, {
-      width: '80%',
-      maxWidth: '90vw', // 90% of viewport width
-      height: '70%',
-      maxHeight: '80vh', // 80% of viewport height
-      disableClose: true,
-      data: { epicBean: row, roles: this.roles },
-    });
+  toggleAssignments(epic: EpicBean): void {
+    epic.expanded = !epic.expanded;
+  }
 
-    dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      if (result) {
-       row.estimates = result.estimates;
+  toggleAssignmentsCheck(epic: EpicBean): void {
+    if (epic.assignments) {
+      if (epic.assignments.filter(a=>a.status!=EpicAssignmentStatusEnum.COMPLETED).length>0) {
+        epic.expanded = true;
+      } else {
+        epic.expanded = false;
       }
-      // Handle the result here
-    });
+    }
   }
   getLoggedPercentage(row: any): number {
     const total = row.prodBasedAssignableTime;
@@ -321,4 +348,6 @@ export class PersonalDashboardComponent implements OnInit {
     protected readonly isManager = isManager;
     protected readonly relationData = relationData;
     protected readonly EpicLinkType = EpicLinkType;
+  protected readonly assignmentStatusClass = assignmentStatusClass;
+  protected readonly assignmentStatusShow = assignmentStatusShow;
 }

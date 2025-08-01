@@ -5,6 +5,7 @@ import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
 import {Utils} from '../utils/utils';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {
+  EntityType,
   Epic, EpicAssignmentBean, EpicAssignmentStatusEnum,
   EpicBean,
   EpicBeanCopyPasteUpdatedValues,
@@ -36,6 +37,7 @@ import {
   relationData,
   releaseStatusClass
 } from '../utils/helper';
+import {EntityDetailComponent} from '../planning/entity-detail.component';
 @Component({
   selector: 'app-planning',
   standalone: true,
@@ -149,7 +151,20 @@ export class ExecutedComponent implements OnInit {
       }
   }
   }
+  openDialogForEntityDetail(release: Release): void {
+    const dialogRef = this.dialog.open(EntityDetailComponent, {
+      width: '50%',
+      maxWidth: '90vw', // 90% of viewport width
+      height: '70%',
+      maxHeight: '80vh', // 80% of viewport height
+      disableClose: true,
+      data: { entityId: release.id, entityType: EntityType.RELEASE, entityName: release.name },
+    });
 
+    dialogRef.afterClosed().subscribe(result => {
+
+    });
+  }
   rowIndex: number=0;
   getRowClass(row: any): string {
     const epic = row as EpicBean;
