@@ -3,7 +3,7 @@ import {Observable, throwError} from 'rxjs';
 import {AppConstants} from '../configuration/app.constants';
 import {
   EpicAssignmentBean,
-  EpicAssignmentStatusEnum,
+  EpicAssignmentStatusEnum, EpicEstimateBean,
   EpicLinkType,
   EpicStatusEnum,
   RelatedEpicDetailBean,
@@ -70,10 +70,12 @@ export function getLocalDate(): Date {
 export function convertToMinutes(timeString: string): number {
 
   let totalMinutes = 0;
-
+  console.log('convertToMinutes input:'+timeString);
   //const dayMatch = timeString.match(/(\d+)\s*d/);
-  const hourMatch = timeString.match(/(\d+)\s*h/);
+  const hourMatch = timeString.match(/(\d+(?:\.\d+)?)\s*h/);
   const minuteMatch = timeString.match(/(\d+)\s*m/);
+  console.log('convertToMinutes hourMatch:'+hourMatch);
+  console.log('convertToMinutes minuteMatch:'+minuteMatch);
 
   //if (dayMatch) {
     //totalMinutes += parseInt(dayMatch[1], 10) * 24 * 60;
@@ -86,10 +88,12 @@ export function convertToMinutes(timeString: string): number {
   }
   if (totalMinutes==0) {
     const hours = Number(timeString);
+    console.log('convertToMinutes hourMatch:'+minuteMatch);
     if (!isNaN(hours)) {
       totalMinutes = hours * 60;
     }
   }
+  console.log('convertToMinutes totalMinutes:'+totalMinutes);
   return totalMinutes;
 
 }
@@ -164,6 +168,7 @@ export function assignmentStatusClass(assignment: EpicAssignmentBean): string {
   //return `<span class="${classStr}" title="${e.title}">${e.code}:${e.status}${byDate}</span>&nbsp;&nbsp;`
 }
 
+
 export function assignmentStatusShow(assignment: EpicAssignmentBean): string {
   var iconStr = '';
   const today = new Date();
@@ -182,6 +187,18 @@ export function assignmentStatusShow(assignment: EpicAssignmentBean): string {
   return `<span><i class="bi ${iconStr}" title="${assignment.status}"></i></span>`
 }
 
+export function estimateStatusClass(estimate: EpicEstimateBean): string {
+  var classStr = '';
+  if (estimate.id==0 && estimate.estimate==0 ) {
+    classStr = 'link-open';
+  } else if (estimate.estimate==0) {
+    classStr = 'link-planned'
+  } else  {
+    classStr = 'link-resolved';
+  }
+  return classStr;
+  //return `<span class="${classStr}" title="${e.title}">${e.code}:${e.status}${byDate}</span>&nbsp;&nbsp;`
+}
 export function messageChange(input:string): string {
   var companyType = localStorage.getItem('companyType');
   if (!companyType || companyType==undefined) {

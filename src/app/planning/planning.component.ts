@@ -5,12 +5,12 @@ import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
 import {Utils} from '../utils/utils';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {
-    Epic, EpicAssignmentBean,
-    EpicBean,
-    EpicBeanCopyPasteUpdatedValues,
-    EpicEstimateBean, EpicLinkType,
-    Release,
-    ReleaseDetailBean, ReleaseStatusEnum
+  Epic, EpicAssignmentBean, EpicAssignmentStatusEnum,
+  EpicBean,
+  EpicBeanCopyPasteUpdatedValues,
+  EpicEstimateBean, EpicLinkType,
+  Release,
+  ReleaseDetailBean, ReleaseStatusEnum
 } from '../models/planning';
 import {EpicService} from '../services/epic.service';
 import {Priority, ResourceRightBean, Role, SubComponent} from '../models/basic';
@@ -25,7 +25,15 @@ import { MatDialog } from '@angular/material/dialog';
 import {EpicComponent} from './epic.component';
 import {PlanningDashboardService} from '../services/planning-dashboard.service';
 import {ReleaseService} from '../services/release.service';
-import {isManager, messageChange, relationData, releaseStatusClass, transformToDhM} from '../utils/helper';
+import {
+  assignmentStatusClass, assignmentStatusShow,
+  convertToMinutes, estimateStatusClass,
+  isManager,
+  messageChange,
+  relationData,
+  releaseStatusClass,
+  transformToDhM
+} from '../utils/helper';
 import {DecimalToTimePipe} from '../pipes/decimal.to.time';
 import {TruncateNumberPipe} from '../pipes/truncate.number';
 import {AuthService} from '../services/auth.service';
@@ -61,8 +69,9 @@ export class PlanningComponent implements OnInit {
   subComponentService = inject(SubComponentService)
   roleService = inject(RoleService)
   planningService = inject(PlanningDashboardService)
+  epicEstimateService: EpicEstimateService = inject(EpicEstimateService);
   releaseService = inject(ReleaseService)
-
+  assignableRoles: Role[] = [];
   authService = inject(AuthService);
   rights  = new ResourceRightBean();
   constructor(private readonly modalService: BsModalService, private readonly util: Utils, private readonly route: ActivatedRoute,
@@ -111,6 +120,16 @@ export class PlanningComponent implements OnInit {
       error: (err) => (this.util.showErrorMessage(err)),
     });
 
+
+    this.roleService.getActiveNonSystemOnlyRolesByProductId(this.productId).subscribe({
+      next: (data) => {
+        this.assignableRoles = data._embedded.roles;
+        this.assignableRoles = this.assignableRoles.filter(r=>!r.systemRole);
+        this.assignableRoles.sort((a, b) => a.name.localeCompare(b.name));
+
+      },
+      error: (err) => (this.util.showErrorMessage(err)),
+    });
   }
   planRelease(releaseDetail: ReleaseDetailBean) {
     console.log('Planning it:'+releaseDetail.release?.name);
@@ -151,6 +170,7 @@ export class PlanningComponent implements OnInit {
       next: (data) => {
         console.log(data);
         this.unplannedEpics = data;
+        this.unplannedEpics.forEach(e=>this.showEstimatesForEdit(e));
       },
       error: (err) => (this.util.showErrorMessage(err)),
     });
@@ -308,8 +328,95 @@ export class PlanningComponent implements OnInit {
   closeModal() {
     this.modalRef?.hide();
   }
+  showEstimatesForEdit(epic:EpicBean): void {
+    var epicEstimates: EpicEstimateBean[] = epic.estimates??[];
+    if (!epic.estimates) {
+      epic.estimates  =epicEstimates;
+    }
+    this.assignableRoles.forEach(r => {
+      if (epicEstimates.find(e => e.roleId == r.id) === undefined) {
+        let newB = new EpicEstimateBean();
+        newB.roleName = r.name;
+        console.log('EpicEstimate:' + newB.roleName);
+        newB.roleId = r.id;
+        newB.resources = 1;
+        newB.estimate = 0;
+        newB.estimateStr = '';
+        newB.id = 0;
+        newB.active = true;
+        newB.epicId = epic.id;
+        epicEstimates.push(newB);
+      } else {
+        console.log('EpicEstimate Found' + r.name)
+      }
+    });
+    epicEstimates.forEach(e => {
+      e.estimateStr = transformToDhM(e.estimate);
+    });
+    epic.estimates = this.filterEstimatesToShow(epicEstimates);
+  }
+  changeEstimateTime(estimateBean: EpicEstimateBean) {
+    //estimateBean.estimateStr = estimateStr as string;
+    estimateBean.estimate = convertToMinutes(estimateBean.estimateStr);
+    if (estimateBean.id == 0) {
+      this.epicEstimateService.create(estimateBean).subscribe({
+        next: (data) => {
+          estimateBean.id = data.id;
+          //estimateBean.estimate = data.estimate;
+          //estimateBean.resources = data.resources;
+          estimateBean.estimateStr = transformToDhM(data.estimate);
+          this.util.showSuccessMessage('Estimate is added.');
+          this.closeModal();
+        },
+        error: (err) => (this.util.showErrorMessage(err)),
+      });
+    } else {
+      this.epicEstimateService.updateSpecificFieldsPasses(estimateBean.id, {estimate: estimateBean.estimate}).subscribe({
+        next: (data) => {
+          //estimateBean.estimate = data.estimate;
+          //estimateBean.resources = data.resources;
+          estimateBean.estimateStr = transformToDhM(data.estimate);
+          this.util.showSuccessMessage('Estimate is updated.');
+          this.closeModal();
+        },
+        error: (err) => (this.util.showErrorMessage(err)),
+      });
+    }
+  }
 
-
+  changeEstimateResources(estimateBean: EpicEstimateBean, resources: string) {
+    estimateBean.resources = parseInt(resources, 10);
+    if (estimateBean.resources==0) {
+      estimateBean.estimateStr = "";
+      estimateBean.estimate = convertToMinutes(estimateBean.estimateStr);
+    }
+    if (estimateBean.id == 0) {
+      this.epicEstimateService.create(estimateBean).subscribe({
+        next: (data) => {
+          estimateBean.id = data.id;
+          //estimateBean.estimate = data.estimate;
+          //estimateBean.resources = data.resources;
+          estimateBean.estimateStr = transformToDhM(data.estimate);
+          this.util.showSuccessMessage('Estimate is added.');
+          this.closeModal();
+        },
+        error: (err) => (this.util.showErrorMessage(err)),
+      });
+    } else {
+      this.epicEstimateService.updateSpecificFieldsPasses(estimateBean.id,
+        {resources: estimateBean.resources,
+          estimate: estimateBean.estimate}).subscribe({
+        next: (data) => {
+          //estimateBean.estimate = data.estimate;
+          //estimateBean.resources = data.resources;
+          estimateBean.estimateStr = transformToDhM(data.estimate);
+          this.util.showSuccessMessage('Estimate is updated.');
+          this.closeModal();
+        },
+        error: (err) => (this.util.showErrorMessage(err)),
+      });
+    }
+  }
   showEstimates(epicEstimates: EpicEstimateBean[]): string {
     if (epicEstimates && epicEstimates.length > 0) {
       return epicEstimates.filter(estimate=>estimate.estimate>0)
@@ -352,22 +459,6 @@ export class PlanningComponent implements OnInit {
             this.reloadReleases(releaseId);
           }
         }
-        /*
-        console.log('The dialog was closed:'+result.epic.title);
-        let epic = result.epic;
-        console.log('The dialog was closed:'+epic.id);
-        console.log('The dialog was closed:'+this.unplannedEpics.filter(ep => ep.id === epic.id));
-        const index = this.unplannedEpics.findIndex(ep => ep.id === epic.id);
-        if (index!== -1) {
-          this.unplannedEpics.splice(index, 1, epic);
-          //const exiting = this.unplannedEpics[index];
-          //EpicBeanCopyPasteUpdatedValues(epic, exiting);
-        } else {
-          console.log('The dialog was closed adding in List:'+result.epic);
-          this.unplannedEpics = [...this.unplannedEpics, epic];
-
-
-        }*/
       }
       // Handle the result here
     });
@@ -386,10 +477,17 @@ export class PlanningComponent implements OnInit {
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
       if (result) {
-       row.estimates = result.estimates;
+        row.estimates = result.estimates;
+        if (row.estimates) {
+          row.estimates = this.filterEstimatesToShow(row.estimates);
+        }
       }
       // Handle the result here
     });
+  }
+
+  filterEstimatesToShow(estimates:EpicEstimateBean[]): EpicEstimateBean[] {
+    return estimates.filter(e => e.id == 0 || e.estimate > 0);
   }
 
   getAssignedPercentage(row: any): number {
@@ -404,4 +502,8 @@ export class PlanningComponent implements OnInit {
   protected readonly relationData = relationData;
     protected readonly EpicLinkType = EpicLinkType;
   protected readonly messageChange = messageChange;
+  protected readonly assignmentStatusClass = assignmentStatusClass;
+  protected readonly assignmentStatusShow = assignmentStatusShow;
+  protected readonly EpicAssignmentStatusEnum = EpicAssignmentStatusEnum;
+  protected readonly estimateStatusClass = estimateStatusClass;
 }

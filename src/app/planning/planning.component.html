@@ -215,7 +215,50 @@
                 <ngx-datatable-column name="Value Gain" prop="valueGain" [maxWidth]="80"></ngx-datatable-column>
                 <ngx-datatable-column name="Estimates" prop="estimates" [width]="300" [minWidth]="300" [maxWidth]="300">
                   <ng-template let-row="row" ngx-datatable-cell-template>
+<!--
                     <a (click)="openDialogForEstimates(row)" title="Change Estimates"><div [innerHTML]="showEstimates(row.estimates)"></div></a>
+-->
+                    <table>
+                      <thead>
+                      <tr>
+                        <th>Resource</th>
+                        <th>Estimate</th>
+                        <th>Resources</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr *ngFor="let estimate of row.estimates" class="{{estimateStatusClass(estimate)}}">
+                        <td>{{ estimate.roleName }}</td>
+                        <td>
+<!--
+                          (blur)="changeEstimateTime(estimate)"
+                          (keydown.enter)="changeEstimateTime(estimate)"
+-->
+                          <input
+                            [readOnly]="!(isManager(this.rights) || estimate.roleId==this.rights.productRoleId)"
+                            type="text"
+                            class="form-control"
+                            name="estimateStr"
+                            #estimateStr="ngModel"
+                            [(ngModel)]="estimate.estimateStr"
+                            (blur)="changeEstimateTime(estimate)"
+                            (keydown.enter)="changeEstimateTime(estimate)"
+                            />
+                        </td>
+                        <td>
+                          <input
+                            [readOnly]="!(isManager(this.rights) || estimate.roleId==this.rights.productRoleId)"
+                            type="number"
+                            class="form-control"
+                            name="resources"
+                            #resources="ngModel"
+                            [(ngModel)]="estimate.resources"
+                            (ngModelChange)="changeEstimateResources(estimate, $event)" />
+                        </td>
+
+                      </tr>
+                      </tbody>
+                    </table>
                   </ng-template>
                 </ngx-datatable-column>
                 <ngx-datatable-column name="Actions" [width]="150" [minWidth]="150" [maxWidth]="150">
