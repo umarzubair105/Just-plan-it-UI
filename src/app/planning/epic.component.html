@@ -37,7 +37,7 @@
                           *ngIf="makeTitleEditable"></textarea>
               </div>
 
-              <div class=" mb-3 mt-3 ">
+              <div class=" mb-3 mt-3">
                 <label for="details" class="form-label">Details</label>
                 <span [innerHTML]="epicBean.details" *ngIf="!makeDescEditable" (click)="makeDescEditable=true;"
                 class="span-quill-custom"></span>
@@ -48,8 +48,35 @@
 
               </div>
               <div class=" mb-3 mt-3 col-md-4">
-                <label for="priorityId" class="form-label">Priority<span class="text-danger ms-1">*</span></label>
-                <select name="priorityId"  [(ngModel)]="epicBean.priorityId" class="form-control" required id="priorityId"
+                <label class="form-label">Priority<span class="text-danger ms-1">*</span></label>
+<!--
+                placeholder="Select Priority"
+                [addTag]="true"
+                  (add)="addNewPriority($event)"
+-->
+
+                <!--
+                -->
+                <ng-select
+                  [items]="priorities"
+                  id="priorityId"
+                  name="priorityId"
+                  bindLabel="name"
+                  bindValue="id"
+                  class="form-control"
+                  [(ngModel)]="epicBean.priorityId"
+                  [searchable]="true"
+                  [clearable]="true"
+                  [addTag]="addNewPriority"
+                  appendTo="body"
+                  required
+                  [ngClass]="{ 'is-invalid': priorityId.invalid && (priorityId.dirty || priorityId.touched) }"
+                  #priorityId="ngModel"
+                >
+                </ng-select>
+
+
+               <!-- <select name="priorityId"  [(ngModel)]="epicBean.priorityId" class="form-control" required id="priorityId"
                         placeholder="Select Priority"
 
                         #priorityId="ngModel"
@@ -61,18 +88,35 @@
                     {{ m.name }}
                   </option>
 
-                </select>
+                </select>-->
 
               </div>
               <div class=" mb-3 mt- col-md-4">
                 <label for="componentId" class="form-label">Component</label>
-                <select id="componentId" name="componentId"  [(ngModel)]="epicBean.componentId"
+                <ng-select
+                  [items]="subComponents"
+                  id="componentId"
+                  name="componentId"
+                  bindLabel="name"
+                  bindValue="id"
+                  class="form-control"
+                  [(ngModel)]="epicBean.componentId"
+                  [searchable]="true"
+                  [clearable]="true"
+                  [addTag]="addNewSubComponent"
+                  appendTo="body"
+                  [ngClass]="{ 'is-invalid': componentId.invalid && (componentId.dirty || componentId.touched) }"
+                  #componentId="ngModel"
+                >
+                </ng-select>
+
+                <!--<select id="componentId" name="componentId"  [(ngModel)]="epicBean.componentId"
                         placeholder="Select Component"
                         class="form-control" #componentId="ngModel">
                   <option *ngFor="let m of subComponents" [value]="m.id">
                     {{ m.name }}
                   </option>
-                </select>
+                </select>-->
 
               </div>
 

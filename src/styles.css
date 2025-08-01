@@ -463,4 +463,33 @@ body.dark-mode {
 }
 
 
+.ng-dropdown-panel {
+  z-index: 1060 !important;
+  position: absolute !important;
+  background-color: #fff !important;
+  border: 1px solid #ccc !important;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2) !important;
+  /*
+  max-height: 200px;
+  overflow-y: auto;
+  */
+  max-height: 200px !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
 
+}
+.ng-dropdown-panel-items .ng-option {
+  padding: 8px 12px;
+  white-space: nowrap;
+  background-color: #fff;
+}
+
+.ng-dropdown-panel-items .ng-option:hover {
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
+
+.ng-dropdown-panel-items {
+  max-height: unset !important;   /* prevent inner scroll */
+  overflow: unset !important;     /* disable nested scroll */
+}

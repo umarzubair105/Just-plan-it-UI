@@ -23,13 +23,15 @@ import {AppConstants} from '../configuration/app.constants';
 import {ResourceService} from '../services/resource.service';
 import {QuillEditorComponent} from 'ngx-quill';
 import {PrettyLabelPipe} from '../pipes/pretty.label';
-import {ReleaseService} from '../services/release.service';
 import {AuthService} from '../services/auth.service';
+import { NgSelectModule } from '@ng-select/ng-select';
+import {PriorityService} from '../services/priority.service';
+import {SubComponentService} from '../services/sub-component.service';
 
 @Component({
   selector: 'epic',
   standalone: true,
-  imports: [CommonModule, FormsModule, ShowErrorsDirective, DecimalToTimePipe, FormatDatePipe, QuillEditorComponent, PrettyLabelPipe],
+  imports: [CommonModule, NgSelectModule, FormsModule, ShowErrorsDirective, DecimalToTimePipe, FormatDatePipe, QuillEditorComponent, PrettyLabelPipe],
   templateUrl: 'epic.component.html',
 })
 export class EpicComponent implements OnInit {
@@ -38,6 +40,8 @@ export class EpicComponent implements OnInit {
   priorities: Priority[] = [];
   subComponents: SubComponent[] = [];
   epicService: EpicService = inject(EpicService);
+  priorityService: PriorityService = inject(PriorityService);
+  subComponentService = inject(SubComponentService)
   resourceService: ResourceService = inject(ResourceService);
   selectedFileForUpload: File | null = null;
   descriptionForFileUpload: string = '';
@@ -61,7 +65,7 @@ export class EpicComponent implements OnInit {
   constructor(public dialogRef: MatDialogRef<EpicComponent>,
               @Inject(MAT_DIALOG_DATA) public data: any,
               private readonly util: Utils) {
-    console.log('EpicEstimate');
+    console.log('Epic....');
     this.originalBean = data.epicBean;
     this.epicBean = { ...this.originalBean };
     this.priorities = data.priorities;
@@ -143,6 +147,55 @@ export class EpicComponent implements OnInit {
       });
     }
   }
+
+  addNewPriority = (newPriorityName: string) => {
+    if (!newPriorityName) {
+      return;
+    }
+        const pLevel = Math.max(0, ...this.priorities.map(p => p.priorityLevel)) + 1;
+        let priority:Priority = new Priority();
+        priority.name = newPriorityName;
+        priority.companyId = this.authService.getCompanyId();
+        priority.active = true;
+        priority.priorityLevel=pLevel;
+        //const newPriority = { id: newId, name: newPriorityName };
+        this.priorityService.create(priority).subscribe({
+          next: (data) => {
+            this.util.showSuccessMessage('New priority is added.')
+            this.priorities = [...this.priorities, data];
+            this.epicBean.priorityId = data.id;
+            this.epicBean.priorityName = data.name;
+            this.epicBean.priorityLevel = data.priorityLevel;
+            this.priorities.sort((a, b) => a.priorityLevel - b.priorityLevel);
+            return data;
+
+          },
+          error: (err) => (this.util.showErrorMessage(err)),
+        });
+  };
+
+  addNewSubComponent = (newName: string) => {
+    if (!newName) {
+      return;
+    }
+    let priority:SubComponent = new SubComponent();
+    priority.name = newName;
+    priority.companyId = this.authService.getCompanyId();
+    priority.active = true;
+    //const newPriority = { id: newId, name: newPriorityName };
+    this.subComponentService.create(priority).subscribe({
+      next: (data) => {
+        this.util.showSuccessMessage('New component is added.')
+
+        this.subComponents = [...this.subComponents, data];
+        this.epicBean.componentId = data.id;
+        this.epicBean.componentName = data.name;
+        return data;
+      },
+      error: (err) => (this.util.showErrorMessage(err)),
+    });
+  };
+
   addEpicLink(epicLink: EpicLink): void {
     if (!epicLink) {
       alert("Please enter data");

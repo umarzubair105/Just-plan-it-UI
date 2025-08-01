@@ -24,7 +24,7 @@ export class SubComponent extends Audit{
   public name: string = '';
   public companyId: number = 0;
 }
-export class Priority extends Basic{
+export class Priority extends Audit{
   public name: string = '';
   public companyId: number = 0;
   public priorityLevel: number = 20;
