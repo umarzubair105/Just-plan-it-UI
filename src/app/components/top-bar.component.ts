@@ -8,7 +8,15 @@ import {ResourceLeaveComponent} from '../leaves/resource.leave.component';
 import {FormsModule} from '@angular/forms';
 import {ProductService} from '../services/product.service';
 import {HttpParams} from '@angular/common/http';
-import {EntityType, Epic, EpicBeanCopyPasteUpdatedValues, EpicLink, Product, Release} from '../models/planning';
+import {
+  EntityType,
+  Epic,
+  EpicBean,
+  EpicBeanCopyPasteUpdatedValues,
+  EpicLink,
+  Product,
+  Release
+} from '../models/planning';
 import {Router, RouterLink, RouterLinkActive} from '@angular/router';
 import {EpicService} from '../services/epic.service';
 import {EpicComponent} from '../planning/epic.component';
@@ -39,7 +47,7 @@ export class TopBarComponent implements OnInit {
   darkMode = false;
   username = 'Umar';
   constructor(private authService: AuthService,
-              private utils: Utils,
+              public utils: Utils,
               private productService: ProductService,
               private epicService: EpicService,
               private dialog: MatDialog,
@@ -144,6 +152,30 @@ export class TopBarComponent implements OnInit {
     });
     }
   }
+
+  openDialogForNewEpic():void {
+    let epic = new EpicBean();
+    epic.productId = this.selectedProductId;
+    epic.releaseId = null;
+    const dialogRef = this.dialog.open(EpicComponent, {
+      width: '100%',
+      maxWidth: '90vw', // 90% of viewport width
+      height: '100%',
+      maxHeight: '80vh', // 80% of viewport height
+      disableClose: true,
+      data: { epicBean: epic, releaseId: 0 },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.epic && result.epic.id>0) {
+        if (result.anythingChanged) {
+          window.location.reload();
+        }
+      }
+      // Handle the result here
+    });
+  }
+
   onSubmit():void {
     this.search = this.epicSearch.code;
     if (this.search  && this.search.trim()) {

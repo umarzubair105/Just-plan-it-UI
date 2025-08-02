@@ -5,13 +5,15 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {AuthResponse} from '../models/basic';
 import {LabelService} from './labels';
 import {messageChange} from './helper';
+import {DeviceDetectorService} from 'ngx-device-detector';
 @Injectable({
   providedIn: 'root' // ✅ Available throughout the app
 })
 export class Utils {
   constructor(private snackBar: MatSnackBar, private authService: AuthService,
               //private labelService: LabelService,
-              private router: Router) { }
+              private router: Router,
+              private deviceService: DeviceDetectorService) { }
 
 
   navigateToResource(rout: string) {
@@ -55,6 +57,13 @@ export class Utils {
       verticalPosition: 'top',
     });
   }
+  isMobile(): boolean {
+    return this.deviceService.isMobile();
+  }
+  isDesktop(): boolean {
+    return this.deviceService.isDesktop();
+  }
+
   /*label(key: string):string | undefined {
     return this.labelService.get(key);
   }*/

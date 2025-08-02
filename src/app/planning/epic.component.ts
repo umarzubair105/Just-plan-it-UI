@@ -110,12 +110,29 @@ export class EpicComponent implements OnInit {
         },
         error: (err) => (this.util.showErrorMessage(err)),
       });
+
+
     }
     this.authService.getResourceRightsByProductId(this.epicBean.productId).subscribe({
       next: (data) => {
         this.rights = data;
       },
       error: (err) => {this.util.showErrorMessage(err);},
+    });
+    this.priorityService.getByCompanyId(this.util.getCompanyId()).subscribe({
+      next: (data) => {
+        this.priorities = data._embedded.priorities;
+        this.priorities.sort((a, b) => a.priorityLevel - b.priorityLevel);
+      },
+      error: (err) => (this.util.showErrorMessage(err)),
+    });
+
+    this.subComponentService.getByCompanyId(this.util.getCompanyId()).subscribe({
+      next: (data) => {
+        this.subComponents = data._embedded.components;
+        this.subComponents.sort((a, b) => a.name.localeCompare(b.name));
+      },
+      error: (err) => (this.util.showErrorMessage(err)),
     });
   }
   getEpicCode(epicLink:EpicLink) {
@@ -178,12 +195,12 @@ export class EpicComponent implements OnInit {
     if (!newName) {
       return;
     }
-    let priority:SubComponent = new SubComponent();
-    priority.name = newName;
-    priority.companyId = this.authService.getCompanyId();
-    priority.active = true;
+    let comp:SubComponent = new SubComponent();
+    comp.name = newName;
+    comp.companyId = this.authService.getCompanyId();
+    comp.active = true;
     //const newPriority = { id: newId, name: newPriorityName };
-    this.subComponentService.create(priority).subscribe({
+    this.subComponentService.create(comp).subscribe({
       next: (data) => {
         this.util.showSuccessMessage('New component is added.')
 
