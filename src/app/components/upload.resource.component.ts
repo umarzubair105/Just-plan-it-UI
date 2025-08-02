@@ -93,6 +93,7 @@ export class UploadResourceComponent implements OnInit {
     this.companyId = this.utils.getCompanyId();
       //Number(this.route.snapshot.paramMap.get('companyId'));
     this.productId = this.utils.getSelectedProductId();//Number(this.route.snapshot.paramMap.get('productId'));
+
   }
 
   onFileChange(event: any) {

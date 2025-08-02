@@ -16,6 +16,7 @@ import {ShowErrorsDirective} from '../directives/show-errors.directive';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Utils} from '../utils/utils';
 import {messageChange, ReleaseIteration} from '../utils/helper';
+import {AuthService} from '../services/auth.service';
 
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -53,7 +54,8 @@ export class ProductComponent implements OnInit {
   addProduct: AddProduct = new AddProduct();
 
   constructor(private utils: Utils,
-              private router: Router, private route: ActivatedRoute) {
+              private router: Router, private route: ActivatedRoute,
+              private authService: AuthService,) {
 
   }
   ngOnInit(): void {
@@ -72,6 +74,8 @@ export class ProductComponent implements OnInit {
           this.productId = data.id;
           this.utils.setSelectedProductId(this.productId);
           sessionStorage.setItem('wizard', 'productSetup');
+          this.authService.reloadTopBar();
+
           this.router.navigate(['/upload-epic']);
           //this.router.navigate(['/upload-epic', this.productId]);
         },

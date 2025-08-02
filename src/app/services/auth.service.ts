@@ -65,7 +65,9 @@ export class AuthService {
     sessionStorage.removeItem('wizard');
     this.userNameSubject.next(null);
   }
-
+  reloadTopBar() {
+    this.userNameSubject.next(    localStorage.getItem('loggedUser'));
+  }
   // Get the current logged-in user
   getUserName(): string | null {
     return localStorage.getItem('loggedUser');
