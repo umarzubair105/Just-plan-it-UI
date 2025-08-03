@@ -73,7 +73,7 @@
         </li>
         <li class="nav-item" *ngIf="selectedProductId > 0">
           <a class="nav-link" (click)="openDialogForEntityDetail()">
-            <i class="bi bi-paperclip me-1"></i>{{ this.selectedProduct?.code }} Docs</a>
+            <i class="bi bi-file-earmark me-1"></i>{{ this.selectedProduct?.code }} Artifacts</a>
         </li>
 
         <li class="nav-item dropdown" *ngIf="isGlobalHR(this.rights)">
@@ -319,7 +319,7 @@
              [style.pointer-events]="selectedProductId > 0 ? 'auto' : 'none'"
              [attr.aria-disabled]="!(selectedProductId > 0)"
           >
-            <i class="bi bi-paperclip me-1"></i>{{ messageChange('Product') }} Docs</a>
+            <i class="bi bi-file-earmark me-1"></i>{{ messageChange('Product') }} Artifacts</a>
         </li>
       </ul>
     </div>

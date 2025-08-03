@@ -128,15 +128,17 @@ export function releaseStatusClass(status: ReleaseStatusEnum | undefined): strin
   }
 }
 
-export function relationData(epics:RelatedEpicDetailBean[] | null, linkType: EpicLinkType): string {
+export function relationData(epics:RelatedEpicDetailBean[] | null, linkType: EpicLinkType, showTitle: boolean): string {
   if (!epics || epics.length==0) {
     return '';
   }
   var str = ''
-  if (linkType==EpicLinkType.RELATED_TO) {
-    str = "Related To: "
-  } else if (linkType==EpicLinkType.DEPEND_ON) {
-    str = "Depends On: "
+  if (showTitle) {
+    if (linkType == EpicLinkType.RELATED_TO) {
+      str = "Related To: "
+    } else if (linkType == EpicLinkType.DEPEND_ON) {
+      str = "Depends On: "
+    }
   }
   epics.forEach(e=> {
     var classStr = 'link-open';
@@ -147,22 +149,22 @@ export function relationData(epics:RelatedEpicDetailBean[] | null, linkType: Epi
       classStr = 'link-planned';
       byDate = ` - Planned by ${e.releaseDate}`
     }
-    str += `<span class="${classStr}" title="${e.title}">${e.code}:${e.status}${byDate}</span>&nbsp;&nbsp;`
+    str += `<span class="${classStr}" title="Status: ${e.status}, Title: ${e.title}${byDate}">${e.code}</span>&nbsp;`
   });
   return str;
 
 }
 
 export function assignmentStatusClass(assignment: EpicAssignmentBean): string {
-  var classStr = '';
+  var classStr = 'table-light';
   const today = new Date();
   today.setHours(0, 0, 0, 0);  // strip time
   if (assignment.status==EpicAssignmentStatusEnum.COMPLETED) {
-    classStr = 'link-resolved';
+    classStr = 'table-success';
   } else if (assignment.expectedDeliveryDate && new Date(assignment.expectedDeliveryDate) < today) {
-    classStr = 'link-open'
+    classStr = 'table-danger'
   } else if (assignment.status==EpicAssignmentStatusEnum.ON_HOLD || assignment.status==EpicAssignmentStatusEnum.OVERDUE) {
-    classStr = 'link-planned';
+    classStr = 'table-warning';
   }
   return classStr;
   //return `<span class="${classStr}" title="${e.title}">${e.code}:${e.status}${byDate}</span>&nbsp;&nbsp;`
@@ -184,7 +186,19 @@ export function assignmentStatusShow(assignment: EpicAssignmentBean): string {
   } else if (assignment.status==EpicAssignmentStatusEnum.OPEN) {
     iconStr = 'bi-unlock';
   }
-  return `<span><i class="bi ${iconStr}" title="${assignment.status}"></i></span>`
+  return `<span><i class="bi ${iconStr}" title="${assignment.status}"></i>&nbsp;${assignment.status}</span>`
+}
+
+export function epicAssignmentStatusIconClass(assignments: EpicAssignmentBean[]|null): string {
+  if (!assignments) {
+    return 'bi bi-arrow-repeat text-primary m-1';
+  } else if (assignments.filter(a => a.status != EpicAssignmentStatusEnum.COMPLETED).length == 0) {
+    return 'bi bi-check-circle-fill text-success m-1';
+  } else if (assignments.filter(a => a.status == EpicAssignmentStatusEnum.OVERDUE).length >0) {
+    return 'bi bi-exclamation-circle-fill text-danger m-1'
+  } else{
+    return 'bi bi-arrow-repeat text-primary m-1';
+  }
 }
 
 export function estimateStatusClass(estimate: EpicEstimateBean): string {
@@ -199,6 +213,24 @@ export function estimateStatusClass(estimate: EpicEstimateBean): string {
   return classStr;
   //return `<span class="${classStr}" title="${e.title}">${e.code}:${e.status}${byDate}</span>&nbsp;&nbsp;`
 }
+
+export function isDateOver(date: Date|null): boolean {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);  // strip time
+  if (date) {
+    return new Date(date) >= today;
+  }
+  return false;
+}
+export function isDateStarted(date: Date|null): boolean {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);  // strip time
+  if (date) {
+    return new Date(date) <= today;
+  }
+  return false;
+}
+
 export function messageChange(input:string): string {
   var companyType = localStorage.getItem('companyType');
   if (!companyType || companyType==undefined) {

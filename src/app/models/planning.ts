@@ -164,6 +164,7 @@ export class RelatedEpicDetailBean {
 }
 export class ReleaseDetailBean {
   public release: Release = new Release();
+  public product: Product = new Product();
   public resourceCaps: ResourceCapInRelease[] = [];
   public epics: EpicBean[] = [];
   public expanded: boolean = false;

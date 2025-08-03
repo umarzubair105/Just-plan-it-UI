@@ -31,18 +31,19 @@ import {EpicAssignmentService} from '../services/epic.assignment.service';
 import {TimeLoggingService} from '../services/time.logging.service';
 import {
   assignmentStatusClass,
-  assignmentStatusShow,
-  getLocalDate,
+  assignmentStatusShow, epicAssignmentStatusIconClass,
+  getLocalDate, isDateOver, isManager,
   messageChange,
   relationData,
   releaseStatusClass
 } from '../utils/helper';
 import {EntityDetailComponent} from '../planning/entity-detail.component';
+import {TruncateNumberPipe} from '../pipes/truncate.number';
 @Component({
   selector: 'app-planning',
   standalone: true,
   imports: [CommonModule, NgIf, NgFor, FormsModule, ModalModule, ReactiveFormsModule,
-    NgxDatatableModule, EpicEstimateComponent, RouterLink, DecimalToTimePipe], // ✅ NO BrowserAnimationsModule here!
+    NgxDatatableModule, EpicEstimateComponent, RouterLink, DecimalToTimePipe, TruncateNumberPipe], // ✅ NO BrowserAnimationsModule here!
   templateUrl: './executed.component.html',
   styleUrl: './executed.component.css',
   providers: [BsModalService]
@@ -151,6 +152,35 @@ export class ExecutedComponent implements OnInit {
       }
   }
   }
+  openDialogForEpic(epic: EpicBean): void {
+    console.log("Planning epic:"+epic);
+    const dialogRef = this.dialog.open(EpicComponent, {
+      width: '80%',
+      maxWidth: '90vw', // 90% of viewport width
+      height: '70%',
+      maxHeight: '80vh', // 80% of viewport height
+      disableClose: true,
+      data: { epicBean: epic, priorities: this.priorities, subComponents: this.subComponents },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      if (result && result.epic && result.epic.id>0) {
+        console.log('The dialog was closed:'+result.epic.title);
+        let epic = result.epic;
+        console.log('The dialog was closed:'+epic.id);
+        console.log('The dialog was closed:'+this.unplannedEpics.filter(ep => ep.id === epic.id));
+        const index = this.unplannedEpics.findIndex(ep => ep.id === epic.id);
+        if (index!== -1) {
+          const exiting = this.unplannedEpics[index];
+          EpicBeanCopyPasteUpdatedValues(epic, exiting);
+        } else {
+          console.log('The dialog was closed adding in List:'+result.epic);
+          this.unplannedEpics = [...this.unplannedEpics, epic];
+        }
+      }
+      // Handle the result here
+    });
+  }
   openDialogForEntityDetail(release: Release): void {
     const dialogRef = this.dialog.open(EntityDetailComponent, {
       width: '50%',
@@ -167,10 +197,6 @@ export class ExecutedComponent implements OnInit {
   }
   rowIndex: number=0;
   getRowClass(row: any): string {
-    const epic = row as EpicBean;
-    if (epic.assignments && epic.assignments.filter(a => a.status != EpicAssignmentStatusEnum.COMPLETED).length == 0){
-      return 'completed-row';
-    }
     this.rowIndex = this.rowIndex +1;
     return this.rowIndex % 2 === 0 ? 'even-row' : 'odd-row';
   }
@@ -182,7 +208,11 @@ export class ExecutedComponent implements OnInit {
     if (!total || total <= 0) return 0;
     return (row.loggedTime / total) * 100;
   }
-
+  getLoggedPercentageAgainstEstimated(row: any): number {
+    const total = row.prodBasedAssignedTime;
+    if (!total || total <= 0) return 0;
+    return (row.loggedTime / total) * 100;
+  }
   protected readonly WorkingHourEnum = WorkingHourEnum;
   protected readonly EpicBean = EpicBean;
   protected readonly EpicAssignmentStatusEnum = EpicAssignmentStatusEnum;
@@ -192,4 +222,7 @@ export class ExecutedComponent implements OnInit {
   protected readonly messageChange = messageChange;
   protected readonly assignmentStatusShow = assignmentStatusShow;
   protected readonly assignmentStatusClass = assignmentStatusClass;
+  protected readonly isDateOver = isDateOver;
+  protected readonly isManager = isManager;
+  protected readonly epicAssignmentStatusIconClass = epicAssignmentStatusIconClass;
 }

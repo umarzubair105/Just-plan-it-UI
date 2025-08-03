@@ -31,9 +31,9 @@ import {EpicAssignmentService} from '../services/epic.assignment.service';
 import {TimeLoggingService} from '../services/time.logging.service';
 import {
   assignmentStatusClass, assignmentStatusShow,
-  convertToMinutes,
-  getLocalDate,
-  isManager,
+  convertToMinutes, epicAssignmentStatusIconClass,
+  getLocalDate, isDateOver,
+  isManager, messageChange,
   relationData,
   releaseStatusClass
 } from '../utils/helper';
@@ -278,10 +278,6 @@ export class PersonalDashboardComponent implements OnInit {
   }
   rowIndex: number=0;
   getRowClass(row: any): string {
-    const epic = row as EpicBean;
-    if (epic.assignments && epic.assignments.filter(a => a.status != EpicAssignmentStatusEnum.COMPLETED).length == 0){
-      return 'completed-row';
-    }
     this.rowIndex = this.rowIndex +1;
     return this.rowIndex % 2 === 0 ? 'even-row' : 'odd-row';
   }
@@ -341,6 +337,11 @@ export class PersonalDashboardComponent implements OnInit {
     if (!total || total <= 0) return 0;
     return (row.loggedTime / total) * 100;
   }
+  getLoggedPercentageAgainstEstimated(row: any): number {
+    const total = row.prodBasedAssignedTime;
+    if (!total || total <= 0) return 0;
+    return (row.loggedTime / total) * 100;
+  }
   protected readonly WorkingHourEnum = WorkingHourEnum;
   protected readonly EpicBean = EpicBean;
   protected readonly EpicAssignmentStatusEnum = EpicAssignmentStatusEnum;
@@ -350,4 +351,7 @@ export class PersonalDashboardComponent implements OnInit {
     protected readonly EpicLinkType = EpicLinkType;
   protected readonly assignmentStatusClass = assignmentStatusClass;
   protected readonly assignmentStatusShow = assignmentStatusShow;
+  protected readonly messageChange = messageChange;
+  protected readonly isDateOver = isDateOver;
+  protected readonly epicAssignmentStatusIconClass = epicAssignmentStatusIconClass;
 }

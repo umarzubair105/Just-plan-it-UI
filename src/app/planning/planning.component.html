@@ -68,8 +68,8 @@
                   <ngx-datatable-column name="Title" prop="title">
                     <ng-template let-row="row" ngx-datatable-cell-template>
                       {{row.title}}
-                      <div [innerHTML]="relationData(row.dependsOn, EpicLinkType.DEPEND_ON)" *ngIf="row.dependsOn && row.dependsOn.length>0"></div>
-                      <div [innerHTML]="relationData(row.relatedTo, EpicLinkType.RELATED_TO)" *ngIf="row.relatedTo && row.relatedTo.length>0"></div>
+                      <div [innerHTML]="relationData(row.dependsOn, EpicLinkType.DEPEND_ON, true)" *ngIf="row.dependsOn && row.dependsOn.length>0"></div>
+                      <div [innerHTML]="relationData(row.relatedTo, EpicLinkType.RELATED_TO, true)" *ngIf="row.relatedTo && row.relatedTo.length>0"></div>
                     </ng-template>
                   </ngx-datatable-column>
                   <ngx-datatable-column name="Priority" prop="priorityLevel" [sortable]="true" [width]="120" [minWidth]="120" [maxWidth]="120">
@@ -193,8 +193,8 @@
                 <ngx-datatable-column name="Title" prop="title">
                   <ng-template let-row="row" ngx-datatable-cell-template>
                     {{row.title}}
-                    <div [innerHTML]="relationData(row.dependsOn, EpicLinkType.DEPEND_ON)" *ngIf="row.dependsOn && row.dependsOn.length>0"></div>
-                    <div [innerHTML]="relationData(row.relatedTo, EpicLinkType.RELATED_TO)" *ngIf="row.relatedTo && row.relatedTo.length>0"></div>
+                    <div [innerHTML]="relationData(row.dependsOn, EpicLinkType.DEPEND_ON, true)" *ngIf="row.dependsOn && row.dependsOn.length>0"></div>
+                    <div [innerHTML]="relationData(row.relatedTo, EpicLinkType.RELATED_TO, true)" *ngIf="row.relatedTo && row.relatedTo.length>0"></div>
                   </ng-template>
                 </ngx-datatable-column>
                 <ngx-datatable-column name="Priority" prop="priorityLevel" [sortable]="true" [maxWidth]="120">

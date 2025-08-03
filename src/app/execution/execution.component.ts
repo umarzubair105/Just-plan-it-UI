@@ -34,8 +34,8 @@ import {TimeLoggingService} from '../services/time.logging.service';
 import {
   assignmentStatusClass,
   assignmentStatusShow,
-  convertToMinutes,
-  getLocalDate,
+  convertToMinutes, epicAssignmentStatusIconClass,
+  getLocalDate, isDateOver,
   isManager,
   messageChange,
   relationData,
@@ -268,10 +268,10 @@ export class ExecutionComponent implements OnInit {
   }
   rowIndex: number=0;
   getRowClass(row: any): string {
-    const epic = row as EpicBean;
-    if (epic.assignments && epic.assignments.filter(a => a.status != EpicAssignmentStatusEnum.COMPLETED).length == 0){
-      return 'completed-row';
-    }
+    //const epic = row as EpicBean;
+    //if (epic.assignments && epic.assignments.filter(a => a.status != EpicAssignmentStatusEnum.COMPLETED).length == 0){
+      //return 'completed-row';
+    //}
     this.rowIndex = this.rowIndex +1;
     return this.rowIndex % 2 === 0 ? 'even-row' : 'odd-row';
     /*switch (row.status) {
@@ -331,7 +331,7 @@ export class ExecutionComponent implements OnInit {
       height: '70%',
       maxHeight: '80vh', // 80% of viewport height
       disableClose: true,
-      data: { entityId: release.id, entityType: EntityType.RELEASE, entityName: release.name },
+      data: { entityId: release.id, entityType: EntityType.RELEASE, entityName: release.name, label:'Artifacts' },
     });
 
     dialogRef.afterClosed().subscribe(result => {
@@ -352,14 +352,14 @@ export class ExecutionComponent implements OnInit {
     }
   }
 
-  assignmentsDone(epic: EpicBean): boolean {
-    if (epic.assignments) {
-      return epic.assignments.filter(a => a.status != EpicAssignmentStatusEnum.COMPLETED).length == 0;
-    }
-    return false;
-  }
+
   getLoggedPercentage(row: any): number {
     const total = row.prodBasedAssignableTime;
+    if (!total || total <= 0) return 0;
+    return (row.loggedTime / total) * 100;
+  }
+  getLoggedPercentageAgainstEstimated(row: any): number {
+    const total = row.prodBasedAssignedTime;
     if (!total || total <= 0) return 0;
     return (row.loggedTime / total) * 100;
   }
@@ -373,4 +373,6 @@ export class ExecutionComponent implements OnInit {
   protected readonly messageChange = messageChange;
   protected readonly assignmentStatusClass = assignmentStatusClass;
   protected readonly assignmentStatusShow = assignmentStatusShow;
+  protected readonly isDateOver = isDateOver;
+  protected readonly epicAssignmentStatusIconClass = epicAssignmentStatusIconClass;
 }

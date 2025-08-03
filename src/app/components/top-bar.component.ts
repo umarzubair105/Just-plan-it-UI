@@ -144,7 +144,7 @@ export class TopBarComponent implements OnInit {
       height: '70%',
       maxHeight: '80vh', // 80% of viewport height
       disableClose: true,
-      data: { entityId: this.selectedProductId, entityType: EntityType.PRODUCT, entityName: product.name },
+      data: { entityId: this.selectedProductId, entityType: EntityType.PRODUCT, entityName: product.name, label:'Artifacts' },
     });
 
     dialogRef.afterClosed().subscribe(result => {

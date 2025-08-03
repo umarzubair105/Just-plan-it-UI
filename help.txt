@@ -4,6 +4,24 @@ Prepare test Data
 Insert meta data for Sample Companies
 Home Page Content
 
+#003366 — Deep Navy (professional + readable white text)
+
+#1a73e8 — Google Blue (clean and modern)
+
+#f8f9fa — Very light gray for a minimal look
+
+#004085 — Bootstrap’s bg-primary darker tone
+
+#dee2e6 — Bootstrap table header default
+
+th {
+  background-color: #003366;
+  color: #fff;
+  border-bottom: 2px solid #dee2e6;
+  font-weight: 600;
+}
+
+Add Epic Repeatively
 
 Changes Release Dates manually
 

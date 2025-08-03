@@ -16,7 +16,8 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
 .bg-primary {
-/*  background-color: #121212 !important;*/
+  background-color: #1d3557 !important;
+  /*#121212*/
 }
 
 
@@ -321,6 +322,19 @@ body.dark-mode {
   border-bottom: 2px solid #0d6efd;
 }
 
+.release-info {
+  background-color: #d1ecf1;
+  min-height: 40px; /* adjust as needed */
+
+  /*
+  #e3f2fd — Light Sky Blue (Bootstrap’s bg-light of info)
+
+#d0ebff — Softer than current, more elegant
+
+#d1ecf1 — Light cyan with a subtle feel
+
+#f0f8ff — AliceBlue (very gentle, more white-ish)*/
+}
 .release-info-card {
   background-color: lightblue;
   border-bottom: 1px solid #dee2e6;
@@ -492,4 +506,13 @@ body.dark-mode {
 .ng-dropdown-panel-items {
   max-height: unset !important;   /* prevent inner scroll */
   overflow: unset !important;     /* disable nested scroll */
+}
+
+.compact-table th {
+  font-weight: normal !important;
+}
+.compact-table td {
+  padding-top: 0.25rem;
+  padding-bottom: 0.25rem;
+  line-height: 1.2;
 }

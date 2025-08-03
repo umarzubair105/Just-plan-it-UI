@@ -28,6 +28,7 @@ import {AuthService} from '../services/auth.service';
 export class EntityDetailComponent implements OnInit {
   entityId:number;
   entityName:string;
+  label:string = 'Artifacts';
   entityType:EntityType;
   companyId:number=0;
   productId:number=0;
@@ -48,7 +49,9 @@ export class EntityDetailComponent implements OnInit {
     this.entityId = data.entityId;
     this.entityType = data.entityType;
     this.entityName = data.entityName;
-
+    if (data.label) {
+      this.label = data.label;
+    }
 
   }
   ngOnInit() {

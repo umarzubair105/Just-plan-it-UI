@@ -1,213 +1,214 @@
-<div class="container-lg mt-4">
-  <div class="row">
-    <div class="col-md-12 offset-md-0">
+<div class="container-fluid px-4">
 
-      <div class="card shadow-lg">
-        <div class="card-header bg-primary text-white text-center">
-          <h2 class="h4 mb-0">My Dashboard</h2>
-        </div>
-        <ul class="custom-nav-list">
-          <li *ngFor="let releaseDetailLink of releases;let i = index">
-            <a [routerLink]="[]" [fragment]="'eRelease'+i" class="custom-nav-link" *ngIf="i>0">
+  <div class="card shadow-sm mb-4">
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h4 class="mb-0"><i class="bi bi-kanban me-2"></i> My Dashboard</h4>
+    </div>
+    <div class="card-body bg-white">
+      <div class="d-flex">
+        <ul class="navbar-nav d-flex flex-row flex-wrap gap-2 mb-2 mb-lg-0 ms-auto">
+          <li class="nav-item" *ngFor="let releaseDetailLink of releases;let i = index">
+            <a [routerLink]="[]" [fragment]="'eRelease'+i" class="nav-link px-2" *ngIf="i>0">
               {{releaseDetailLink.release?.name}}</a>
           </li>
         </ul>
+      </div>
 
 
-        <div class="row release" *ngFor="let releaseDetail of releases;let i = index" [id]="'eRelease'+i">
-        <div class="">
-          <div class="card-header release-info-card">
-          <ul class="release-info-list">
-            <li><strong>Release:</strong> {{ releaseDetail.release?.name }}</li>
-            <li><strong>Start Date:</strong> {{ releaseDetail.release?.startDate }}</li>
-            <li><strong>End Date:</strong> {{ releaseDetail.release?.endDate }}</li>
-            <li><strong>Working Days:</strong> {{ releaseDetail.release?.workingDays }}</li>
-            <li><strong>Status:</strong>
-              <span [ngClass]="releaseStatusClass(releaseDetail.release?.status)">
-                  {{ releaseDetail.release?.status }}
-                </span>
-            </li>
-            <li *ngIf="isManager(this.rights)">
-              <a (click)="completeRelease(releaseDetail)" title="Close the release" class="btn btn-sm btn-outline-success">
-                <i class="bi bi-door-closed"></i> Close
-              </a>
-            </li>
-            <li>
-              <a (click)="openDialogForEntityDetail(releaseDetail.release)" title="Doc" class="btn btn-sm btn-outline-success">
-                <i class="bi bi-upload"></i> Docs
-              </a>
-            </li>
-          </ul>
+
+      <div class="row release" *ngFor="let releaseDetail of releases;let i = index" [id]="'eRelease'+i">
+        <!-- Release Details -->
+        <div class="mb-4 p-2 border rounded d-flex justify-content-between align-items-center flex-wrap release-info">
+          <div class="release-info-text text-dark text-center">
+            {{messageChange('Product')}}: <strong>{{ releaseDetail.product.name }}</strong> &nbsp;|&nbsp;
+            Release: {{ releaseDetail.release?.name }} &nbsp;|&nbsp;
+            Start Date: <strong>{{ releaseDetail.release?.startDate }}</strong> &nbsp;|&nbsp;
+            End Date: <strong>{{ releaseDetail.release?.endDate }}</strong> &nbsp;|&nbsp;
+            Working Days: {{ releaseDetail.release?.workingDays }}
           </div>
-          <div class="card-body">
-            <h5 class="card-title">Deliverables</h5>
-            <div class="col-md-12">
-                <ngx-datatable
-                  class="bootstrap-table table-striped table-bordered table-hover"
-                  [rows]="releaseDetail.epics"
-                  [columnMode]="'force'"
-                  [headerHeight]="40"
-                  [footerHeight]="40"
-                  [rowHeight]="'auto'"
-                  [sorts]="[{ prop: 'priorityLevel', dir: 'asc' }]"
-                  [rowClass]="getRowClass"
-                  >
 
-                  <ngx-datatable-column name="Code" prop="code" [sortable]="true" [width]="80" [minWidth]="80" [maxWidth]="80"></ngx-datatable-column>
-                  <ngx-datatable-column name="Title" prop="title">
-                    <ng-template let-row="row" ngx-datatable-cell-template>
-                      {{row.title}}
-                      <div [innerHTML]="relationData(row.dependsOn, EpicLinkType.DEPEND_ON)" *ngIf="row.dependsOn && row.dependsOn.length>0"></div>
-                      <div [innerHTML]="relationData(row.relatedTo, EpicLinkType.RELATED_TO)" *ngIf="row.relatedTo && row.relatedTo.length>0"></div>
-                    </ng-template>
-                  </ngx-datatable-column>
-                  <ngx-datatable-column name="Required By" prop="requiredBy" [maxWidth]="100"></ngx-datatable-column>
-                  <ngx-datatable-column name="Value Gain" prop="valueGain" [maxWidth]="80"></ngx-datatable-column>
-                  <ngx-datatable-column name="Assignment" [width]="620" [minWidth]="620" [maxWidth]="620">
-                    <ng-template let-row="row" ngx-datatable-cell-template>
-                      <a (click)="toggleAssignments(row)" class="text-primary" style="cursor:pointer">
-                        <i [ngClass]="{'bi bi-chevron-down': row.expanded, 'bi bi-chevron-right': !row.expanded}"></i>
-                      </a>
-                      <table *ngIf="row.expanded">
-                        <thead>
-                        <tr>
-                          <th>Resource</th>
-                          <th>Estimate</th>
-                          <th>Logged</th>
-                          <th>Status</th>
-                          <th>Due Date</th>
-                          <th>Action</th>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <tr *ngFor="let assignment of row.assignments" class="{{assignmentStatusClass(assignment)}}">
-                          <td>{{ assignment.resourceName }}</td>
-                          <td>{{ assignment.estimate | decimalToTime }}</td>
-                          <td>{{ assignment.minutesLogged | decimalToTime }}</td>
-                          <td [innerHTML]="assignmentStatusShow(assignment)"></td>
-                          <td>
-                            <input
-                              type="date"
-                              class="form-control"
-                              [ngModel]="assignment.expectedDeliveryDate"
-                              (ngModelChange)="changeAssignmentDeliveryDate(assignment, $event)" />
-                          </td>
-                          <td *ngIf="isManager(this.rights) || this.rights.resourceId==assignment.resourceId " [width]="150">
-                            <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.OPEN)"
-                               title="Re open it"
-                               *ngIf="assignment.status === EpicAssignmentStatusEnum.COMPLETED || assignment.status === EpicAssignmentStatusEnum.ON_HOLD
+          <div class="mt-2 mt-lg-0">
+            <button class="btn btn-outline-success btn-sm me-2"
+                    *ngIf="isManager(this.rights) && isDateOver(releaseDetail.release.endDate)"
+                    (click)="completeRelease(releaseDetail)" title="Mark release to complete.">
+              <i class="bi bi-x-circle"></i> Complete
+            </button>
+
+            <button class="btn btn-outline-secondary btn-sm"
+                    (click)="openDialogForEntityDetail(releaseDetail.release)" title="Release Artifacts">
+              <i class="bi bi-file-earmark"></i> Release Artifacts
+            </button>
+          </div>
+        </div>
+        <!--
+                  <h5 class="mb-1"><i class="bi bi-journal me-2"></i> Deliverables</h5>
+        -->
+        <div class="table-responsive mb-2">
+          <table class="table table-bordered table-hover align-middle compact-table">
+            <thead class="table-light">
+            <tr>
+              <th>&nbsp;</th>
+              <th>Code</th>
+              <th>Title</th>
+              <th>Depends On</th>
+              <th>Related To</th>
+              <th>Priority</th>
+              <th>Required By</th>
+              <th>Value Gain</th>
+              <th class="text-center">Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <ng-container *ngFor="let row of releaseDetail.epics">
+              <tr>
+                <td><button (click)="toggleAssignments(row)">
+                  <i [ngClass]="{'bi bi-toggle-on': row.expanded, 'bi bi-toggle-off': !row.expanded}"></i></button></td>
+                <td><i class="{{epicAssignmentStatusIconClass(row.assignments)}}" ></i>{{row.code}}</td>
+                <td>{{row.title}}</td>
+                <td><div [innerHTML]="relationData(row.dependsOn, EpicLinkType.DEPEND_ON, false)" *ngIf="row.dependsOn && row.dependsOn.length>0"></div></td>
+                <td><div [innerHTML]="relationData(row.relatedTo, EpicLinkType.RELATED_TO, false)" *ngIf="row.relatedTo && row.relatedTo.length>0"></div></td>
+                <td>{{row.priorityName}}</td>
+                <td>{{row.requiredBy}}</td>
+                <td>{{row.valueGain}}</td>
+                <td class="text-center">
+                  <a (click)="openDialogForEpic(row)" title="Add achievements">
+                    <i class="bi bi-box-seam action-icon"></i>
+                  </a>
+                </td>
+              </tr>
+              <tr *ngIf="row.expanded" >
+                <td colspan="10" >
+                  <table class="table table-bordered table-hover align-middle mb-0 compact-table">
+                    <thead class="table-light">
+                    <tr>
+                      <th>Resource</th>
+                      <th>Estimated Time</th>
+                      <th>Logged Time</th>
+                      <th>Status</th>
+                      <th>Due Date</th>
+                      <th class="text-center">Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <ng-container *ngFor="let assignment of row.assignments">
+                      <tr class="{{assignmentStatusClass(assignment)}}">
+                        <td>{{ assignment.resourceName }}</td>
+                        <td>{{ assignment.estimate | decimalToTime }}</td>
+                        <td>{{ assignment.minutesLogged | decimalToTime }}</td>
+                        <td [innerHTML]="assignmentStatusShow(assignment)"></td>
+                        <td class="mb-0 mt-0">
+                          <input
+                            type="date"
+                            class="form-control form-control-sm"
+                            [min]="releaseDetail.release.startDate"
+                            [max]="releaseDetail.release.endDate"
+                            [ngModel]="assignment.expectedDeliveryDate"
+                            (ngModelChange)="changeAssignmentDeliveryDate(assignment, $event)" />
+                        </td>
+                        <td *ngIf="isManager(this.rights) || this.rights.resourceId==assignment.resourceId " [width]="150"  class="text-center">
+                          <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.OPEN)"
+                             title="Re open it"
+                             *ngIf="assignment.status === EpicAssignmentStatusEnum.COMPLETED || assignment.status === EpicAssignmentStatusEnum.ON_HOLD
                                   || assignment.status === EpicAssignmentStatusEnum.OVERDUE">
-                              <i class="bi bi-stop-circle-fill action-icon"></i>
-                            </a>
-                            <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.STARTED)"
-                               title="Start working on"
-                               *ngIf="assignment.status === EpicAssignmentStatusEnum.OPEN || assignment.status === EpicAssignmentStatusEnum.ON_HOLD">
-                              <i class="bi bi-play-circle-fill action-icon"></i>
-                            </a>
-                            <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.ON_HOLD)"
-                               title="Hold it"
-                               *ngIf="assignment.status === EpicAssignmentStatusEnum.OPEN || assignment.status === EpicAssignmentStatusEnum.STARTED">
-                              <i class="bi bi-pause-circle-fill action-icon"></i>
-                            </a>
-                            <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.COMPLETED)"
-                               title="Mark as Completed"
-                               *ngIf="assignment.status === EpicAssignmentStatusEnum.STARTED">
-                              <i class="bi bi-check-circle-fill action-icon"></i>
-                            </a>
-                            <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.OVERDUE)"
-                               title="Can't be completed"
-                               *ngIf="assignment.status !== EpicAssignmentStatusEnum.OVERDUE">
-                              <i class="bi bi-exclamation-circle-fill action-icon"></i>
-                            </a>
-                            <a (click)="updateTimeLoggingModal(timeLoggingTemplate, releaseDetail.release?.id, assignment)"
-                               title="Log your work"
-                               *ngIf="assignment.status === EpicAssignmentStatusEnum.STARTED">
-                              <i class="bi bi-clock action-icon"></i>
-                            </a>
-                          </td>
-                          <td *ngIf="!(isManager(this.rights) || this.rights.resourceId==assignment.resourceId)" [width]="150">
-                          </td>
-                        </tr>
-                        </tbody>
-                      </table>
-                    </ng-template>
-                  </ngx-datatable-column>
-                  <ngx-datatable-column name="Actions" [width]="50" [minWidth]="50" [maxWidth]="50">
-                    <ng-template let-row="row" ngx-datatable-cell-template>
-                      <a (click)="openDialogForEpic(row)" title="Add achievements">
-                        <i class="bi bi-box-seam action-icon"></i>
-                      </a>
-                    </ng-template>
-                  </ngx-datatable-column>
-                </ngx-datatable>
-              </div>
-            </div>
-          <div class="card-body">
-            <h5 class="card-title">Resource Allocation</h5>
-            <div class="col-md-12">
-              <ngx-datatable
-                [rows]="releaseDetail.resourceCaps"
-                [columnMode]="'force'"
-                [headerHeight]="40"
-                [footerHeight]="0"
-                [rowHeight]="'auto'"
-                class="material">
-                <ngx-datatable-column name="Resource" prop="resourceName"></ngx-datatable-column>
-                <ngx-datatable-column name="Availability" [width]="150" [minWidth]="150" [maxWidth]="150">
-                  <ng-template let-row="row" ngx-datatable-cell-template>
-                    {{ row.prodBasedAssignableTime | decimalToTime}}
-                  </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column name="Time Assigned" [width]="150" [minWidth]="150" [maxWidth]="150">
-                  <ng-template let-row="row" ngx-datatable-cell-template>
-                    {{ row.prodBasedAssignedTime | decimalToTime}}
-                  </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column name="Time Unassigned" [width]="150" [minWidth]="150" [maxWidth]="150">
-                  <ng-template let-row="row" ngx-datatable-cell-template>
-                    {{ row.prodBasedAssignableTime - row.prodBasedAssignedTime | decimalToTime }}
-                  </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column name="Time Logged">
-                  <ng-template let-row="row" ngx-datatable-cell-template>
-                    {{ row.loggedTime | decimalToTime }}
-                  </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column name="Time Utilized" [width]="500" [minWidth]="500" [maxWidth]="500">
-                  <ng-template let-row="row" ngx-datatable-cell-template>
-                    <div class="progress m-1" style="height: 20px;">
-                      <div class="progress-bar" role="progressbar"
-                           [style.width.%]="getLoggedPercentage(row)"
-                           aria-valuemin="0" aria-valuemax="100">{{getLoggedPercentage(row) | truncateNumber}}%</div>
-                    </div>
-                   <!-- <div class="time-bar-container">
-                      <div
-                        class="time-bar-assigned"
-                        [style.width.%]="getLoggedPercentage(row)"
-                        title="Time Logged: {{ row.loggedTime | decimalToTime }}">
-                      </div>
-                      <div
-                        class="time-bar-remaining"
-                        [style.width.%]="100 - getLoggedPercentage(row)"
-                        title="Max Time Left: {{ row.prodBasedAssignableTime - row.loggedTime | decimalToTime }}">
-                      </div>
-                    </div>-->
-                  </ng-template>
-                </ngx-datatable-column>
-              </ngx-datatable>
-            </div>
-          </div>
+                            <i class="bi bi-stop-circle-fill action-icon"></i>
+                          </a>
+                          <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.STARTED)"
+                             title="Start working on"
+                             *ngIf="assignment.status === EpicAssignmentStatusEnum.OPEN || assignment.status === EpicAssignmentStatusEnum.ON_HOLD">
+                            <i class="bi bi-play-circle-fill action-icon"></i>
+                          </a>
+                          <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.ON_HOLD)"
+                             title="Hold it"
+                             *ngIf="assignment.status === EpicAssignmentStatusEnum.OPEN || assignment.status === EpicAssignmentStatusEnum.STARTED">
+                            <i class="bi bi-pause-circle-fill action-icon"></i>
+                          </a>
+                          <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.COMPLETED)"
+                             title="Mark as Completed"
+                             *ngIf="assignment.status === EpicAssignmentStatusEnum.STARTED">
+                            <i class="bi bi-check-circle-fill action-icon"></i>
+                          </a>
+                          <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.OVERDUE)"
+                             title="Can't be completed"
+                             *ngIf="assignment.status !== EpicAssignmentStatusEnum.OVERDUE">
+                            <i class="bi bi-exclamation-circle-fill action-icon"></i>
+                          </a>
+                          <a (click)="updateTimeLoggingModal(timeLoggingTemplate, releaseDetail.release?.id, assignment)"
+                             title="Log your work"
+                             *ngIf="assignment.status === EpicAssignmentStatusEnum.STARTED">
+                            <i class="bi bi-clock action-icon"></i>
+                          </a>
+                        </td>
+                        <td *ngIf="!(isManager(this.rights) || this.rights.resourceId==assignment.resourceId)" [width]="150">
+                        </td>
+                      </tr>
+                    </ng-container>
+                    </tbody>
+                  </table>
+                </td>
+              </tr>
+            </ng-container>
+            </tbody>
+          </table>
+
+        </div>
+        <!-- Resource Allocation -->
+        <!--
+                  <h5 class="mb-1"><i class="bi bi-people me-2"></i> Resource Allocation</h5>
+        -->
+        <div class="table-responsive">
+          <table class="table table-bordered table-hover align-middle compact-table">
+            <thead class="table-light">
+            <tr>
+              <td>Resource</td>
+              <td>Availability</td>
+              <td>Time Assigned</td>
+              <td>Time Unassigned</td>
+              <td>Time Logged</td>
+              <td>Estimated Time - Utilized</td>
+              <td>Available Time - Utilized</td>
+            </tr>
+            </thead>
+            <tbody>
+            <tr *ngFor="let row of releaseDetail.resourceCaps">
+              <td>{{row.resourceName}}</td>
+              <td>{{ row.prodBasedAssignableTime | decimalToTime}}</td>
+              <td>{{ row.prodBasedAssignedTime | decimalToTime}}</td>
+              <td>{{ row.prodBasedAssignableTime - row.prodBasedAssignedTime | decimalToTime }}</td>
+              <td>{{ row.loggedTime | decimalToTime }}</td>
+              <td>
+                <div class="progress m-0" style="height: 18px;">
+                  <div class="progress-bar" role="progressbar"
+                       [ngClass]="{'bg-danger': getLoggedPercentageAgainstEstimated(row)>100,
+                              'bg-primary': getLoggedPercentageAgainstEstimated(row)<=100}"
+                       [style.width.%]="getLoggedPercentageAgainstEstimated(row)"
+                       aria-valuemin="0" aria-valuemax="100">{{getLoggedPercentageAgainstEstimated(row) | truncateNumber}}%</div>
+                </div>
+              </td>
+              <td>
+                <div class="progress m-0" style="height: 18px;">
+                  <div class="progress-bar" role="progressbar"
+                       [ngClass]="{'bg-danger': getLoggedPercentage(row)>100,
+                              'bg-success': getLoggedPercentage(row)<=100}"
+                       [style.width.%]="getLoggedPercentage(row)"
+                       aria-valuemin="0" aria-valuemax="100">{{getLoggedPercentage(row) | truncateNumber}}%</div>
+                </div>
+              </td>
+            </tr>
+            </tbody>
+          </table>
         </div>
         <div>
-          <ul class="custom-nav-list">
-            <li *ngFor="let releaseDetailLink of releases;let j = index">
-              <a [routerLink]="[]" [fragment]="'eRelease'+j" class="custom-nav-link" *ngIf="j<i || j>i+1">
-                {{releaseDetailLink.release?.name}}</a>
-            </li>
-          </ul>
+          <div class="d-flex">
+            <ul class="navbar-nav d-flex flex-row flex-wrap gap-2 mb-2 mb-lg-0 ms-auto">
+              <li class="nav-item" *ngFor="let releaseDetailLink of releases;let j = index">
+                <a [routerLink]="[]" [fragment]="'eRelease'+j" class="nav-link px-2" *ngIf="j<i || j>i+1">
+                  {{releaseDetailLink.release?.name}}</a>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
-      </div>
+
     </div>
   </div>
 
