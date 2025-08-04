@@ -2,13 +2,13 @@
 
   <div class="card shadow-sm mb-4">
     <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
-      <h4 class="mb-0"><i class="bi bi-kanban me-2"></i> Planned releases</h4>
+      <h4 class="mb-0"><i class="bi bi-box me-2"></i> Planned releases</h4>
     </div>
     <div class="card-body bg-white">
       <div class="d-flex">
         <ul class="navbar-nav d-flex flex-row flex-wrap gap-2 mb-2 mb-lg-0 ms-auto">
           <li class="nav-item" *ngFor="let releaseDetailLink of releases;let i = index">
-            <a [routerLink]="[]" [fragment]="'eRelease'+i" class="nav-link px-2" *ngIf="i>0">
+            <a [routerLink]="[]" [fragment]="'plannedRelease'+i" class="nav-link px-2" *ngIf="i>0">
               {{ releaseDetailLink.release?.name }}</a>
           </li>
         </ul>
@@ -92,14 +92,15 @@
                   <div [innerHTML]="showAssignments(row.assignments)"></div>
                 </ng-template>
               </ngx-datatable-column>
-              <ngx-datatable-column name="Actions" [maxWidth]="150" [headerClass]="'text-center'" [cellClass]="'text-center'">
+              <ngx-datatable-column name="Actions" [maxWidth]="150" [headerClass]="'text-center'">
                 <ng-template let-row="row" ngx-datatable-cell-template>
-
-                  <button class="btn btn-sm btn-outline-danger me-2"
-                          *ngIf="isManager(this.rights)"
-                          (click)="unplanEpic(row.id, releaseDetail.release.id)" title="Remove it from release plan.">
-                    <i class="bi bi-stop-circle"></i> Remove from plan
-                  </button>
+                  <div style="text-align: center;">
+                  <a (click)="unplanEpic(row.id, releaseDetail.release.id)"
+                     title="Remove it from release plan"
+                     *ngIf="isManager(this.rights)">
+                    <i class="bi bi-dash-square action-icon"></i>
+                  </a>
+                  </div>
                 </ng-template>
               </ngx-datatable-column>
             </ngx-datatable>
@@ -159,7 +160,7 @@
           <div class="d-flex">
             <ul class="navbar-nav d-flex flex-row flex-wrap gap-2 mb-2 mb-lg-0 ms-auto">
               <li class="nav-item" *ngFor="let releaseDetailLink of releases;let j = index">
-                <a [routerLink]="[]" [fragment]="'eRelease'+j" class="nav-link px-2" *ngIf="j<i || j>i+1">
+                <a [routerLink]="[]" [fragment]="'plannedRelease'+j" class="nav-link px-2" *ngIf="j<i || j>i+1">
                   {{ releaseDetailLink.release?.name }}</a>
               </li>
             </ul>

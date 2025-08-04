@@ -1,302 +1,325 @@
-<div class="container-lg mt-4">
-  <div class="row">
-    <div class="col-md-12 offset-md-0">
+<div class="container-fluid px-4">
 
-      <div class="card shadow-sm mb-3">
-        <div class="card-body">
-          <h5 class="card-title">Planning Setup</h5>
-          <p class="card-text">
-            Prior to the planning
+  <div class="card shadow-sm mb-4">
 
-            <br/>1. Team should have defined with roles to play each resource in {{messageChange('product')}}.
-            <br/>2. Time allocation should have been done for resource participating in {{messageChange('product')}}.
-            <br/>3. Deliverables can be created using bulk option or manually here.
-            <br/>After defining time estimate for a delivery on this UI, a deliverable can be planned. System will automatically place deliverable in
-            best first release based on estimates and resource availability.
-          </p>
-        </div>
+    <div class="card shadow-sm mb-3">
+      <div class="card-body">
+        <h5 class="card-title">Planning Setup</h5>
+        <p class="card-text">
+          Prior to the planning
+
+          <br/>1. Team should have defined with roles to play each resource in {{ messageChange('product') }}.
+          <br/>2. Time allocation should have been done for resource participating in {{ messageChange('product') }}.
+          <br/>3. Deliverables can be created using bulk option or manually here.
+          <br/>After defining time estimate for a delivery on this UI, a deliverable can be planned. System will
+          automatically place deliverable in
+          best first release based on estimates and resource availability.
+        </p>
       </div>
-      <div class="card shadow-lg">
-        <div class="card-header bg-primary text-white text-center">
-          <h2 class="h4 mb-0">{{messageChange('Product')}} Planning</h2>
-        </div>
+    </div>
 
-        <ul class="custom-nav-list">
-          <li *ngFor="let releaseDetailLink of releases;let i = index">
-              <a [routerLink]="[]" [fragment]="'unplannedRelease'+i" class="custom-nav-link" *ngIf="i>0">
-                {{releaseDetailLink.release?.name}}</a>
+    <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
+      <h4 class="mb-0"><i class="bi bi-clipboard-data me-2"></i> {{ messageChange('Product') }} Planning</h4>
+    </div>
+    <div class="card-body bg-white">
+
+      <div class="d-flex">
+        <ul class="navbar-nav d-flex flex-row flex-wrap gap-2 mb-2 mb-lg-0 ms-auto">
+          <li *ngFor="let releaseDetailLink of releases;let i = index" class="nav-item">
+            <a *ngIf="i>0" [fragment]="'unplannedRelease'+i" [routerLink]="[]" class="nav-link px-2">
+              {{ releaseDetailLink.release?.name }}</a>
           </li>
-          <li><a [routerLink]="[]" fragment="unplannedEpics" class="custom-nav-link">Unplanned Deliverables</a></li>
+          <li class="nav-item"><a [routerLink]="[]" class="nav-link px-2" fragment="unplannedEpics">Unplanned Deliverables</a></li>
         </ul>
+      </div>
 
-        <div class="row release" *ngFor="let releaseDetail of releases;let i = index" [id]="'unplannedRelease'+i">
-        <div class="">
-          <div class="card-header release-info-card">
-            <ul class="release-info-list">
-              <li><strong>Release:</strong> {{ releaseDetail.release?.name }}</li>
-              <li><strong>Start Date:</strong> {{ releaseDetail.release?.startDate }}</li>
-              <li><strong>End Date:</strong> {{ releaseDetail.release?.endDate }}</li>
-              <li><strong>Working Days:</strong> {{ releaseDetail.release?.workingDays }}</li>
-              <li><strong>Status:</strong>
-                <span [ngClass]="releaseStatusClass(releaseDetail.release?.status)">
-                  {{ releaseDetail.release?.status }}
-                </span>
-              </li>
-              <li *ngIf="isManager(this.rights)">
-                <a (click)="planRelease(releaseDetail)" title="Plan the release" class="btn btn-sm btn-outline-success">
-                  <i class="bi bi-clipboard-check"></i> Plan
+
+      <div *ngFor="let releaseDetail of releases;let i = index" [id]="'unplannedRelease'+i" class="row release">
+        <div class="mb-4 p-2 border rounded d-flex justify-content-between align-items-center flex-wrap release-info">
+          <div class="release-info-text text-dark text-center">
+            Release: {{ releaseDetail.release?.name }} &nbsp;|&nbsp;
+            Start Date: <strong>{{ releaseDetail.release?.startDate }}</strong> &nbsp;|&nbsp;
+            End Date: <strong>{{ releaseDetail.release?.endDate }}</strong> &nbsp;|&nbsp;
+            Working Days: {{ releaseDetail.release?.workingDays }} &nbsp;|&nbsp;
+            Status: <span
+            [ngClass]="releaseStatusClass(releaseDetail.release.status)">{{ releaseDetail.release.status | titlecase }}</span>
+          </div>
+
+          <div class="mt-2 mt-lg-0">
+            <button (click)="planRelease(releaseDetail)" *ngIf="isManager(this.rights)"
+                    class="btn btn-sm btn-outline-success me-2"
+                    title="Plan the release">
+              <i class="bi bi-clipboard-check"></i> Plan
+            </button>
+          </div>
+        </div>
+        <h5 class="mb-1"><i class="bi bi-journal me-2"></i> Deliverables</h5>
+        <div class="table-responsive mb-2">
+          <ngx-datatable
+            [columnMode]="'force'"
+            [footerHeight]="30"
+            [headerHeight]="40"
+            [rowClass]="getRowClass"
+            [rowHeight]="'auto'"
+            [rows]="releaseDetail.epics"
+            [sorts]="[{ prop: 'priorityLevel', dir: 'asc' }]"
+            class="bootstrap-table table-striped table-bordered table-hover"
+          >
+
+            <ngx-datatable-column [maxWidth]="80" [minWidth]="80" [sortable]="true" [width]="80" name="Code"
+                                  prop="code"></ngx-datatable-column>
+            <ngx-datatable-column name="Title" prop="title">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.title }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Dependends On">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <div [innerHTML]="relationData(row.dependsOn, EpicLinkType.DEPEND_ON, false)"
+                     *ngIf="row.dependsOn && row.dependsOn.length>0"></div>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Related To">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <div [innerHTML]="relationData(row.relatedTo, EpicLinkType.RELATED_TO, false)"
+                     *ngIf="row.relatedTo && row.relatedTo.length>0"></div>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column [maxWidth]="120" [minWidth]="120" [sortable]="true" [width]="120"
+                                  name="Priority" prop="priorityLevel">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.priorityName }}
+                <a (click)="changePriorityToUpper(row)" *ngIf="showChangePriorityToUpper(row)"
+                   title="Move it to higher priority">
+                  <i class="bi bi-arrow-up-short action-icon"></i>
                 </a>
+                <a (click)="changePriorityToLower(row)" *ngIf="showChangePriorityToLower(row)"
+                   title="Move it to lower priority">
+                  <i class="bi bi-arrow-down-short action-icon"></i>
+                </a>
+
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column [maxWidth]="100" name="Required By" prop="requiredBy"></ngx-datatable-column>
+            <ngx-datatable-column [maxWidth]="80" name="Value Gain" prop="valueGain"></ngx-datatable-column>
+            <ngx-datatable-column [maxWidth]="300" [minWidth]="300" [width]="300" name="Assignment">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <div [innerHTML]="showAssignments(row.assignments)"></div>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column [maxWidth]="150" name="Actions" [headerClass]="'text-center'" >
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <div style="text-align: center;">
+                <a (click)="unplanEpic(row.id, releaseDetail.release.id)" *ngIf="isManager(this.rights)"
+                   title="Remove it from release plan">
+                  <i class="bi bi-dash-square action-icon"></i>
+                </a>
+
+                <a (click)="openDialogForEpic(row, releaseDetail.release.id)" title="Edit">
+                  <i class="bi bi-pencil-square action-icon"></i>
+                </a>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+          </ngx-datatable>
+        </div>
+        <h5 class="mb-1"><i class="bi bi-people me-2"></i> Resource Allocation</h5>
+        <div class="table-responsive mb-2">
+            <ngx-datatable
+              [columnMode]="'force'"
+              [footerHeight]="0"
+              [headerHeight]="40"
+              [rowHeight]="'auto'"
+              [rows]="releaseDetail.resourceCaps"
+              class="material">
+              <ngx-datatable-column name="Resource" prop="resourceName"></ngx-datatable-column>
+              <ngx-datatable-column [maxWidth]="150" [minWidth]="150" [width]="150" name="Availability">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{ row.prodBasedAssignableTime | decimalToTime }}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [maxWidth]="150" [minWidth]="150" [width]="150" name="Time Assigned">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{ row.prodBasedAssignedTime | decimalToTime }}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [maxWidth]="150" [minWidth]="150" [width]="150" name="Time Unassigned">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{ row.prodBasedAssignableTime - row.prodBasedAssignedTime | decimalToTime }}
+                </ng-template>
+              </ngx-datatable-column>
+              <ngx-datatable-column [maxWidth]="500" [minWidth]="500" [width]="500" name="Time Utilization">
+                <ng-template let-row="row" ngx-datatable-cell-template>
+                  <div class="progress m-1" style="height: 20px;">
+                    <div [style.width.%]="getAssignedPercentage(row)" aria-valuemax="100"
+                         [ngClass]="{'bg-danger': getAssignedPercentage(row)>100,
+                              'bg-primary': getAssignedPercentage(row)<=100}"
+                         aria-valuemin="0"
+                         class="progress-bar" role="progressbar">{{ getAssignedPercentage(row) | truncateNumber }}%
+                    </div>
+                  </div>
+                  <!--<div class="time-bar-container">
+                    <div
+                      class="time-bar-assigned"
+                      [style.width.%]="getAssignedPercentage(row)"
+                      title="Time Assigned: {{ row.prodBasedAssignedTime | decimalToTime }}">
+                    </div>
+                    <div
+                      class="time-bar-remaining"
+                      [style.width.%]="100 - getAssignedPercentage(row)"
+                      title="Time Unassigned: {{ row.prodBasedAssignableTime - row.prodBasedAssignedTime | decimalToTime }}">
+                    </div>
+                  </div>-->
+                </ng-template>
+              </ngx-datatable-column>
+            </ngx-datatable>
+          </div>
+        <div>
+          <div class="d-flex">
+            <ul class="navbar-nav d-flex flex-row flex-wrap gap-2 mb-2 mb-lg-0 ms-auto">
+              <li class="nav-item" *ngFor="let releaseDetailLink of releases;let j = index">
+                <a [routerLink]="[]" [fragment]="'unplannedRelease'+j" class="nav-link px-2" *ngIf="j<i || j>i+1">
+                  {{ releaseDetailLink.release?.name }}</a>
               </li>
             </ul>
           </div>
+        </div>
 
-          <div class="card-body">
-            <h5 class="card-title">Deliverables</h5>
-            <div class="col-md-12 table-responsive">
-                <ngx-datatable
-                  class="bootstrap-table table-striped table-bordered table-hover"
-                  [rows]="releaseDetail.epics"
-                  [columnMode]="'force'"
-                  [headerHeight]="40"
-                  [footerHeight]="30"
-                  [rowHeight]="'auto'"
-                  [sorts]="[{ prop: 'priorityLevel', dir: 'asc' }]"
-                  [rowClass]="getRowClass"
-                  >
-
-                  <ngx-datatable-column name="Code" prop="code" [sortable]="true" [width]="80" [minWidth]="80" [maxWidth]="80"></ngx-datatable-column>
-                  <ngx-datatable-column name="Title" prop="title">
-                    <ng-template let-row="row" ngx-datatable-cell-template>
-                      {{row.title}}
-                      <div [innerHTML]="relationData(row.dependsOn, EpicLinkType.DEPEND_ON, true)" *ngIf="row.dependsOn && row.dependsOn.length>0"></div>
-                      <div [innerHTML]="relationData(row.relatedTo, EpicLinkType.RELATED_TO, true)" *ngIf="row.relatedTo && row.relatedTo.length>0"></div>
-                    </ng-template>
-                  </ngx-datatable-column>
-                  <ngx-datatable-column name="Priority" prop="priorityLevel" [sortable]="true" [width]="120" [minWidth]="120" [maxWidth]="120">
-                    <ng-template let-row="row" ngx-datatable-cell-template>
-                      {{row.priorityName}}
-                      <a (click)="changePriorityToUpper(row)" title="Move it to higher priority"
-                         *ngIf="showChangePriorityToUpper(row)">
-                        <i class="bi bi-arrow-up-short action-icon"></i>
-                      </a>
-                      <a (click)="changePriorityToLower(row)" title="Move it to lower priority"
-                         *ngIf="showChangePriorityToLower(row)">
-                        <i class="bi bi-arrow-down-short action-icon"></i>
-                      </a>
-
-                    </ng-template>
-                  </ngx-datatable-column>
-                  <ngx-datatable-column name="Required By" prop="requiredBy" [maxWidth]="100"></ngx-datatable-column>
-                  <ngx-datatable-column name="Value Gain" prop="valueGain" [maxWidth]="80"></ngx-datatable-column>
-                  <ngx-datatable-column name="Assignment" [width]="300" [minWidth]="300" [maxWidth]="300">
-                    <ng-template let-row="row" ngx-datatable-cell-template>
-                      <div [innerHTML]="showAssignments(row.assignments)"></div>
-                    </ng-template>
-                  </ngx-datatable-column>
-                  <ngx-datatable-column name="Actions" [width]="150" [minWidth]="150" [maxWidth]="150">
-                    <ng-template let-row="row" ngx-datatable-cell-template>
-                      <a (click)="unplanEpic(row.id, releaseDetail.release.id)" title="Remove it from release plan" *ngIf="isManager(this.rights)">
-                        <i class="bi bi-dash-square action-icon"></i>
-                      </a>
-
-                      <a (click)="openDialogForEpic(row, releaseDetail.release.id)" title="Edit">
-                        <i class="bi bi-pencil-square action-icon"></i>
-                      </a>
-
-                    </ng-template>
-                  </ngx-datatable-column>
-                </ngx-datatable>
-              </div>
-          </div>
-          <div class="card-body">
-            <h5 class="card-title">Resource Allocation</h5>
-            <div class="col-md-12">
-                <ngx-datatable
-                  [rows]="releaseDetail.resourceCaps"
-                  [columnMode]="'force'"
-                  [headerHeight]="40"
-                  [footerHeight]="0"
-                  [rowHeight]="'auto'"
-                  class="material">
-                  <ngx-datatable-column name="Resource" prop="resourceName"></ngx-datatable-column>
-                  <ngx-datatable-column name="Availability" [width]="150" [minWidth]="150" [maxWidth]="150">
-                    <ng-template let-row="row" ngx-datatable-cell-template>
-                      {{ row.prodBasedAssignableTime | decimalToTime}}
-                    </ng-template>
-                  </ngx-datatable-column>
-                  <ngx-datatable-column name="Time Assigned" [width]="150" [minWidth]="150" [maxWidth]="150">
-                    <ng-template let-row="row" ngx-datatable-cell-template>
-                      {{ row.prodBasedAssignedTime | decimalToTime}}
-                    </ng-template>
-                  </ngx-datatable-column>
-                  <ngx-datatable-column name="Time Unassigned" [width]="150" [minWidth]="150" [maxWidth]="150">
-                    <ng-template let-row="row" ngx-datatable-cell-template>
-                      {{ row.prodBasedAssignableTime - row.prodBasedAssignedTime | decimalToTime }}
-                    </ng-template>
-                  </ngx-datatable-column>
-                  <ngx-datatable-column name="Time Utilization" [width]="500" [minWidth]="500" [maxWidth]="500">
-                    <ng-template let-row="row" ngx-datatable-cell-template>
-                      <div class="progress m-1" style="height: 20px;">
-                        <div class="progress-bar" role="progressbar"
-                             [style.width.%]="getAssignedPercentage(row)"
-                             aria-valuemin="0" aria-valuemax="100">{{getAssignedPercentage(row) | truncateNumber}}%</div>
-                      </div>
-                      <!--<div class="time-bar-container">
-                        <div
-                          class="time-bar-assigned"
-                          [style.width.%]="getAssignedPercentage(row)"
-                          title="Time Assigned: {{ row.prodBasedAssignedTime | decimalToTime }}">
-                        </div>
-                        <div
-                          class="time-bar-remaining"
-                          [style.width.%]="100 - getAssignedPercentage(row)"
-                          title="Time Unassigned: {{ row.prodBasedAssignableTime - row.prodBasedAssignedTime | decimalToTime }}">
-                        </div>
-                      </div>-->
-                    </ng-template>
-                  </ngx-datatable-column>
-                </ngx-datatable>
-              </div>
+      </div>
+      <div class="row release" id="unplannedEpics">
+        <div class="mb-4 p-2 border rounded d-flex justify-content-between align-items-center flex-wrap release-info">
+          <div class="release-info-text text-dark text-center">
+            <strong>Deliverables</strong> awaiting for estimates and move forward to part of release.
           </div>
         </div>
-        <div>
-          <ul class="custom-nav-list">
-            <li *ngFor="let releaseDetailLink of releases;let j = index">
-                <a [routerLink]="[]" [fragment]="'unplannedRelease'+j" class="custom-nav-link" *ngIf="j<i || j>i+1">
-                  {{releaseDetailLink.release?.name}}</a>
-            </li>
-          </ul>
+        <div class="table-responsive mb-2">
+          <ngx-datatable
+            [columnMode]="'force'"
+            [footerHeight]="30"
+            [headerHeight]="40"
+            [rowClass]="getRowClass"
+            [rowHeight]="'auto'"
+            [rows]="unplannedEpics"
+            [sorts]="[{ prop: 'priorityLevel', dir: 'asc' }]"
+            class="bootstrap-table table-striped table-bordered"
+          >
+
+            <ngx-datatable-column [maxWidth]="80" [minWidth]="80" [sortable]="true" [width]="80" name="Code"
+                                  prop="code"></ngx-datatable-column>
+            <ngx-datatable-column name="Title" prop="title">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.title }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Dependends On">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <div [innerHTML]="relationData(row.dependsOn, EpicLinkType.DEPEND_ON, false)"
+                     *ngIf="row.dependsOn && row.dependsOn.length>0"></div>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Related To">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <div [innerHTML]="relationData(row.relatedTo, EpicLinkType.RELATED_TO, false)"
+                     *ngIf="row.relatedTo && row.relatedTo.length>0"></div>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column [maxWidth]="120" [sortable]="true" name="Priority" prop="priorityLevel">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.priorityName }}
+                <a (click)="changePriorityToUpper(row)" *ngIf="showChangePriorityToUpper(row)"
+                   title="Move it to higher priority">
+                  <i class="bi bi-arrow-up-short action-icon"></i>
+                </a>
+                <a (click)="changePriorityToLower(row)" *ngIf="showChangePriorityToLower(row)"
+                   title="Move it to lower priority">
+                  <i class="bi bi-arrow-down-short action-icon"></i>
+                </a>
+
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column [maxWidth]="100" name="Required By" prop="requiredBy"></ngx-datatable-column>
+            <ngx-datatable-column [maxWidth]="80" name="Value Gain" prop="valueGain"></ngx-datatable-column>
+            <ngx-datatable-column [maxWidth]="300" [minWidth]="300" [width]="300" name="Time Estimates by Role"
+                                  prop="estimates">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <!--
+                                    <a (click)="openDialogForEstimates(row)" title="Change Estimates"><div [innerHTML]="showEstimates(row.estimates)"></div></a>
+                -->
+                <table>
+
+                  <tbody>
+                  <tr *ngFor="let estimate of row.estimates" class="{{estimateStatusClass(estimate)}}">
+                    <td>{{ estimate.roleName }}</td>
+                    <td>
+                      <!--
+                                                (blur)="changeEstimateTime(estimate)"
+                                                (keydown.enter)="changeEstimateTime(estimate)"
+                      -->
+                      <input
+                        title="Estimate to be provided in hours."
+                        #estimateStr="ngModel"
+                        (blur)="changeEstimateTime(estimate)"
+                        (keydown.enter)="changeEstimateTime(estimate)"
+                        [(ngModel)]="estimate.estimateStr"
+                        [readOnly]="!(isManager(this.rights) || estimate.roleId==this.rights.productRoleId)"
+                        class="form-control"
+                        name="estimateStr"
+                        type="text"
+                      />
+                    </td>
+                    <td>
+                      <input
+                        title="Number of resources required."
+                        #resources="ngModel"
+                        (ngModelChange)="changeEstimateResources(estimate, $event)"
+                        [(ngModel)]="estimate.resources"
+                        [readOnly]="!(isManager(this.rights) || estimate.roleId==this.rights.productRoleId)"
+                        class="form-control"
+                        name="resources"
+                        type="number"/>
+                    </td>
+
+                  </tr>
+                  </tbody>
+                </table>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column [maxWidth]="150" name="Actions" [headerClass]="'text-center'">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <div style="text-align: center;">
+                <a (click)="planEpic(row.id)"
+                   *ngIf="row.estimates && row.estimates.length > 0 && isManager(this.rights)"
+                   title="Make it part of release plan">
+                  <i class="bi bi-plus-square action-icon"></i>
+                </a>
+                <a (click)="openDialogForEstimates(row)" title="Change Estimates">
+                  <i class="bi bi-bucket action-icon"></i>
+                </a>
+                <a (click)="openDialogForEpic(row,0)" title="Edit">
+                  <i class="bi bi-pencil-square action-icon"></i>
+                </a>
+                <a (click)="deleteEpic(row.id)" title="Delete">
+                  <i class="bi bi-trash action-icon"></i>
+                </a>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+
+
+          </ngx-datatable>
         </div>
-        </div>
-        <div class="row release" id="unplannedEpics">
-      <div class="">
-        <div class="card-header release-info-card">
-          <ul class="release-info-list">
-            <li><strong>Deliverables</strong> awaiting for estimates and move forward to part of release.</li>
-          </ul>
-        </div>
-        <div class="card-body">
-          <div class="row">
-            <div class="col-md-12">
-              <ngx-datatable
-                [rows]="unplannedEpics"
-                [columnMode]="'force'"
-                [headerHeight]="40"
-                [footerHeight]="30"
-                [rowHeight]="'auto'"
-                [sorts]="[{ prop: 'priorityLevel', dir: 'asc' }]"
-                class="bootstrap-table table-striped table-bordered"
-                [rowClass]="getRowClass"
-              >
-
-                <ngx-datatable-column name="Code" prop="code" [sortable]="true" [width]="80" [minWidth]="80" [maxWidth]="80"></ngx-datatable-column>
-                <ngx-datatable-column name="Title" prop="title">
-                  <ng-template let-row="row" ngx-datatable-cell-template>
-                    {{row.title}}
-                    <div [innerHTML]="relationData(row.dependsOn, EpicLinkType.DEPEND_ON, true)" *ngIf="row.dependsOn && row.dependsOn.length>0"></div>
-                    <div [innerHTML]="relationData(row.relatedTo, EpicLinkType.RELATED_TO, true)" *ngIf="row.relatedTo && row.relatedTo.length>0"></div>
-                  </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column name="Priority" prop="priorityLevel" [sortable]="true" [maxWidth]="120">
-                  <ng-template let-row="row" ngx-datatable-cell-template>
-                    {{row.priorityName}}
-                    <a (click)="changePriorityToUpper(row)" title="Move it to higher priority"
-                         *ngIf="showChangePriorityToUpper(row)">
-                        <i class="bi bi-arrow-up-short action-icon"></i>
-                    </a>
-                    <a (click)="changePriorityToLower(row)" title="Move it to lower priority"
-                       *ngIf="showChangePriorityToLower(row)">
-                      <i class="bi bi-arrow-down-short action-icon"></i>
-                    </a>
-
-                  </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column name="Required By" prop="requiredBy" [maxWidth]="100"></ngx-datatable-column>
-                <ngx-datatable-column name="Value Gain" prop="valueGain" [maxWidth]="80"></ngx-datatable-column>
-                <ngx-datatable-column name="Estimates" prop="estimates" [width]="300" [minWidth]="300" [maxWidth]="300">
-                  <ng-template let-row="row" ngx-datatable-cell-template>
-<!--
-                    <a (click)="openDialogForEstimates(row)" title="Change Estimates"><div [innerHTML]="showEstimates(row.estimates)"></div></a>
--->
-                    <table>
-                      <thead>
-                      <tr>
-                        <th>Resource</th>
-                        <th>Estimate</th>
-                        <th>Resources</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      <tr *ngFor="let estimate of row.estimates" class="{{estimateStatusClass(estimate)}}">
-                        <td>{{ estimate.roleName }}</td>
-                        <td>
-<!--
-                          (blur)="changeEstimateTime(estimate)"
-                          (keydown.enter)="changeEstimateTime(estimate)"
--->
-                          <input
-                            [readOnly]="!(isManager(this.rights) || estimate.roleId==this.rights.productRoleId)"
-                            type="text"
-                            class="form-control"
-                            name="estimateStr"
-                            #estimateStr="ngModel"
-                            [(ngModel)]="estimate.estimateStr"
-                            (blur)="changeEstimateTime(estimate)"
-                            (keydown.enter)="changeEstimateTime(estimate)"
-                            />
-                        </td>
-                        <td>
-                          <input
-                            [readOnly]="!(isManager(this.rights) || estimate.roleId==this.rights.productRoleId)"
-                            type="number"
-                            class="form-control"
-                            name="resources"
-                            #resources="ngModel"
-                            [(ngModel)]="estimate.resources"
-                            (ngModelChange)="changeEstimateResources(estimate, $event)" />
-                        </td>
-
-                      </tr>
-                      </tbody>
-                    </table>
-                  </ng-template>
-                </ngx-datatable-column>
-                <ngx-datatable-column name="Actions" [width]="150" [minWidth]="150" [maxWidth]="150">
-                  <ng-template let-row="row" ngx-datatable-cell-template>
-                    <a (click)="planEpic(row.id)" title="Make it part of release plan"
-                       *ngIf="row.estimates && row.estimates.length > 0 && isManager(this.rights)">
-                      <i class="bi bi-plus-square action-icon"></i>
-                    </a>
-                    <a (click)="openDialogForEstimates(row)" title="Change Estimates">
-                      <i class="bi bi-bucket action-icon"></i>
-                    </a>
-                    <a (click)="openDialogForEpic(row,0)" title="Edit">
-                      <i class="bi bi-pencil-square action-icon"></i>
-                    </a>
-                    <a (click)="deleteEpic(row.id)" title="Delete">
-                      <i class="bi bi-trash action-icon"></i>
-                    </a>
-                  </ng-template>
-                </ngx-datatable-column>
-
-
-              </ngx-datatable>
-            </div>
-            <div class="text-center mt-4 mb-2 d-flex justify-content-center gap-2">
-              <button class="btn btn-primary w-20" (click)="openDialogForNewEpic()">Add Deliverable</button>
-            </div>
-          </div>
+        <div class="text-center mt-4 mb-2 d-flex justify-content-center gap-2">
+          <button (click)="openDialogForNewEpic()" class="btn btn-primary w-20">Add Deliverable</button>
         </div>
       </div>
-    </div>
-      </div>
+
     </div>
   </div>
-<!--
-        <button class="btn btn-danger btn-sm" (click)="deleteCompanyWorkingHour(wh.id)"
-         *ngIf="wh.scope !== WorkingHourEnum.DEFAULT">Delete</button>
-        <button class="btn btn-danger btn-sm" (click)="updateEpicModal(editEpicTemplate, wh.id)">Edit</button>
--->
+  <!--
+          <button class="btn btn-danger btn-sm" (click)="deleteCompanyWorkingHour(wh.id)"
+           *ngIf="wh.scope !== WorkingHourEnum.DEFAULT">Delete</button>
+          <button class="btn btn-danger btn-sm" (click)="updateEpicModal(editEpicTemplate, wh.id)">Edit</button>
+  -->
 
   <ng-template #editEpicTemplate>
     <div class="modal fade show d-block">
@@ -304,21 +327,21 @@
         <div class="modal-content">
           <div class="modal-header">
             <h5 class="modal-title">Add/Update Epic</h5>
-            <button type="button" class="btn-close" (click)="closeModal()"></button>
+            <button (click)="closeModal()" class="btn-close" type="button"></button>
           </div>
           <div class="modal-body">
             <form>
               <div class="mb-3">
                 <label class="form-label">Title<span class="text-danger ms-1">*</span></label>
-                <input type="text" class="form-control" [(ngModel)]="editEpic.title" name="title" required>
+                <input [(ngModel)]="editEpic.title" class="form-control" name="title" required type="text">
               </div>
               <div class="mb-3">
                 <label class="form-label">Details</label>
-                <textarea class="form-control" [(ngModel)]="editEpic.details" name="details" ></textarea>
+                <textarea [(ngModel)]="editEpic.details" class="form-control" name="details"></textarea>
               </div>
               <div class="mb-3">
                 <label class="form-label">Priority<span class="text-danger ms-1">*</span></label>
-                <select name="priorityId"  [(ngModel)]="editEpic.priorityId" class="form-control" required>
+                <select [(ngModel)]="editEpic.priorityId" class="form-control" name="priorityId" required>
                   <option *ngFor="let m of priorities" [value]="m.id">
                     {{ m.name }}
                   </option>
@@ -326,19 +349,19 @@
               </div>
               <div class="mb-3">
                 <label class="form-label">Value Gain (In number)</label>
-                <input type="number" class="form-control" [(ngModel)]="editEpic.valueGain" name="valueGain" >
+                <input [(ngModel)]="editEpic.valueGain" class="form-control" name="valueGain" type="number">
               </div>
               <div class="mb-3">
                 <label class="form-label">Risks</label>
-                <textarea class="form-control" [(ngModel)]="editEpic.risks" name="risks" ></textarea>
+                <textarea [(ngModel)]="editEpic.risks" class="form-control" name="risks"></textarea>
               </div>
               <div class="mb-3">
                 <label class="form-label">Required By</label>
-                <input type="date" class="form-control" [(ngModel)]="editEpic.requiredBy" name="requiredBy">
+                <input [(ngModel)]="editEpic.requiredBy" class="form-control" name="requiredBy" type="date">
               </div>
               <div class="mb-3">
                 <label class="form-label">Component</label>
-                <select name="componentId"  [(ngModel)]="editEpic.componentId" class="form-control">
+                <select [(ngModel)]="editEpic.componentId" class="form-control" name="componentId">
                   <option *ngFor="let m of subComponents" [value]="m.id">
                     {{ m.name }}
                   </option>
@@ -347,9 +370,9 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-secondary" (click)="closeModal()">Cancel</button>
-            <button class="btn btn-success" (click)="updateEpic()" *ngIf="editEpic.id>0">Update</button>
-            <button class="btn btn-success" (click)="createEpic()" *ngIf="editEpic.id===0">Add</button>
+            <button (click)="closeModal()" class="btn btn-secondary">Cancel</button>
+            <button (click)="updateEpic()" *ngIf="editEpic.id>0" class="btn btn-success">Update</button>
+            <button (click)="createEpic()" *ngIf="editEpic.id===0" class="btn btn-success">Add</button>
           </div>
         </div>
       </div>

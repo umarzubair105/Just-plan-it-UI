@@ -5,12 +5,12 @@ import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
 import {Utils} from '../utils/utils';
 import {ActivatedRoute, RouterLink} from '@angular/router';
 import {
-    Epic, EpicAssignmentBean,
-    EpicBean,
-    EpicBeanCopyPasteUpdatedValues,
-    EpicEstimateBean, EpicLinkType,
-    Release,
-    ReleaseDetailBean, ReleaseStatusEnum
+  Epic, EpicAssignmentBean, EpicAssignmentStatusEnum,
+  EpicBean,
+  EpicBeanCopyPasteUpdatedValues,
+  EpicEstimateBean, EpicLinkType,
+  Release,
+  ReleaseDetailBean, ReleaseStatusEnum
 } from '../models/planning';
 import {EpicService} from '../services/epic.service';
 import {Priority, ResourceRightBean, Role, SubComponent} from '../models/basic';
@@ -264,4 +264,5 @@ export class PlannedComponent implements OnInit {
   protected readonly messageChange = messageChange;
   protected readonly isDateOver = isDateOver;
   protected readonly isDateStarted = isDateStarted;
+  protected readonly EpicAssignmentStatusEnum = EpicAssignmentStatusEnum;
 }
