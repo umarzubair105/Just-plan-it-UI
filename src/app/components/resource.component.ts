@@ -39,7 +39,7 @@ import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
 import {ReleaseStatusEnum} from '../models/planning';
 import {FormatDatePipe} from '../pipes/format.date';
 import {AuthService} from '../services/auth.service';
-import {isGlobalHR} from '../utils/helper';
+import {isGlobalHR, isManager} from '../utils/helper';
 import {NgSelectComponent, NgSelectModule} from '@ng-select/ng-select';
 
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -263,4 +263,5 @@ export class ResourceComponent implements OnInit {
   }
 
   protected readonly isGlobalHR = isGlobalHR;
+  protected readonly isManager = isManager;
 }

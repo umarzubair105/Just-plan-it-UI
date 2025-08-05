@@ -3,7 +3,7 @@ import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Observable, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import {PageResponse} from '../models/page.response';
-import {handleError, messageChange, ReleaseIteration} from '../utils/helper';
+import {handleError, handleErrorLogin, messageChange, ReleaseIteration} from '../utils/helper';
 import {AuthResponse, Company, ContactUs, Resource, ResourceRightBean} from '../models/basic';
 import {AppConstants} from '../configuration/app.constants';
 
@@ -96,7 +96,7 @@ export class CompanyService {
     //const { id, ...payload } = company;
     //console.log(payload);
     return this.http.post<AuthResponse>(this.baseAuthUrl+'/authenticate', body).pipe(
-      catchError(handleError)
+      catchError(handleErrorLogin)
     );
   }
 

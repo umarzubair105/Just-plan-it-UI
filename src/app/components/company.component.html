@@ -1,112 +1,116 @@
-<div class="container-lg mt-4">
-  <div class="row">
-    <div class="col-md-8 offset-md-2">
+<div class="container-fluid px-4">
+  <div class="col-md-4 offset-md-4">
+    <div class="text-end mt-2">
+      <a aria-controls="helpSection" aria-expanded="false" class="btn btn-link text-decoration-none" data-bs-toggle="collapse"
+         href="#helpSection" role="button">
+        <i class="bi bi-info-circle me-1"></i> Need Help?
+      </a>
+    </div>
 
-      <!-- Intro Card -->
-      <div class="card shadow-sm mb-3">
+    <!-- Help Card (Collapsed by default) -->
+    <div class="collapse" id="helpSection">
+      <div class="card shadow-sm mb-3 mt-2">
         <div class="card-body">
           <h5 class="card-title">Register Your Company</h5>
           <p class="card-text">
-            Provide basic information about your company to get started. Once following steps gets completed, you'll move to the planning phase.
+            Provide basic information about your company to get started. Once following steps are completed, you'll move
+            to the planning phase.
           </p>
         </div>
       </div>
-
-      <!-- Main Form Card -->
-      <div class="card shadow-lg">
-        <div class="card-header bg-primary text-white text-center">
-          <h2 class="h4 mb-0">Company Registration</h2>
-        </div>
-        <form #useForm="ngForm" (ngSubmit)="onSubmit()">
-          <div class="card-body">
-
-            <!-- Error Alert -->
-            <div *ngIf="errorMessage" class="alert alert-danger">
-              {{ errorMessage }}
-            </div>
-            <!-- Company Information -->
-            <fieldset class="mb-4">
-              <legend class="h5">Company Information</legend>
-              <div class="mb-3 col-md-4">
-                <label for="name" class="form-label">Company Name <span class="text-danger">*</span></label>
-                <input type="text" id="name" name="name" class="form-control" required
-                       placeholder="e.g. Acme Corp"
-                       [(ngModel)]="addCompany.name" #name="ngModel"
-                       [ngClass]="{ 'is-invalid': name.invalid && (name.dirty || name.touched) }"
-                       [showErrors]="{ required: 'Company Name is required'}" />
-              </div>
-              <div class="mb-3 col-md-4">
-                <label for="sampleCompanyId" class="form-label">Industry <span class="text-danger">*</span></label>
-                <select id="sampleCompanyId" name="sampleCompanyId" class="form-select" required
-                        [(ngModel)]="addCompany.sampleCompanyId" #sampleCompanyId="ngModel"
-                        [ngClass]="{ 'is-invalid': sampleCompanyId.invalid && (sampleCompanyId.dirty || sampleCompanyId.touched) }"
-                        [showErrors]="{ required: 'Industry is required' }">
-                  <option value="" disabled>Select an industry</option>
-                  <option *ngFor="let m of sampleCompanies" [value]="m.id">{{ m.name }}</option>
-                </select>
-              </div>
-
-              <div class="mb-3 col-md-4">
-                <label for="countryId" class="form-label">Country <span class="text-danger">*</span></label>
-                <select id="countryId" name="countryId" class="form-select" required
-                        [(ngModel)]="addCompany.countryId" #countryId="ngModel"
-                        [ngClass]="{ 'is-invalid': countryId.invalid && (countryId.dirty || countryId.touched) }"
-                        [showErrors]="{ required: 'Country is required' }">
-                  <option value="" disabled>Select a country</option>
-                  <option *ngFor="let m of countries" [value]="m.id">{{ m.name }}</option>
-                </select>
-              </div>
-            </fieldset>
-            <!-- Your Information -->
-            <fieldset class="mb-4">
-              <legend class="h5">Your Information</legend>
-
-              <div class="mb-3 col-md-4">
-                <label for="resourceName" class="form-label">Name <span class="text-danger">*</span></label>
-                <input type="text" id="resourceName" name="resourceName" class="form-control" required
-                       placeholder="Your full name"
-                       [(ngModel)]="addCompany.resourceName" #resourceName="ngModel"
-                       [ngClass]="{ 'is-invalid': resourceName.invalid && (resourceName.dirty || resourceName.touched) }"
-                       [showErrors]="{ required: 'Name is required' }" />
-              </div>
-
-              <div class="mb-3 col-md-4">
-                <label for="email" class="form-label">Email <span class="text-danger">*</span></label>
-                <input type="email" id="email" name="email" class="form-control" required
-                       autocomplete="email" placeholder="you@example.com" email
-                       [(ngModel)]="addCompany.email" #email="ngModel"
-                       [ngClass]="{ 'is-invalid': email.invalid && (email.dirty || email.touched) }"
-                       [showErrors]="{ required: 'Email is required', email: 'Invalid email' }" />
-              </div>
-
-              <div class="mb-3 col-md-4">
-                <label for="designation" class="form-label">Designation <span class="text-danger">*</span></label>
-                <input type="text" id="designation" name="designation" class="form-control" required
-                       placeholder="e.g. Manager"
-                       [(ngModel)]="addCompany.designation" #designation="ngModel"
-                       [ngClass]="{ 'is-invalid': designation.invalid && (designation.dirty || designation.touched) }"
-                       [showErrors]="{ required: 'Designation is required' }" />
-              </div>
-
-              <div class="mb-3 col-md-4">
-                <label for="mobileNumber" class="form-label">Mobile Number <span class="text-danger">*</span></label>
-                <input type="tel" id="mobileNumber" name="mobileNumber" class="form-control" required
-                       placeholder="+1 555-123-4567"
-                       [(ngModel)]="addCompany.mobileNumber" #mobileNumber="ngModel"
-                       [ngClass]="{ 'is-invalid': mobileNumber.invalid && (mobileNumber.dirty || mobileNumber.touched) }"
-                       [showErrors]="{ required: 'Mobile Number is required' }" />
-              </div>
-            </fieldset>
-            <!-- Actions -->
-            <div class="text-center mt-2 d-flex justify-content-center gap-2">
-              <button class="btn btn-primary w-20" type="submit" [disabled]="useForm.invalid">Save</button>
-              <button type="reset" class="btn btn-secondary ms-2 w-20">Reset</button>
-            </div>
-
-          </div>
-        </form>
+    </div>
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0"><i class="bi bi-person-plus me-2"></i> Company Registration</h4>
       </div>
+      <div class="card-body bg-white col-md-10 offset-md-1">
+        <form #useForm="ngForm" (ngSubmit)="onSubmit()">
+          <!-- Error Alert -->
+          <div *ngIf="errorMessage" class="alert alert-danger mt-2 mb-3 mb-0" role="alert">
+            {{ errorMessage }}
+          </div>
+          <!-- Company Information -->
+          <fieldset class="mb-4">
+            <legend class="h5">Company Information</legend>
+            <div class="mb-3">
+              <label class="form-label" for="name">Company Name <span class="text-danger">*</span></label>
+              <input #name="ngModel" [(ngModel)]="addCompany.name" [ngClass]="{ 'is-invalid': name.invalid && (name.dirty || name.touched) }" [showErrors]="{ required: 'Company Name is required'}" class="form-control"
+                     id="name"
+                     name="name" placeholder=""
+                     required
+                     type="text"/>
+            </div>
+            <div class="mb-3">
+              <label class="form-label" for="sampleCompanyId">Industry <span class="text-danger">*</span></label>
+              <select #sampleCompanyId="ngModel" [(ngModel)]="addCompany.sampleCompanyId" [ngClass]="{ 'is-invalid': sampleCompanyId.invalid && (sampleCompanyId.dirty || sampleCompanyId.touched) }" [showErrors]="{ required: 'Industry is required' }"
+                      class="form-select" id="sampleCompanyId"
+                      name="sampleCompanyId"
+                      required>
+                <option disabled value="">Select an industry</option>
+                <option *ngFor="let m of sampleCompanies" [value]="m.id">{{ m.name }}</option>
+              </select>
+            </div>
 
+            <div class="mb-3">
+              <label class="form-label" for="countryId">Country <span class="text-danger">*</span></label>
+              <select #countryId="ngModel" [(ngModel)]="addCompany.countryId" [ngClass]="{ 'is-invalid': countryId.invalid && (countryId.dirty || countryId.touched) }" [showErrors]="{ required: 'Country is required' }"
+                      class="form-select" id="countryId"
+                      name="countryId"
+                      required>
+                <option disabled value="">Select a country</option>
+                <option *ngFor="let m of countries" [value]="m.id">{{ m.name }}</option>
+              </select>
+            </div>
+          </fieldset>
+          <!-- Your Information -->
+          <fieldset class="mb-4">
+            <legend class="h5">Your Information</legend>
+
+            <div class="mb-3">
+              <label class="form-label" for="resourceName">Name <span class="text-danger">*</span></label>
+              <input #resourceName="ngModel" [(ngModel)]="addCompany.resourceName" [ngClass]="{ 'is-invalid': resourceName.invalid && (resourceName.dirty || resourceName.touched) }" [showErrors]="{ required: 'Name is required' }" class="form-control"
+                     id="resourceName"
+                     name="resourceName" placeholder=""
+                     required
+                     type="text"/>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="email">Email <span class="text-danger">*</span></label>
+              <input #email="ngModel" [(ngModel)]="addCompany.email" [ngClass]="{ 'is-invalid': email.invalid && (email.dirty || email.touched) }" [showErrors]="{ required: 'Email is required', email: 'Invalid email' }" autocomplete="email"
+                     class="form-control" email id="email"
+                     name="email" placeholder=""
+                     required
+                     type="email"/>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label" for="designation">Designation <span class="text-danger">*</span></label>
+              <input #designation="ngModel" [(ngModel)]="addCompany.designation" [ngClass]="{ 'is-invalid': designation.invalid && (designation.dirty || designation.touched) }" [showErrors]="{ required: 'Designation is required' }" class="form-control"
+                     id="designation"
+                     name="designation" placeholder=""
+                     required
+                     type="text"/>
+            </div>
+
+            <div class="mb-2">
+              <label class="form-label" for="mobileNumber">Mobile Number <span class="text-danger">*</span></label>
+              <input #mobileNumber="ngModel" [(ngModel)]="addCompany.mobileNumber" [ngClass]="{ 'is-invalid': mobileNumber.invalid && (mobileNumber.dirty || mobileNumber.touched) }" [showErrors]="{ required: 'Mobile Number is required' }" class="form-control"
+                     id="mobileNumber"
+                     name="mobileNumber" placeholder=""
+                     required
+                     type="tel"/>
+            </div>
+          </fieldset>
+          <!-- Actions -->
+          <div class="text-center mb-2 d-flex justify-content-center gap-2">
+            <button [disabled]="useForm.invalid" class="btn btn-primary w-20" type="submit">Save</button>
+            <button class="btn btn-secondary ms-2 w-20" type="reset">Reset</button>
+          </div>
+
+        </form>
+
+      </div>
     </div>
   </div>
 </div>

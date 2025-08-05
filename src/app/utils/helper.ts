@@ -48,11 +48,31 @@ export function handleError(error: HttpErrorResponse): Observable<never> {
   console.error('>>>>>');
   console.error(error);
   if (error.error instanceof ErrorEvent) {
+    console.error('ErrorEvent');
     // Client-side error
     errorMessage = `Error: ${error.error.message}`;
   } else  if (error.error && error.error.message) {
+    console.error('Not ErrorEvent');
     // Client-side error
     errorMessage = `Error: ${error.error.message}`;
+  } else {
+    // Server-side error
+    errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+  }
+  return throwError(messageChange(errorMessage));
+}
+export function handleErrorLogin(error: HttpErrorResponse): Observable<never> {
+  let errorMessage = 'An unknown error occurred!';
+  console.error('>>>>>');
+  console.error(error);
+  if (error.error instanceof ErrorEvent) {
+    console.error('ErrorEvent');
+    // Client-side error
+    errorMessage = `Error: ${error.error.message}`;
+  } else  if (error.error && error.error.message) {
+    console.error('Not ErrorEvent');
+    // Client-side error
+    errorMessage = `Error: ${error.error.error}`;
   } else {
     // Server-side error
     errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;

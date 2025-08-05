@@ -1,6 +1,6 @@
 <div class="container-fluid px-4">
 
-  <div class="card shadow-sm mb-4">
+  <div class="card mb-2 mt-2">
     <div class="card-header bg-primary text-white d-flex justify-content-between align-items-center">
       <h4 class="mb-0"><i class="bi bi-book me-2"></i> {{ messageChange('Product') }} Release History</h4>
     </div>
@@ -15,7 +15,7 @@
       </div>
       <div class="row release" *ngFor="let releaseDetail of releases;let i = index" [id]="'eRelease'+i">
         <!-- Release Details -->
-        <div class="mb-4 p-2 border rounded d-flex justify-content-between align-items-center flex-wrap release-info">
+        <div class="mb-2 p-2 border rounded d-flex justify-content-between align-items-center flex-wrap release-info">
           <div class="release-info-text text-dark text-center">
             Release: {{ releaseDetail.release?.name }} &nbsp;|&nbsp;
             Start Date: <strong>{{ releaseDetail.release?.startDate }}</strong> &nbsp;|&nbsp;

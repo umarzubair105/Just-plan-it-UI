@@ -1,6 +1,6 @@
 import {Component, inject, OnInit} from '@angular/core';
 import {HttpClient, HttpClientModule} from '@angular/common/http';
-import {Router, RouterOutlet} from '@angular/router';
+import {Router, RouterLink, RouterOutlet} from '@angular/router';
 import {FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators} from '@angular/forms';
 import {CommonModule} from '@angular/common';
 import {CommonResp, CompanyService} from '../services/company.service';
@@ -18,9 +18,9 @@ import {Utils} from '../utils/utils';
 @Component({
   selector: 'app-reset-password',
   standalone: true,
-  imports: [FormsModule, CommonModule, HttpClientModule, ReactiveFormsModule,
-    ShowErrorsDirective,
-    MatButtonModule, MatIcon, MatInputModule, MatFormFieldModule, RouterOutlet], // Include FormsModule here
+    imports: [FormsModule, CommonModule, HttpClientModule, ReactiveFormsModule,
+        ShowErrorsDirective,
+        MatButtonModule, MatIcon, MatInputModule, MatFormFieldModule, RouterOutlet, RouterLink], // Include FormsModule here
   templateUrl:'reset-password.component.html',
 styleUrl:'common.css',
 })

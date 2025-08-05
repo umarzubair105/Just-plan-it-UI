@@ -17,7 +17,33 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
 
 .bg-primary {
   background-color: #1d3557 !important;
-  /*#121212*/
+}
+.btn-primary {
+  background-color: #1d3557 !important;
+  border-color: #1d3557 !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+  background-color: #16324f !important; /* Optional darker shade */
+  border-color: #16324f !important;
+}
+
+.btn-secondary {
+  background-color: #457b9d !important;  /* or any from above */
+  border-color: #457b9d !important;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background-color: #35627a !important;
+  border-color: #35627a !important;
+}
+
+.custom-mt { /* Login Case Bit down */
+  margin-top: 40px;
+  margin-bottom: 40px;
 }
 
 
