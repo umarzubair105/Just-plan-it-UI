@@ -279,3 +279,6 @@ export function messageChange(input:string): string {
   }
   return input;
 }
+export function getToDayDate():string {
+  return new Date().toISOString().split('T')[0];
+}

@@ -41,6 +41,7 @@ import {FormatDatePipe} from '../pipes/format.date';
 import {AuthService} from '../services/auth.service';
 import {isGlobalHR, isManager} from '../utils/helper';
 import {NgSelectComponent, NgSelectModule} from '@ng-select/ng-select';
+import {PrettyLabelPipe} from '../pipes/pretty.label';
 
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -50,7 +51,7 @@ import {NgSelectComponent, NgSelectModule} from '@ng-select/ng-select';
   imports: [NgSelectModule, FormsModule, CommonModule, HttpClientModule, SubComponentComponent,
     MatButtonModule, MatToolbarModule, MatInputModule,
     MatCheckboxModule, MatFormFieldModule, ModalModule,
-    MatListItem, MatList, MatIcon, ReactiveFormsModule, ShowErrorsDirective, DataTableColumnCellDirective, DataTableColumnDirective, DatatableComponent, FormatDatePipe, NgSelectComponent
+    MatListItem, MatList, MatIcon, ReactiveFormsModule, ShowErrorsDirective, DataTableColumnCellDirective, DataTableColumnDirective, DatatableComponent, FormatDatePipe, NgSelectComponent, PrettyLabelPipe
   ], // Include FormsModule here
   //template:`Hello`,
   //templateUrl: './company.component.html',
@@ -153,7 +154,7 @@ export class ResourceComponent implements OnInit {
   }
   openDialogForLeaves(resource: Resource): void {
     const dialogRef = this.dialog.open(ResourceLeaveComponent, {
-      width: '80%',
+      width: '70%',
       maxWidth: '90vw', // 90% of viewport width
       height: '70%',
       maxHeight: '80vh', // 80% of viewport height

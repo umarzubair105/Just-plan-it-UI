@@ -22,6 +22,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif;
   background-color: #1d3557 !important;
   border-color: #1d3557 !important;
 }
+.modal-header {
+  background-color: #1d3557 !important;
+  border-color: #1d3557 !important;
+}
 
 .btn-primary:hover,
 .btn-primary:focus,

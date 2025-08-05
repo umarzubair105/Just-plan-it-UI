@@ -57,7 +57,7 @@
 
           <div class="mt-2 mt-lg-0">
             <button (click)="planRelease(releaseDetail)" *ngIf="isManager(this.rights)"
-                    class="btn btn-sm btn-outline-success me-2"
+                    class="btn btn-sm me-2"
                     title="Plan the release">
               <i class="bi bi-clipboard-check"></i> Plan
             </button>
@@ -122,11 +122,12 @@
                 <div style="text-align: center;">
                 <a (click)="unplanEpic(row.id, releaseDetail.release.id)" *ngIf="isManager(this.rights)"
                    title="Remove it from release plan">
-                  <i class="bi bi-dash-square action-icon"></i>
+                  <i class="bi bi-dash-square me-2"></i>
                 </a>
 
-                <a (click)="openDialogForEpic(row, releaseDetail.release.id)" title="Edit">
-                  <i class="bi bi-pencil-square action-icon"></i>
+                <a (click)="openDialogForEpic(row, releaseDetail.release.id)" title="Edit"
+                   >
+                  <i class="bi bi-pencil-square"></i>
                 </a>
                 </div>
               </ng-template>
@@ -300,16 +301,16 @@
                 <a (click)="planEpic(row.id)"
                    *ngIf="row.estimates && row.estimates.length > 0 && isManager(this.rights)"
                    title="Make it part of release plan">
-                  <i class="bi bi-plus-square action-icon"></i>
+                  <i class="bi bi-plus-square me-2"></i>
                 </a>
                 <a (click)="openDialogForEstimates(row)" title="Change Estimates">
-                  <i class="bi bi-bucket action-icon"></i>
+                  <i class="bi bi-bucket me-2"></i>
                 </a>
                 <a (click)="openDialogForEpic(row,0)" title="Edit">
-                  <i class="bi bi-pencil-square action-icon"></i>
+                  <i class="bi bi-pencil-square me-2"></i>
                 </a>
                 <a (click)="deleteEpic(row.id)" title="Delete">
-                  <i class="bi bi-trash action-icon"></i>
+                  <i class="bi bi-trash me-2"></i>
                 </a>
                 </div>
               </ng-template>

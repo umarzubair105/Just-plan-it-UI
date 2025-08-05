@@ -25,17 +25,17 @@
           </div>
 
           <div class="mt-2 mt-lg-0">
-            <button class="btn btn-sm btn-outline-success me-2" title="Expand the release"
+            <button class="btn btn-sm me-2" title="Expand the release"
                     *ngIf="!releaseDetail.expanded"
                     (click)="expand(releaseDetail)">
               <i class="bi bi-arrows-angle-expand"></i> Expand
             </button>
-            <button class="btn btn-sm btn-outline-success me-2" title="Collapse the release"
+            <button class="btn btn-sm me-2" title="Collapse the release"
                     *ngIf="releaseDetail.expanded"
                     (click)="releaseDetail.expanded=false;">
               <i class="bi bi-arrows-angle-contract"></i> Collapse
             </button>
-            <button class="btn btn-outline-secondary btn-sm"
+            <button class="btn btn-sm"
                     (click)="openDialogForEntityDetail(releaseDetail.release)" title="Release Artifacts">
               <i class="bi bi-file-earmark"></i> Release Artifacts
             </button>
@@ -60,7 +60,7 @@
             <ng-container *ngFor="let row of releaseDetail.epics">
               <tr>
                 <td>
-                  <button (click)="toggleAssignments(row)">
+                  <button (click)="toggleAssignments(row)"  class="btn btn-sm">
                     <i [ngClass]="{'bi bi-toggle-on': row.expanded, 'bi bi-toggle-off': !row.expanded}"></i></button>
                 </td>
                 <td><i class="{{epicAssignmentStatusIconClass(row.assignments)}}"></i>{{ row.code }}</td>
@@ -78,7 +78,7 @@
                 <td>{{ row.valueGain }}</td>
                 <td class="text-center">
                   <a (click)="openDialogForEpic(row)" title="View achievements">
-                    <i class="bi bi-box-seam action-icon"></i>
+                    <i class="bi bi-box-seam"></i>
                   </a>
                 </td>
               </tr>

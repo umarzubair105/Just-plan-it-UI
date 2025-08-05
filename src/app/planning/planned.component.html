@@ -25,12 +25,12 @@
           </div>
 
           <div class="mt-2 mt-lg-0">
-            <button class="btn btn-sm btn-outline-success me-2"
+            <button class="btn btn-sm me-2"
                     *ngIf="isManager(this.rights) && isDateStarted(releaseDetail.release.startDate)"
                     (click)="startRelease(releaseDetail)" title="Start working on release.">
               <i class="bi bi-play"></i> Start
             </button>
-            <button class="btn btn-sm btn-outline-danger me-2"
+            <button class="btn btn-sm me-2"
                     *ngIf="isManager(this.rights)"
                     (click)="unplanRelease(releaseDetail)" title="Un plan the release.">
               <i class="bi bi-stop-circle"></i> Remove from plan
@@ -97,8 +97,8 @@
                   <div style="text-align: center;">
                   <a (click)="unplanEpic(row.id, releaseDetail.release.id)"
                      title="Remove it from release plan"
-                     *ngIf="isManager(this.rights)">
-                    <i class="bi bi-dash-square action-icon"></i>
+                     *ngIf="isManager(this.rights)"  class="btn btn-sm">
+                    <i class="bi bi-dash-square"></i>
                   </a>
                   </div>
                 </ng-template>

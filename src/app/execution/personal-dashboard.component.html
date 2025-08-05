@@ -28,13 +28,13 @@
           </div>
 
           <div class="mt-2 mt-lg-0">
-            <button class="btn btn-outline-success btn-sm me-2"
+            <button class="btn btn-sm me-2"
                     *ngIf="isManager(this.rights) && isDateOver(releaseDetail.release.endDate)"
                     (click)="completeRelease(releaseDetail)" title="Mark release to complete.">
               <i class="bi bi-x-circle"></i> Complete
             </button>
 
-            <button class="btn btn-outline-secondary btn-sm"
+            <button class="btn btn-sm"
                     (click)="openDialogForEntityDetail(releaseDetail.release)" title="Release Artifacts">
               <i class="bi bi-file-earmark"></i> Release Artifacts
             </button>
@@ -61,7 +61,7 @@
             <tbody>
             <ng-container *ngFor="let row of releaseDetail.epics">
               <tr>
-                <td><button (click)="toggleAssignments(row)">
+                <td><button (click)="toggleAssignments(row)"  class="btn btn-sm">
                   <i [ngClass]="{'bi bi-toggle-on': row.expanded, 'bi bi-toggle-off': !row.expanded}"></i></button></td>
                 <td><i class="{{epicAssignmentStatusIconClass(row.assignments)}}" ></i>{{row.code}}</td>
                 <td>{{row.title}}</td>
@@ -72,7 +72,7 @@
                 <td>{{row.valueGain}}</td>
                 <td class="text-center">
                   <a (click)="openDialogForEpic(row)" title="Add achievements">
-                    <i class="bi bi-box-seam action-icon"></i>
+                    <i class="bi bi-box-seam"></i>
                   </a>
                 </td>
               </tr>
@@ -110,32 +110,32 @@
                              title="Re open it"
                              *ngIf="assignment.status === EpicAssignmentStatusEnum.COMPLETED || assignment.status === EpicAssignmentStatusEnum.ON_HOLD
                                   || assignment.status === EpicAssignmentStatusEnum.OVERDUE">
-                            <i class="bi bi-stop-circle-fill action-icon"></i>
+                            <i class="bi bi-stop-circle-fill me-2"></i>
                           </a>
                           <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.STARTED)"
                              title="Start working on"
                              *ngIf="assignment.status === EpicAssignmentStatusEnum.OPEN || assignment.status === EpicAssignmentStatusEnum.ON_HOLD">
-                            <i class="bi bi-play-circle-fill action-icon"></i>
+                            <i class="bi bi-play-circle-fill me-2"></i>
                           </a>
                           <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.ON_HOLD)"
                              title="Hold it"
                              *ngIf="assignment.status === EpicAssignmentStatusEnum.OPEN || assignment.status === EpicAssignmentStatusEnum.STARTED">
-                            <i class="bi bi-pause-circle-fill action-icon"></i>
+                            <i class="bi bi-pause-circle-fill me-2"></i>
                           </a>
                           <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.COMPLETED)"
                              title="Mark as Completed"
                              *ngIf="assignment.status === EpicAssignmentStatusEnum.STARTED">
-                            <i class="bi bi-check-circle-fill action-icon"></i>
+                            <i class="bi bi-check-circle-fill me-2"></i>
                           </a>
                           <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.OVERDUE)"
                              title="Can't be completed"
                              *ngIf="assignment.status !== EpicAssignmentStatusEnum.OVERDUE">
-                            <i class="bi bi-exclamation-circle-fill action-icon"></i>
+                            <i class="bi bi-exclamation-circle-fill me-2"></i>
                           </a>
                           <a (click)="updateTimeLoggingModal(timeLoggingTemplate, releaseDetail.release?.id, assignment)"
                              title="Log your work"
                              *ngIf="assignment.status === EpicAssignmentStatusEnum.STARTED">
-                            <i class="bi bi-clock action-icon"></i>
+                            <i class="bi bi-clock me-2"></i>
                           </a>
                         </td>
                         <td *ngIf="!(isManager(this.rights) || this.rights.resourceId==assignment.resourceId)" [width]="150">

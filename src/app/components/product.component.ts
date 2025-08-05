@@ -15,7 +15,7 @@ import {MatIcon} from '@angular/material/icon';
 import {ShowErrorsDirective} from '../directives/show-errors.directive';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Utils} from '../utils/utils';
-import {messageChange, ReleaseIteration} from '../utils/helper';
+import {getToDayDate, messageChange, ReleaseIteration} from '../utils/helper';
 import {AuthService} from '../services/auth.service';
 
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -84,4 +84,5 @@ export class ProductComponent implements OnInit {
   }
 
   protected readonly messageChange = messageChange;
+  protected readonly getToDayDate = getToDayDate;
 }

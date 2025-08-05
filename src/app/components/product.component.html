@@ -116,6 +116,7 @@
               id="startDate"
               class="form-control"
               name="startDate"
+              [min]="getToDayDate()"
               required
               placeholder="Enter first working date"
               [(ngModel)]="addProduct.startDate"
@@ -129,6 +130,7 @@
             <label for="endDate" class="form-label">Last Delivery Date</label>
             <input
               type="date"
+              [min]="getToDayDate()"
               id="endDate"
               class="form-control"
               name="endDate"

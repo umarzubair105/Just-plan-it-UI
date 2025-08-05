@@ -11,12 +11,14 @@ import {ShowErrorsDirective} from '../directives/show-errors.directive';
 import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
 import {ResourceService} from '../services/resource.service';
 import {FormatDatePipe} from '../pipes/format.date';
+import {getToDayDate, isGlobalHR} from '../utils/helper';
+import {PrettyLabelPipe} from '../pipes/pretty.label';
 
 
 @Component({
   selector: 'app-resource-leave',
   standalone: true,
-  imports: [CommonModule, NgIf, NgFor, FormsModule, ModalModule, DataTableColumnCellDirective, DataTableColumnDirective, DatatableComponent, ShowErrorsDirective, FormatDatePipe], // ✅ NO BrowserAnimationsModule here!
+  imports: [CommonModule, NgIf, NgFor, FormsModule, ModalModule, DataTableColumnCellDirective, DataTableColumnDirective, DatatableComponent, ShowErrorsDirective, FormatDatePipe, PrettyLabelPipe], // ✅ NO BrowserAnimationsModule here!
   templateUrl: './resource.leave.component.html',
   providers: [BsModalService]
 })
@@ -85,6 +87,10 @@ export class ResourceLeaveComponent  implements OnInit {
 
   // Helper method to return the correct API observable
   update() {
+    if (this.leave.startDate && this.leave.endDate && this.leave.endDate<this.leave.startDate) {
+      alert('End Date should not be less than Start Date.');
+      return;
+    }
     this.resourceLeaveService.update(this.leave.id,
       this.leave).subscribe({
       next: (data) => {
@@ -131,6 +137,11 @@ export class ResourceLeaveComponent  implements OnInit {
   }
 
   add() {
+    if (this.leave.startDate && this.leave.endDate && this.leave.endDate<this.leave.startDate) {
+      alert('End Date should not be less than Start Date.');
+      return;
+    }
+
     this.leave.active=true;
     this.leave.resourceId=this.resourceId;
     this.leave.status = LeaveStatus.PENDING;
@@ -165,4 +176,6 @@ export class ResourceLeaveComponent  implements OnInit {
   }
 
   protected readonly LeaveStatus = LeaveStatus;
+  protected readonly getToDayDate = getToDayDate;
+  protected readonly isGlobalHR = isGlobalHR;
 }
