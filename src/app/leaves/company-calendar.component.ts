@@ -17,12 +17,13 @@ import {Router} from '@angular/router';
 import {ShowErrorsDirective} from '../directives/show-errors.directive';
 import {AuthService} from '../services/auth.service';
 import {ResourceRightBean} from '../models/basic';
+import {PrettyLabelPipe} from '../pipes/pretty.label';
 
 
 @Component({
   selector: 'app-company-calendar',
   standalone: true,
-  imports: [CommonModule, NgIf, NgFor, FormsModule, ModalModule, ReactiveFormsModule, ShowErrorsDirective], // ✅ NO BrowserAnimationsModule here!
+  imports: [CommonModule, NgIf, NgFor, FormsModule, ModalModule, ReactiveFormsModule, ShowErrorsDirective, PrettyLabelPipe], // ✅ NO BrowserAnimationsModule here!
   templateUrl: './company-calendar.component.html',
   styleUrl: './company-calendar.component.css',
   providers: [BsModalService]

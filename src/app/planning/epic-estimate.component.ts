@@ -10,7 +10,7 @@ import {EpicEstimateService} from '../services/epic-estimate.service';
 import {Utils} from '../utils/utils';
 import {forkJoin, of, tap} from 'rxjs';
 import {catchError} from 'rxjs/operators';
-import {convertToMinutes, isManager, transformToDhM} from '../utils/helper';
+import {convertToMinutes, isManager, messageChange, transformToDhM} from '../utils/helper';
 import {AuthService} from '../services/auth.service';
 
 @Component({
@@ -123,4 +123,5 @@ export class EpicEstimateComponent implements OnInit {
   //  this.epicEstimatBeans.splice(indexToRemove, 1);
   }
   protected readonly isManager = isManager;
+  protected readonly messageChange = messageChange;
 }

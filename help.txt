@@ -22,6 +22,9 @@ th {
 }
 
 Add Epic Repeatively
+change assign in execution/planned
+Export XLS on Closing Release
+On Release show Progress based on Days, Time Log, Epic Done
 
 Changes Release Dates manually
 

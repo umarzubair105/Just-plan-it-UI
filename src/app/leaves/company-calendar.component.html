@@ -1,25 +1,31 @@
-<div class="container-lg mt-4">
-  <div class="row">
-    <div class="col-md-8 offset-md-2">
+<div class="container-fluid px-4">
+  <div class="col-md-8 offset-md-2">
+    <div class="text-end mt-2">
+      <a aria-controls="helpSection" aria-expanded="false" class="btn btn-link text-decoration-none" data-bs-toggle="collapse"
+         href="#helpSection" role="button">
+        <i class="bi bi-info-circle me-1"></i> Need Help?
+      </a>
+    </div>
 
-      <!-- Intro Card -->
-      <div class="card shadow-sm mb-3">
+    <!-- Help Card (Collapsed by default) -->
+    <div class="collapse" id="helpSection">
+      <div class="card shadow-sm mb-3 mt-2">
         <div class="card-body">
           <h5 class="card-title">Define Working Days & Hours</h5>
           <p class="card-text">
-            Lets define daily working hours, weekend, holidays & explicitly declaring weekend as a working day. This information should
+            Lets define daily working hours, weekend, holidays & explicitly declaring weekend as a working day. This
+            information should
             be defined prior to creating plan for a specific time period.
           </p>
         </div>
       </div>
-
-      <!-- Main Form Card -->
-      <div class="card shadow-lg">
-        <div class="card-header bg-primary text-white text-center">
-          <h2 class="h4 mb-0">Calendar</h2>
-        </div>
-
-        <div class="container mt-2">
+    </div>
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0"><i class="bi bi-calendar-event me-2"></i> Calendar</h4>
+      </div>
+      <div class="card-body bg-white col-md-12">
+        <div class="mt-2">
           <h5 class="mb-2">Weekend</h5>
 
           <!-- Display Mode -->
@@ -27,76 +33,60 @@
             <div class="d-flex flex-wrap gap-2 mb-3">
               <!-- d-inline-flex -->
               <span
-              class="badge bg-light text-dark fs-6 fw-normal gap-2 align-items-center"
                 *ngFor="let wd of weekends"
-                [hidden]="wd.id <= 0">
+                [hidden]="wd.id <= 0"
+                class="badge bg-light text-dark fs-6 fw-normal gap-2 align-items-center">
                 {{ wd.day | titlecase }}
               </span>
-              <span class="align-items-center mt-1" *ngIf="isGlobalHR(this.rights)">
+              <span *ngIf="isGlobalHR(this.rights)" class="align-items-center mt-1">
                 <a
-                  class="btn btn-sm btn-outline-primary btn-tight-custom me-1"
                   (click)="editWeekend = true"
+                  class="btn btn-sm btn-tight-custom me-1"
                   title="Edit">
                   <i class="bi bi-pencil"></i>
                 </a>
               </span>
             </div>
-<!--            <div class="d-flex flex-wrap gap-2 mb-3">
-              <span
-                class="badge bg-light text-dark fs-6 fw-normal gap-2 align-items-center"
-                *ngFor="let wd of weekends"
-                [hidden]="wd.id <= 0">
-                {{ wd.day | titlecase }}
-              </span>
-              <span class="align-items-center mt-1">
-                <a (click)="editWeekend = true" class="btn-link p-0">Edit</a>
-              </span>
-            </div>-->
           </div>
-
-
           <!-- Edit Mode -->
           <div *ngIf="editWeekend" class="row">
             <div class="d-flex flex-wrap gap-2 align-items-center mb-3">
               <span *ngFor="let day of weekends" class="form-check form-check-inline">
                 <input
-                  type="checkbox"
-                  class="form-check-input"
                   [(ngModel)]="day.active"
                   [id]="day.day"
+                  class="form-check-input"
+                  type="checkbox"
                 />
-                <label class="form-check-label" [for]="day.day">
+                <label [for]="day.day" class="form-check-label">
                   {{ day.day | titlecase }}
                 </label>
               </span>
               <span>
-                <button class="btn btn-primary" (click)="saveWeekend()">Save</button>
+                <button (click)="saveWeekend()" class="btn btn-sm btn-primary">Save</button>
               </span>
             </div>
           </div>
         </div>
 
-        <div class="container mt-2">
-<!--
-          <div class="d-flex justify-content-between align-items-center">
--->
+        <div class="mt-2">
           <div class="d-flex align-items-center mb-2">
             <h5 class="mb-0 me-2">Working Hours</h5>
             <a
-              class="btn btn-sm btn-outline-primary btn-tight-custom"
               (click)="openWDModal(addWHTemplate)"
-              title="Add" *ngIf="isGlobalHR(this.rights)">
+              *ngIf="isGlobalHR(this.rights)"
+              class="btn btn-sm btn-tight-custom" title="Add">
               <i class="bi bi-plus"></i>
             </a>
           </div>
           <!--            <a (click)="openWDModal(addWHTemplate)" class="btn-link p-0">Add Working Hour</a>-->
           <div class="table-responsive">
-<!--
-            <table class="table table-bordered table-hover align-middle table-sm-custom text-sm">
-              <thead class="table-secondary text-center">
--->
+            <!--
+                        <table class="table table-bordered table-hover align-middle table-sm-custom text-sm">
+                          <thead class="table-secondary text-center">
+            -->
             <table class="table table-striped table-hover table-bordered table-sm-custom text-sm">
-              <thead class="table-secondary" >
+              <thead class="table-secondary">
               <tr>
                 <th>Description</th>
                 <th>Scope</th>
@@ -105,13 +95,13 @@
                 <th>Event Date</th>
                 <th>Start Date</th>
                 <th>End Date</th>
-                <th>Action</th>
+                <th class="text-center">Action</th>
               </tr>
               </thead>
               <tbody>
               <tr *ngFor="let wh of companyWorkingHours;">
                 <td>{{ wh.description }}</td>
-                <td>{{ wh.scope }}</td>
+                <td>{{ wh.scope.toString() | prettyLabel }}</td>
                 <td class="text-center">{{ wh.minutes }}</td>
                 <td>{{ wh.dayOfWeek | titlecase }}</td>
                 <td>{{ wh.eventDate }}</td>
@@ -119,16 +109,16 @@
                 <td>{{ wh.endDate }}</td>
                 <td class="text-center">
                   <a
-                    class="btn btn-sm btn-outline-primary btn-tight-custom me-1"
                     (click)="openWDModalEdit(addWHTemplate, wh.id)"
-                    title="Edit" *ngIf="isGlobalHR(this.rights)">
+                    *ngIf="isGlobalHR(this.rights)"
+                    class="btn btn-sm btn-tight-custom me-1" title="Edit">
                     <i class="bi bi-pencil"></i>
                   </a>
                   <a
-                    class="btn btn-sm btn-outline-danger btn-tight-custom"
                     (click)="deleteCompanyWorkingHour(wh.id)"
                     *ngIf="wh.scope !== WorkingHourEnum.DEFAULT && isGlobalHR(this.rights)"
-                    title="Delete" >
+                    class="btn btn-sm  btn-tight-custom"
+                    title="Delete">
                     <i class="bi bi-trash"></i>
                   </a>
                 </td>
@@ -139,13 +129,13 @@
         </div>
 
 
-        <div class="container mt-2">
+        <div class="mt-2">
           <div class="d-flex align-items-center mb-2">
-            <h5 class="mb-0 me-2">Holidays/Working Days</h5>
+            <h5 class="mb-0 me-2">Holidays/Explicit Working Days</h5>
             <a
-              class="btn btn-sm btn-outline-primary btn-tight-custom"
               (click)="openCCModal(addCCTemplate)"
-              title="Add" *ngIf="isGlobalHR(this.rights)">
+              *ngIf="isGlobalHR(this.rights)"
+              class="btn btn-sm btn-tight-custom" title="Add">
               <i class="bi bi-plus"></i>
             </a>
           </div>
@@ -157,27 +147,27 @@
                 <th>Type</th>
                 <th>Start Date</th>
                 <th>End Date</th>
-                <th>Action</th>
+                <th class="text-center">Action</th>
               </tr>
               </thead>
               <tbody>
               <tr *ngFor="let wh of companyCalendars; ">
                 <td>{{ wh.eventName }}</td>
-                <td>{{ wh.eventType }}</td>
+                <td>{{ wh.eventType.toString() | prettyLabel }}</td>
                 <td>{{ wh.startDate }}</td>
                 <td>{{ wh.endDate }}</td>
                 <td class="text-center">
                   <a
-                    class="btn btn-sm btn-outline-primary btn-tight-custom me-1"
                     (click)="openCCModalEdit(addCCTemplate, wh.id)"
-                    title="Edit" *ngIf="isGlobalHR(this.rights)"
+                    *ngIf="isGlobalHR(this.rights)"
+                    class="btn btn-sm btn-tight-custom me-1" title="Edit"
                   >
                     <i class="bi bi-pencil"></i>
                   </a>
                   <a
-                    class="btn btn-sm btn-outline-danger btn-tight-custom"
                     (click)="deleteCompanyCalendar(wh.id)"
-                    title="Delete" *ngIf="isGlobalHR(this.rights)"
+                    *ngIf="isGlobalHR(this.rights)"
+                    class="btn btn-sm btn-tight-custom" title="Delete"
                   >
                     <i class="bi bi-trash"></i>
                   </a>
@@ -187,8 +177,8 @@
             </table>
           </div>
         </div>
-        <div class="text-center mt-0 mb-2 d-flex justify-content-center gap-2" *ngIf="isWizard()">
-          <button class="btn btn-primary w-20" (click)="next()">Skip</button>
+        <div *ngIf="isWizard()" class="text-center mt-0 mb-2 d-flex justify-content-center gap-2">
+          <button (click)="next()" class="btn btn-primary w-20">Skip</button>
         </div>
       </div>
     </div>
@@ -196,31 +186,34 @@
 
   <ng-template #addWHTemplate>
     <div class="modal fade show d-block">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Add/Update Working Hour</h5>
-            <button type="button" class="btn-close" (click)="closeModal()"></button>
+          <div class="modal-header text-white justify-content-between align-items-center py-2 px-3 ">
+            <h5 class="modal-title mb-0 fx-6">Add/Update Working Hour</h5>
+            <button class="btn btn-sm text-white p-0" (click)="closeModal()">
+              <i class="bi bi-x-lg"></i>
+            </button>
           </div>
           <div class="modal-body">
-            <form  #hrForm="ngForm" >
+            <form #hrForm="ngForm">
               <div class="mb-3">
-                <label class="form-label">Description</label><label class="required-label"><span class="text-danger ms-1">*</span></label>
-                <input type="text" class="form-control" [(ngModel)]="editCompanyWorkingHour.description"
-                       id="description"
-                       name="description" required
-                       #description="ngModel"
-                       [ngClass]="{ 'is-invalid': description.invalid && (description.dirty || description.touched) }"
+                <label class="form-label">Description</label><label class="required-label"><span
+                class="text-danger ms-1">*</span></label>
+                <input #description="ngModel" [(ngModel)]="editCompanyWorkingHour.description" [ngClass]="{ 'is-invalid': description.invalid && (description.dirty || description.touched) }"
                        [showErrors]="{ required: 'Description is required' }"
+                       class="form-control" id="description"
+                       name="description"
+                       required
+                       type="text"
                 >
               </div>
-              <div class="mb-3" *ngIf="editCompanyWorkingHour.scope !== WorkingHourEnum.DEFAULT">
+              <div *ngIf="editCompanyWorkingHour.scope !== WorkingHourEnum.DEFAULT" class="mb-3">
                 <label class="form-label">Scope<span class="text-danger ms-1">*</span></label>
-                <select name="scope"  [(ngModel)]="editCompanyWorkingHour.scope" class="form-control" required
+                <select #scope="ngModel" [(ngModel)]="editCompanyWorkingHour.scope" [ngClass]="{ 'is-invalid': scope.invalid && (scope.dirty || scope.touched) }" [showErrors]="{ required: 'Scope is required' }"
+                        class="form-control"
                         id="scope"
-                        #scope="ngModel"
-                        [ngClass]="{ 'is-invalid': scope.invalid && (scope.dirty || scope.touched) }"
-                        [showErrors]="{ required: 'Scope is required' }">
+                        name="scope"
+                        required>
                   <option *ngFor="let scope of workingHourScopes" [value]="scope.viewValue">
                     {{ scope.value }}
                   </option>
@@ -228,38 +221,42 @@
               </div>
               <div class="mb-3">
                 <label class="form-label">Minutes<span class="text-danger ms-1">*</span></label>
-                <input type="number" class="form-control" [(ngModel)]="editCompanyWorkingHour.minutes" name="minutes" required
-                       #minutes="ngModel"
-                       [ngClass]="{ 'is-invalid': minutes.invalid && (minutes.dirty || minutes.touched) }"
-                       [showErrors]="{ required: 'Minutes is required' }">
+                <input #minutes="ngModel" [(ngModel)]="editCompanyWorkingHour.minutes" [ngClass]="{ 'is-invalid': minutes.invalid && (minutes.dirty || minutes.touched) }" [showErrors]="{ required: 'Minutes is required' }"
+                       class="form-control"
+                       name="minutes"
+                       required
+                       type="number">
               </div>
-              <div class="mb-3" *ngIf="isDisplay('startDate',editCompanyWorkingHour.scope)">
+              <div *ngIf="isDisplay('startDate',editCompanyWorkingHour.scope)" class="mb-3">
                 <label class="form-label">Start Date<span class="text-danger ms-1">*</span></label>
-                <input type="date" class="form-control" [(ngModel)]="editCompanyWorkingHour.startDate" name="startDate" required
-                       #startDate="ngModel"
-                       [ngClass]="{ 'is-invalid': startDate.invalid && (startDate.dirty || startDate.touched) }"
-                       [showErrors]="{ required: 'Start Date is required' }">
+                <input #startDate="ngModel" [(ngModel)]="editCompanyWorkingHour.startDate" [ngClass]="{ 'is-invalid': startDate.invalid && (startDate.dirty || startDate.touched) }" [showErrors]="{ required: 'Start Date is required' }"
+                       class="form-control"
+                       name="startDate"
+                       required
+                       type="date">
               </div>
-              <div class="mb-3" *ngIf="isDisplay('endDate',editCompanyWorkingHour.scope)">
+              <div *ngIf="isDisplay('endDate',editCompanyWorkingHour.scope)" class="mb-3">
                 <label class="form-label">End Date<span class="text-danger ms-1">*</span></label>
-                <input type="date" class="form-control" [(ngModel)]="editCompanyWorkingHour.endDate" name="endDate" required
-                       #endDate="ngModel"
-                       [ngClass]="{ 'is-invalid': endDate.invalid && (endDate.dirty || endDate.touched) }"
-                       [showErrors]="{ required: 'End Date is required' }">
+                <input #endDate="ngModel" [(ngModel)]="editCompanyWorkingHour.endDate" [ngClass]="{ 'is-invalid': endDate.invalid && (endDate.dirty || endDate.touched) }" [showErrors]="{ required: 'End Date is required' }"
+                       class="form-control"
+                       name="endDate"
+                       required
+                       type="date">
               </div>
-              <div class="mb-3" *ngIf="isDisplay('eventDate',editCompanyWorkingHour.scope)">
+              <div *ngIf="isDisplay('eventDate',editCompanyWorkingHour.scope)" class="mb-3">
                 <label class="form-label">Event Date<span class="text-danger ms-1">*</span></label>
-                <input type="date" class="form-control" [(ngModel)]="editCompanyWorkingHour.eventDate" name="eventDate" required
-                       #eventDate="ngModel"
-                       [ngClass]="{ 'is-invalid': eventDate.invalid && (eventDate.dirty || eventDate.touched) }"
-                       [showErrors]="{ required: 'Event Date is required' }">
+                <input #eventDate="ngModel" [(ngModel)]="editCompanyWorkingHour.eventDate" [ngClass]="{ 'is-invalid': eventDate.invalid && (eventDate.dirty || eventDate.touched) }" [showErrors]="{ required: 'Event Date is required' }"
+                       class="form-control"
+                       name="eventDate"
+                       required
+                       type="date">
               </div>
-              <div class="mb-3" *ngIf="isDisplay('dayOfWeek',editCompanyWorkingHour.scope)">
+              <div *ngIf="isDisplay('dayOfWeek',editCompanyWorkingHour.scope)" class="mb-3">
                 <label class="form-label">Day of Week<span class="text-danger ms-1">*</span></label>
-                <select name="dayOfWeek"  [(ngModel)]="editCompanyWorkingHour.dayOfWeek" class="form-control" required
-                        #dayOfWeek="ngModel"
-                        [ngClass]="{ 'is-invalid': dayOfWeek.invalid && (dayOfWeek.dirty || dayOfWeek.touched) }"
-                        [showErrors]="{ required: 'Day of Week is required' }">
+                <select #dayOfWeek="ngModel" [(ngModel)]="editCompanyWorkingHour.dayOfWeek" [ngClass]="{ 'is-invalid': dayOfWeek.invalid && (dayOfWeek.dirty || dayOfWeek.touched) }" [showErrors]="{ required: 'Day of Week is required' }"
+                        class="form-control"
+                        name="dayOfWeek"
+                        required>
                   <option *ngFor="let day of weekDays" [value]="day.toUpperCase()">
                     {{ day | titlecase }}
                   </option>
@@ -268,9 +265,13 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-primary w-20" (click)="updateCompanyWorkingHour()" *ngIf="editCompanyWorkingHour.id>0" [disabled]="hrForm.invalid" >Update</button>
-            <button class="btn btn-primary w-20" (click)="addCompanyWorkingHour()" *ngIf="editCompanyWorkingHour.id===0" [disabled]="hrForm.invalid" >Add</button>
-            <button class="btn btn-secondary w-20" (click)="closeModal()">Cancel</button>
+            <button (click)="updateCompanyWorkingHour()" *ngIf="editCompanyWorkingHour.id>0"
+                    [disabled]="hrForm.invalid" class="btn btn-primary w-20">Save
+            </button>
+            <button (click)="addCompanyWorkingHour()" *ngIf="editCompanyWorkingHour.id===0" [disabled]="hrForm.invalid"
+                    class="btn btn-primary w-20">Save
+            </button>
+            <button (click)="closeModal()" class="btn btn-secondary w-20">Close</button>
           </div>
         </div>
       </div>
@@ -279,27 +280,30 @@
 
   <ng-template #addCCTemplate>
     <div class="modal fade show d-block">
-      <div class="modal-dialog">
+      <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Add/Update Holidays/Working Days</h5>
-            <button type="button" class="btn-close" (click)="closeModal()"></button>
+          <div class="modal-header text-white justify-content-between align-items-center py-2 px-3 ">
+            <h5 class="modal-title mb-0 fx-6">Add/Update Holidays/Explicit Working Days</h5>
+            <button class="btn btn-sm text-white p-0" (click)="closeModal()">
+              <i class="bi bi-x-lg"></i>
+            </button>
           </div>
           <div class="modal-body">
-            <form  #userForm="ngForm" >
+            <form #userForm="ngForm">
               <div class="mb-3">
                 <label class="form-label">Event<span class="text-danger ms-1">*</span></label>
-                <input type="text" class="form-control" [(ngModel)]="editCompanyCalendar.eventName" name="eventName" required
-                       #eventName="ngModel"
-                       [ngClass]="{ 'is-invalid': eventName.invalid && (eventName.dirty || eventName.touched) }"
-                       [showErrors]="{ required: 'Event is required' }">
+                <input #eventName="ngModel" [(ngModel)]="editCompanyCalendar.eventName" [ngClass]="{ 'is-invalid': eventName.invalid && (eventName.dirty || eventName.touched) }" [showErrors]="{ required: 'Event is required' }"
+                       class="form-control"
+                       name="eventName"
+                       required
+                       type="text">
               </div>
               <div class="mb-3">
                 <label class="form-label">Type<span class="text-danger ms-1">*</span></label>
-                <select name="eventType"  [(ngModel)]="editCompanyCalendar.eventType" class="form-control" required
-                        #eventType="ngModel"
-                        [ngClass]="{ 'is-invalid': eventType.invalid && (eventType.dirty || eventType.touched) }"
-                        [showErrors]="{ required: 'Type is required' }">
+                <select #eventType="ngModel" [(ngModel)]="editCompanyCalendar.eventType" [ngClass]="{ 'is-invalid': eventType.invalid && (eventType.dirty || eventType.touched) }" [showErrors]="{ required: 'Type is required' }"
+                        class="form-control"
+                        name="eventType"
+                        required>
                   <option *ngFor="let scope of eventTypes" [value]="scope.viewValue">
                     {{ scope.value }}
                   </option>
@@ -307,24 +311,30 @@
               </div>
               <div class="mb-3">
                 <label class="form-label">Start Date<span class="text-danger ms-1">*</span></label>
-                <input type="date" class="form-control" [(ngModel)]="editCompanyCalendar.startDate" name="startDate" required
-                       #startDate="ngModel"
-                       [ngClass]="{ 'is-invalid': startDate.invalid && (startDate.dirty || startDate.touched) }"
-                       [showErrors]="{ required: 'Start Date is required' }">
+                <input #startDate="ngModel" [(ngModel)]="editCompanyCalendar.startDate" [ngClass]="{ 'is-invalid': startDate.invalid && (startDate.dirty || startDate.touched) }" [showErrors]="{ required: 'Start Date is required' }"
+                       class="form-control"
+                       name="startDate"
+                       required
+                       type="date">
               </div>
               <div class="mb-3">
                 <label class="form-label">End Date<span class="text-danger ms-1">*</span></label>
-                <input type="date" class="form-control" [(ngModel)]="editCompanyCalendar.endDate" name="endDate" required
-                       #endDate="ngModel"
-                       [ngClass]="{ 'is-invalid': endDate.invalid && (endDate.dirty || endDate.touched) }"
-                       [showErrors]="{ required: 'End Date is required' }">
+                <input #endDate="ngModel" [(ngModel)]="editCompanyCalendar.endDate" [ngClass]="{ 'is-invalid': endDate.invalid && (endDate.dirty || endDate.touched) }" [showErrors]="{ required: 'End Date is required' }"
+                       class="form-control"
+                       name="endDate"
+                       required
+                       type="date">
               </div>
             </form>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-primary w-20" (click)="updateCompanyCalendar()" *ngIf="editCompanyCalendar.id>0" [disabled]="userForm.invalid" >Update</button>
-            <button class="btn btn-primary w-20" (click)="addCompanyCalendar()" *ngIf="editCompanyCalendar.id===0" [disabled]="userForm.invalid" >Add</button>
-            <button class="btn btn-secondary w-20" (click)="closeModal()">Cancel</button>
+            <button (click)="updateCompanyCalendar()" *ngIf="editCompanyCalendar.id>0" [disabled]="userForm.invalid"
+                    class="btn btn-primary w-20">Save
+            </button>
+            <button (click)="addCompanyCalendar()" *ngIf="editCompanyCalendar.id==0" [disabled]="userForm.invalid"
+                    class="btn btn-primary w-20">Save
+            </button>
+            <button (click)="closeModal()" class="btn btn-secondary w-20">Close</button>
           </div>
         </div>
       </div>

@@ -1,7 +1,15 @@
-<div class="container-lg mt-4">
-  <div class="row">
-    <div class="col-md-12 offset-md-0">
-      <div class="card shadow-sm mb-2">
+<div class="container-fluid px-4">
+  <div class="col-md-8 offset-md-2">
+    <div class="text-end mt-2">
+      <a aria-controls="helpSection" aria-expanded="false" class="btn btn-link text-decoration-none" data-bs-toggle="collapse"
+         href="#helpSection" role="button">
+        <i class="bi bi-info-circle me-1"></i> Need Help?
+      </a>
+    </div>
+
+    <!-- Help Card (Collapsed by default) -->
+    <div class="collapse" id="helpSection">
+      <div class="card shadow-sm mb-3 mt-2">
         <div class="card-body">
           <h5 class="card-title">{{messageChange('Upload Product Milestones')}}</h5>
           <p class="card-text">
@@ -14,13 +22,14 @@
           </p>
         </div>
       </div>
+    </div>
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0"><i class="bi bi-journal-text me-2"></i> Upload Deliverables</h4>
+      </div>
+      <div class="card-body bg-white col-md-12">
 
-      <!-- Upload Card -->
-      <div class="card shadow-lg">
-        <div class="card-header bg-primary text-white text-center">
-          <h3>Upload Deliverables</h3>
-        </div>
-        <div class="card-body">
+
           <!-- File Upload -->
           <div class="mb-3">
             <label for="fileUpload" class="form-label">Select Excel File</label>
@@ -52,7 +61,6 @@
           <div *ngIf="predefinedFields.length > 0 && excelHeadersUnmapped.length > 0" class="mt-5">
             <h5>Column Mapping</h5>
             <div *ngIf="errorMessage" class="alert alert-danger">{{ errorMessage }}</div>
-            <div class="row">
               <div class="mb-3" *ngFor="let header of predefinedFields">
                 <div *ngIf="mappedHeaders[header] === undefined">
                   <label class="form-label">
@@ -65,7 +73,6 @@
                     <option *ngFor="let field of excelHeadersUnmapped" [value]="field">{{ field }}</option>
                   </select>
                 </div>
-              </div>
             </div>
           </div>
 
@@ -93,54 +100,4 @@
       </div>
     </div>
   </div>
-</div>
-<!--<div class="container mt-5">
-  <h3>Upload and Map Excel Data</h3>
 
-  &lt;!&ndash; File Input &ndash;&gt;
-  <input type="file" (change)="onFileChange($event)" class="form-control mt-2" accept=".xls,.xlsx" />
-
-  &lt;!&ndash; Mapping Section &ndash;&gt;
-  <div *ngIf="predefinedFieldList.length > 0">
-    <h5 class="mt-4">Column Mapping</h5>
-    <div *ngFor="let header of predefinedFieldList" class="mb-3">
-      <label>{{ header }}</label>
-      <select class="form-select" [(ngModel)]="mappedHeaders[predefinedFields[header]]" (change)="onMappingChange()">
-        <option value="">&#45;&#45; Select Field &#45;&#45;</option>
-        <option *ngFor="let field of excelHeaders" [value]="field">{{ field }}</option>
-      </select>
-    </div>
-  </div>
-
-  &lt;!&ndash; Display Transformed Data &ndash;&gt;
-  <table class="table mt-3" *ngIf="transformedData.length > 0">
-    <thead>
-    <tr>
-      <th *ngFor="let key of predefinedFieldList">{{ key | titlecase }}</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let row of transformedData">
-      <td *ngFor="let key of predefinedFieldList">{{ row[predefinedFields[key]] || '-' }}</td>
-    </tr>
-    </tbody>
-  </table>
-</div>-->
-  <!--<h3>Upload and Process Excel File</h3>
-
-  &lt;!&ndash; File Input &ndash;&gt;
-  <input type="file" (change)="onFileChange($event)" class="form-control mt-2" accept=".xls,.xlsx" />
-
-  &lt;!&ndash; Display Data &ndash;&gt;
-  <table class="table mt-3" *ngIf="excelData.length > 0">
-    <thead>
-    <tr>
-      <th *ngFor="let key of columnHeaders">{{ key | titlecase }}</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr *ngFor="let row of excelData">
-      <td *ngFor="let key of columnHeaders">{{ row[key] }}</td>
-    </tr>
-    </tbody>
-  </table>-->

@@ -11,6 +11,7 @@ import {HttpParams} from '@angular/common/http';
 import {FormsModule} from '@angular/forms';
 import {NgForOf, NgIf} from '@angular/common';
 import {firstValueFrom} from 'rxjs';
+import {messageChange} from "../utils/helper";
 
 @Component({
   selector: 'app-product-resource',
@@ -220,4 +221,5 @@ export class ProductResourceComponent implements OnInit {
       }))
     ];
   }*/
+    protected readonly messageChange = messageChange;
 }

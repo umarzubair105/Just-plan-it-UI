@@ -1,21 +1,29 @@
-<div class="container-lg mt-4">
-  <div class="row">
-    <div class="col-md-12 offset-md-0">
-      <div class="card shadow-sm mb-2">
+<div class="container-fluid px-4">
+  <div class="col-md-12 offset-md-0">
+    <div class="text-end mt-2">
+      <a aria-controls="helpSection" aria-expanded="false" class="btn btn-link text-decoration-none" data-bs-toggle="collapse"
+         href="#helpSection" role="button">
+        <i class="bi bi-info-circle me-1"></i> Need Help?
+      </a>
+    </div>
+
+    <!-- Help Card (Collapsed by default) -->
+    <div class="collapse" id="helpSection">
+      <div class="card shadow-sm mb-3 mt-2">
         <div class="card-body">
-          <h5 class="card-title">Allocate time to resource</h5>
+          <h5 class="card-title">{{messageChange('Allocate time to resource per Product')}}</h5>
           <p class="card-text">
-            It's to define how much time a resource can be allocated to product out of resource availability.
+            {{messageChange('It\'s to define how much time a resource can be allocated to product out of resource availability.')}}
           </p>
         </div>
       </div>
+    </div>
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0"><i class="bi bi-hourglass-split me-2"></i> Time Allocation</h4>
+      </div>
+      <div class="card-body bg-white col-md-12">
 
-      <!-- Upload Card -->
-      <div class="card shadow-lg">
-        <div class="card-header bg-primary text-white text-center">
-          <h3>Time Allocation</h3>
-        </div>
-        <div class="card-body">
           <div *ngIf="errorMessage" class="alert alert-danger">
             {{ errorMessage }}
           </div>
@@ -31,7 +39,7 @@
               [rowHeight]="'auto'">
 
               <!-- Resource Name Column -->
-              <ngx-datatable-column name="Resource" prop="resourceName">
+              <ngx-datatable-column name="Resource" prop="resourceName" [maxWidth]="500">
               </ngx-datatable-column>
 
               <!-- Dynamic Product Columns -->
@@ -46,15 +54,15 @@
                 </ng-template>
               </ngx-datatable-column>
 
-              <ngx-datatable-column name="Total">
+              <ngx-datatable-column name="Total" [headerClass]="'text-center'">
                 <ng-template let-row="row" let-value="value" ngx-datatable-cell-template>
+                  <div style="text-align: right;">
                   {{row['total'].participationPercentTime}}%
+                  </div>
                 </ng-template>
               </ngx-datatable-column>
             </ngx-datatable>
           </div>
-
-
           <div class="text-center mt-3 d-flex justify-content-center gap-2">
             <button class="btn btn-primary w-20" type="submit" (click)="onSave()" [disabled]="!isAnyThingChanged || !isValidated">Save</button>
             <button class="btn btn-secondary w-20" type="reset" (click)="onSkip()" *ngIf="isWizard()">Skip</button>
@@ -63,6 +71,5 @@
       </div>
     </div>
   </div>
-</div>
 
 
