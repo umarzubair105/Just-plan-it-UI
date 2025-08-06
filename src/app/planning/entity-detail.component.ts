@@ -11,7 +11,7 @@ import {ShowErrorsDirective} from '../directives/show-errors.directive';
 import {Utils} from '../utils/utils';
 import {DecimalToTimePipe} from '../pipes/decimal.to.time';
 import {FormatDatePipe} from '../pipes/format.date';
-import {formatDate, isManager, messageChange} from '../utils/helper';
+import {formatDate, isGlobalHR, isManager, messageChange} from '../utils/helper';
 import {AppConstants} from '../configuration/app.constants';
 import {ResourceService} from '../services/resource.service';
 import {QuillEditorComponent} from 'ngx-quill';
@@ -192,4 +192,5 @@ export class EntityDetailComponent implements OnInit {
   protected readonly AppConstants = AppConstants;
   protected readonly isManager = isManager;
   protected readonly messageChange = messageChange;
+  protected readonly isGlobalHR = isGlobalHR;
 }

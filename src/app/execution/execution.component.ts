@@ -326,7 +326,7 @@ export class ExecutionComponent implements OnInit {
 
   openDialogForEntityDetail(release: Release): void {
     const dialogRef = this.dialog.open(EntityDetailComponent, {
-      width: '50%',
+      width: '80%',
       maxWidth: '90vw', // 90% of viewport width
       height: '70%',
       maxHeight: '80vh', // 80% of viewport height
