@@ -27,7 +27,7 @@
               <th>Start Date</th>
               <th>End Date</th>
               <th>Approved At</th>
-              <th>Action</th>
+              <th class="text-center">Action</th>
             </tr>
             </thead>
             <tbody>
@@ -128,7 +128,7 @@
               <button (click)="add()" *ngIf="leave.id===0" [disabled]="resourceForm.invalid"
                       class="btn btn-primary w-20">Save
               </button>
-              <button (click)="closeModal()" class="btn btn-secondary w-20">Cancel</button>
+              <button (click)="closeModal()" class="btn btn-secondary w-20">Close</button>
             </div>
           </div>
         </div>

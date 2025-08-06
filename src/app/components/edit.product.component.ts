@@ -28,8 +28,10 @@ import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
 import {Product, ReleaseStatusEnum} from '../models/planning';
 import {FormatDatePipe} from '../pipes/format.date';
 import {ProductService} from '../services/product.service';
-import {messageChange, ReleaseIteration} from '../utils/helper';
+import {getToDayDate, isGlobalHR, messageChange, ReleaseIteration} from '../utils/helper';
 import {DecimalToTimePipe} from "../pipes/decimal.to.time";
+import {PrettyLabelPipe} from '../pipes/pretty.label';
+import {ResourceService} from '../services/resource.service';
 
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -39,7 +41,7 @@ import {DecimalToTimePipe} from "../pipes/decimal.to.time";
   imports: [FormsModule, CommonModule, HttpClientModule, SubComponentComponent,
     MatButtonModule, MatToolbarModule, MatInputModule,
     MatCheckboxModule, MatFormFieldModule, ModalModule,
-    MatListItem, MatList, MatIcon, ReactiveFormsModule, ShowErrorsDirective, DataTableColumnCellDirective, DataTableColumnDirective, DatatableComponent, FormatDatePipe, DecimalToTimePipe
+    MatListItem, MatList, MatIcon, ReactiveFormsModule, ShowErrorsDirective, DataTableColumnCellDirective, DataTableColumnDirective, DatatableComponent, FormatDatePipe, DecimalToTimePipe, PrettyLabelPipe
   ], // Include FormsModule here
   //template:`Hello`,
   //templateUrl: './company.component.html',
@@ -53,8 +55,10 @@ export class EditProductComponent implements OnInit {
   errorMessage: string = '';
   companyId!: number;
   modelService = inject(ProductService);
+  resourceService = inject(ResourceService);
   models: Product[] = [];
   model: Product = new Product();
+  resources: Resource[] = [];
   releaseIterations = Object.keys(ReleaseIteration)
     .filter(key => isNaN(Number(key))) // Exclude numeric keys
     .map((key) => ({
@@ -78,7 +82,7 @@ export class EditProductComponent implements OnInit {
     console.log(this.companyId); // Output: 123
     console.log('Testing')
     this.loadModels();
-
+    this.loadResources();
   }
 
   addNewModel(): void {
@@ -94,11 +98,23 @@ export class EditProductComponent implements OnInit {
     });
   }
 
+  loadResources(): void {
+    this.resourceService.getByCompanyId(this.companyId).subscribe({
+      next: (data) => {
+        var tempR : Resource[] = data._embedded.resources;
+        this.resources = tempR;
+        this.resources.sort((a, b) => a.name.localeCompare(b.name));
+      },
+      error: (err) => (this.errorMessage = err),
+    });
+  }
+
   update() {
     this.modelService.updateSpecificFieldsPasses(this.model.id,
       {name: this.model.name,startDate: this.model.startDate,
         endDate:this.model.endDate,otherActivitiesPercentTime:this.model.otherActivitiesPercentTime,
-        releaseIteration: this.model.releaseIteration
+        releaseIteration: this.model.releaseIteration,
+        productManagerId:this.model.productManagerId
       }
     ).subscribe({
       next: (data) => {
@@ -121,4 +137,6 @@ export class EditProductComponent implements OnInit {
   }
 
   protected readonly messageChange = messageChange;
+    protected readonly isGlobalHR = isGlobalHR;
+  protected readonly getToDayDate = getToDayDate;
 }

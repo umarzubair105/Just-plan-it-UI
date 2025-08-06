@@ -1,79 +1,60 @@
-<div class="container-lg mt-4">
-  <div class="row">
-    <div class="col-md-12 offset-md-0">
+<div class="container-fluid px-4">
+  <div class="col-md-8 offset-md-2">
 
-      <!-- Intro Card -->
-      <div class="card shadow-sm mb-3">
-        <div class="card-body">
-          <h5 class="card-title">{{ messageChange('Product') }}</h5>
-          <p class="card-text">
-            Define the {{ messageChange('product') }} which your company want to deliver.
-          </p>
-        </div>
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0"><i class="bi bi-folder2-open me-2"></i> {{ messageChange('Products') }}</h4>
       </div>
-
-      <!-- Main Form Card -->
-      <div class="card shadow-lg">
-        <div class="card-header bg-primary text-white text-center">
-          <h2 class="h4 mb-0">{{ messageChange('Products') }}</h2>
+      <div class="card-body bg-white col-md-12">
+        <div class="text-end mb-2">
+          <button (click)="addNewModel()"
+                  class="btn btn-sm me-2"
+                  title="Add new resource">
+            <i class="bi bi-plus"></i> Add New {{ messageChange('Product') }}
+          </button>
         </div>
+        <div class="col-md-12 table-responsive">
 
-        <div class="">
-          <div class="card-body">
-            <div class="d-flex align-items-center">
-              <h5 class="mb-0 me-2">{{ messageChange('Products') }}</h5>
+          <ngx-datatable
+            [columnMode]="'force'"
+            [footerHeight]="30"
+            [headerHeight]="40"
+            [rowHeight]="'auto'"
+            [rows]="models"
+            class="bootstrap-table table-striped table-bordered table-hover">
+            <ngx-datatable-column [maxWidth]="80" name="Code" prop="code"></ngx-datatable-column>
+            <ngx-datatable-column name="Name" prop="name"></ngx-datatable-column>
+            <ngx-datatable-column [maxWidth]="180" name="Non Productive Time %"
+                                  prop="otherActivitiesPercentTime"></ngx-datatable-column>
+            <ngx-datatable-column [maxWidth]="150" name="Release Duration">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.releaseIteration.toString() | prettyLabel }}
+              </ng-template>
+            </ngx-datatable-column>
 
-              <a
-                class="btn btn-sm btn-outline-primary btn-tight-custom"
-                (click)="addNewModel()"
-                title="Add">
-                <i class="bi bi-plus"></i>
-              </a>
-            </div>
+            <ngx-datatable-column [maxWidth]="150" name="First Working Date">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.startDate }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column [maxWidth]="150" name="Last Delivery Date">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.endDate | decimalToTime }}
+              </ng-template>
+            </ngx-datatable-column>
 
+            <ngx-datatable-column [maxWidth]="80" name="Action" [headerClass]="'text-center'">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <div style="text-align: center;">
+                <a (click)="openModalEdit(editModel,row.id)" title="Edit">
+                  <i class="bi bi-pencil-square"></i>
+                </a>
+                </div>
+              </ng-template>
+            </ngx-datatable-column>
+          </ngx-datatable>
 
-            <div class="col-md-12 table-responsive">
-
-            <ngx-datatable
-              [rows]="models"
-              [columnMode]="'force'"
-              [headerHeight]="40"
-              [footerHeight]="30"
-              [rowHeight]="'auto'"
-              class="bootstrap-table table-striped table-bordered table-hover">
-              <ngx-datatable-column name="Code" prop="code" [maxWidth]="80"></ngx-datatable-column>
-              <ngx-datatable-column name="Name" prop="name" ></ngx-datatable-column>
-              <ngx-datatable-column name="Non Productive Time %" prop="otherActivitiesPercentTime" [maxWidth]="180"></ngx-datatable-column>
-              <ngx-datatable-column name="Release Duration" prop="releaseIteration" [maxWidth]="150"></ngx-datatable-column>
-              <ngx-datatable-column name="Created At" [maxWidth]="180">
-                <ng-template let-row="row" ngx-datatable-cell-template>
-                  {{ row.startDate | formatDate }}
-                </ng-template>
-              </ngx-datatable-column>
-
-              <ngx-datatable-column name="First Working Date" [maxWidth]="150">
-                <ng-template let-row="row" ngx-datatable-cell-template>
-                  {{ row.startDate }}
-                </ng-template>
-              </ngx-datatable-column>
-              <ngx-datatable-column name="Last Delivery Date" [maxWidth]="150">
-                <ng-template let-row="row" ngx-datatable-cell-template>
-                  {{ row.endDate | decimalToTime}}
-                </ng-template>
-              </ngx-datatable-column>
-
-              <ngx-datatable-column name="Action" [maxWidth]="100">
-                <ng-template let-row="row" ngx-datatable-cell-template>
-                  <a (click)="openModalEdit(editModel,row.id)" title="Edit">
-                    <i class="bi bi-pencil-square action-icon"></i>
-                  </a>
-                </ng-template>
-              </ngx-datatable-column>
-            </ngx-datatable>
-
-          </div>
         </div>
-      </div>
       </div>
     </div>
   </div>
@@ -82,107 +63,130 @@
     <div class="modal fade show d-block">
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Update {{messageChange('Product')}}</h5>
-            <button type="button" class="btn-close" (click)="closeModal()"></button>
+
+          <div class="modal-header text-white justify-content-between align-items-center py-2 px-3 ">
+            <h5 class="modal-title mb-0 fx-6">Update {{ messageChange('Product') }}</h5>
+            <button class="btn btn-sm text-white p-0" (click)="closeModal()">
+              <i class="bi bi-x-lg"></i>
+            </button>
           </div>
           <div class="modal-body">
-            <form  #resourceForm="ngForm" >
-              <div class="mb-3">
-                <label for="nameR" class="form-label">Name <span class="text-danger">*</span></label>
-                <input type="text" id="nameR" name="name" class="form-control" required
-                       placeholder="Name"
-                       [(ngModel)]="model.name" #name="ngModel"
+            <form #resourceForm="ngForm">
+              <div class="mb-2">
+                <label class="form-label" for="nameR">Name <span class="text-danger">*</span></label>
+                <input #name="ngModel" [(ngModel)]="model.name"
                        [ngClass]="{ 'is-invalid': name.invalid && (name.dirty || name.touched) }"
-                       [showErrors]="{ required: 'Name is required' }" />
-            </div>
-
-            <div class="mb-3">
-              <label for="codeR" class="form-label">Code <span class="text-danger">*</span></label>
-              <input type="text" id="codeR" name="code" class="form-control" required
-                     placeholder="Code" readonly
-                     [(ngModel)]="model.code" #code="ngModel"
-                     [ngClass]="{ 'is-invalid': code.invalid && (code.dirty || code.touched) }"
-                     [showErrors]="{ required: 'Code is required' }" />
-            </div>
-
-              <div class="mb-3">
-                <label for="otherActivitiesPercentTime" class="form-label">Non Productive Time % <span class="text-danger">*</span></label>
-                <input type="text" id="otherActivitiesPercentTime" name="otherActivitiesPercentTime" class="form-control" required
-                       placeholder="Non Productive Time %"
-                       min="0"
-                       max="100"
+                       [showErrors]="{ required: 'Name is required' }" class="form-control"
+                       id="nameR"
+                       name="name" placeholder="Name"
                        required
-                       [(ngModel)]="model.otherActivitiesPercentTime" #otherActivitiesPercentTime="ngModel"
+                       type="text"/>
+              </div>
+
+              <div class="mb-2">
+                <label class="form-label" for="codeR">Code <span class="text-danger">*</span></label>
+                <input #code="ngModel" [(ngModel)]="model.code"
+                       [ngClass]="{ 'is-invalid': code.invalid && (code.dirty || code.touched) }"
+                       [showErrors]="{ required: 'Code is required' }" class="form-control"
+                       id="codeR" name="code"
+                       placeholder="Code" readonly
+                       required
+                       type="text"/>
+              </div>
+
+              <div class="mb-2">
+                <label class="form-label" for="productManagerId">{{ messageChange('Product') }} Manager <span
+                  class="text-danger">*</span></label>
+                <select #productManagerId="ngModel" [(ngModel)]="model.productManagerId"
+                        [ngClass]="{ 'is-invalid': productManagerId.invalid && (productManagerId.dirty || productManagerId.touched) }"
+                        [showErrors]="{ required: 'Designation is required' }" class="form-control"
+                        id="productManagerId"
+                        name="productManagerId"
+                        required>
+                  <option *ngFor="let res of resources" [value]="res.id">
+                    {{ res.name }}
+                  </option>
+                </select>
+
+              </div>
+
+              <div class="mb-2">
+                <label class="form-label" for="otherActivitiesPercentTime">Non Productive Time % <span
+                  class="text-danger">*</span></label>
+                <input #otherActivitiesPercentTime="ngModel" [(ngModel)]="model.otherActivitiesPercentTime"
                        [ngClass]="{ 'is-invalid': otherActivitiesPercentTime.invalid && (otherActivitiesPercentTime.dirty || otherActivitiesPercentTime.touched) }"
                        [showErrors]="{ required: 'Non productive time is required', min:'Min value is 0',
-                             max:'Max value is 100', pattern: 'Should be number only'}" />
+                             max:'Max value is 100', pattern: 'Should be number only'}" class="form-control"
+                       id="otherActivitiesPercentTime"
+                       max="100"
+                       min="0"
+                       name="otherActivitiesPercentTime"
+                       placeholder="Non Productive Time %" required
+                       required
+                       type="text"/>
               </div>
 
 
-            <div class="mb-3">
-              <label for="releaseIteration" class="form-label">Release Duration <span class="text-danger">*</span></label>
-              <select name="releaseIteration" id="releaseIteration"  [(ngModel)]="model.releaseIteration" class="form-control" required
-                      #releaseIteration="ngModel"
-                      [ngClass]="{ 'is-invalid': releaseIteration.invalid && (releaseIteration.dirty || releaseIteration.touched) }"
-                      [showErrors]="{ required: 'Designation is required' }">
-                <option *ngFor="let releaseIteration of releaseIterations" [value]="releaseIteration.viewValue">
-                  {{ releaseIteration.value }}
-                </option>
-              </select>
+              <div class="mb-2">
+                <label class="form-label" for="releaseIteration">Release Duration <span
+                  class="text-danger">*</span></label>
+                <select #releaseIteration="ngModel" [(ngModel)]="model.releaseIteration"
+                        [ngClass]="{ 'is-invalid': releaseIteration.invalid && (releaseIteration.dirty || releaseIteration.touched) }"
+                        [showErrors]="{ required: 'Designation is required' }" class="form-control"
+                        id="releaseIteration"
+                        name="releaseIteration"
+                        required>
+                  <option *ngFor="let releaseIteration of releaseIterations" [value]="releaseIteration.viewValue">
+                    {{ releaseIteration.value }}
+                  </option>
+                </select>
 
-            </div>
-            <div class="mb-3">
-              <label for="startDate" class="form-label">First Working Date</label>
-              <input
-                type="date"
-                id="startDate"
-                class="form-control"
-                name="startDate"
-                required
-                placeholder="First Working Date"
-                [(ngModel)]="model.startDate" #startDate="ngModel"
-
-                [ngClass]="{ 'is-invalid': startDate.invalid && (startDate.dirty || startDate.touched) }"
-
-                [showErrors]="{ required: 'First working date is required' }"
-              />
-            </div>
-
-              <div class="mb-3">
-                <label for="endDate" class="form-label">Last Delivery Date</label>
+              </div>
+              <div class="mb-2">
+                <label class="form-label" for="startDate">First Working Date</label>
                 <input
-                  type="date"
-                  id="endDate"
+                  [min]="model.startDate"
+                  #startDate="ngModel"
+                  [(ngModel)]="model.startDate"
+                  [ngClass]="{ 'is-invalid': startDate.invalid && (startDate.dirty || startDate.touched) }"
+                  [showErrors]="{ required: 'First working date is required' }"
                   class="form-control"
-                  name="endDate"
-                  placeholder="Last Delivery Date"
-                  [(ngModel)]="model.endDate" #endDate="ngModel"
+                  id="startDate"
+                  name="startDate" placeholder="First Working Date"
 
+                  required
+
+                  type="date"
+                />
+              </div>
+
+              <div class="mb-2">
+                <label class="form-label" for="endDate">Last Delivery Date</label>
+                <input
+                  [min]="model.startDate?model.startDate:getToDayDate()"
+                  #endDate="ngModel"
+                  [(ngModel)]="model.endDate"
                   [ngClass]="{ 'is-invalid': endDate.invalid && (endDate.dirty || endDate.touched) }"
-
                   [showErrors]="{ required: 'Last delivery date is required' }"
+                  class="form-control"
+                  id="endDate" name="endDate"
+
+                  placeholder="Last Delivery Date"
+
+                  type="date"
                 />
               </div>
             </form>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-success w-20" (click)="update()" [disabled]="resourceForm.invalid">Save</button>
-            <button class="btn btn-secondary w-20" (click)="closeModal()">Cancel</button>
+            <button (click)="update()" [disabled]="resourceForm.invalid" class="btn btn-primary w-20">Save</button>
+            <button (click)="closeModal()" class="btn btn-secondary w-20">Close</button>
           </div>
         </div>
       </div>
     </div>
   </ng-template>
 </div>
-
-
-
-
-
-
-
-
 
 
 <!--

@@ -42,7 +42,6 @@
               <th>Lead</th>
               <th>Created On</th>
               <th>Status</th>
-              <th>Activated</th>
               <th>Action</th>
             </tr>
             </thead>
@@ -51,10 +50,9 @@
               <td>{{ wh.name | titlecase}}</td>
               <td>{{ wh.email }}</td>
               <td>{{ wh.mobileNumber }}</td>
-              <td>{{ wh.lead }}</td>
+              <td>{{ wh.lead ? 'Yes' : 'No' }}</td>
               <td>{{ wh.createdDate | formatDate }}</td>
               <td>{{ wh.status.toString() | prettyLabel }}</td>
-              <td>{{ wh.active }}</td>
               <td class="text-center">
                 <a
                   class="btn btn-sm btn-tight-custom me-1"
