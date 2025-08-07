@@ -1,4 +1,4 @@
-import {Component, EventEmitter, inject, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, inject, Input, OnInit, Output, TemplateRef, ViewChild} from '@angular/core';
 import { PriorityService } from '../services/priority.service';
 import {FormBuilder, FormsModule} from '@angular/forms';
 import { CommonModule } from '@angular/common';
@@ -15,14 +15,17 @@ import {
 import {Utils} from '../utils/utils';
 import {Priority} from '../models/basic';
 import {WorkingHourEnum} from '../services/leave.service';
+import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
+import {ShowErrorsDirective} from '../directives/show-errors.directive';
 @Component({
   selector: 'app-priority',
   standalone: true,
   imports: [FormsModule, CommonModule, HttpClientModule,
-    CdkDropList, CdkDrag, CdkDragPreview], // Include FormsModule here
+    CdkDropList, CdkDrag, CdkDragPreview, ModalModule,ShowErrorsDirective], // Include FormsModule here
   //template:`Hello`,
   templateUrl: './priority.component.html',
   styleUrls: ['./priority.component.css'],
+  providers: [BsModalService]
 })
 export class PriorityComponent implements OnInit {
 //  @Input() companyId:string = '';
@@ -35,12 +38,14 @@ export class PriorityComponent implements OnInit {
   models: Priority[] = [];
   totalModels : number = 0;
   selectedModel?: Priority | null = null;
+  modalRef?: BsModalRef;
+  @ViewChild('modelC') myModal!: TemplateRef<any>;
   errorMessage: string = '';
-  resetModel: Priority = new Priority();
-  newModel: Priority = this.resetModel;
+  newModel: Priority = new Priority();
   modelService = inject(PriorityService)
   productId! : number;
   constructor(private fb: FormBuilder, private utils: Utils,
+              private modalService: BsModalService,
               private router: Router,private route: ActivatedRoute) {}
 
   ngOnInit(): void {
@@ -75,16 +80,17 @@ export class PriorityComponent implements OnInit {
     this.selectedModel = model;
   }
 
-  addModel(): void {
+  add(): void {
+    const pLevel = Math.max(0, ...this.models.map(p => p.priorityLevel)) + 1;
     this.newModel.companyId = this.companyId;
-    this.newModel.priorityLevel = this.models.length + 1; // Set priority level based on current models length + 1
+    this.newModel.priorityLevel = pLevel;
     this.newModel.active = true;
     this.modelService.create(this.newModel).subscribe({
       next: (data) => {
         this.models.push(data);
         this.utils.showSuccessMessage('Priority is added');
-        this.newModel =  this.resetModel;
-      },
+        this.closeModal();
+        },
       error: (err) => {this.errorMessage = err;this.utils.showErrorMessage(err);},
     });
   }
@@ -108,28 +114,12 @@ export class PriorityComponent implements OnInit {
     }
 
   }
-  updateModel(model: Priority | null): void {
-    if (model) {
-      this.modelService.update(model.id, model).subscribe({
-        next: () => {
-          this.utils.showSuccessMessage('Priority is updated');
-          this.loadModels();
-          this.selectedModel = null;
-        },
-        error: (err) => {this.errorMessage = err;this.utils.showErrorMessage(err);},
-      });
-    } else {
-      console.error('Cannot update.');
-    }
+  openModal(template: TemplateRef<any>) {
+    this.newModel = new Priority();
+    this.modalRef = this.modalService.show(template);
   }
-  deleteModel(modelId: number): void {
-    this.modelService.delete(modelId).subscribe({
-      next: () => {
-        this.models = this.models.filter((c) => c.id !== modelId);
-        this.utils.showSuccessMessage('Priority is added');},
-
-      error: (err) => {this.errorMessage = err;this.utils.showErrorMessage(err);},
-    });
+  closeModal() {
+    this.modalRef?.hide();
   }
   onSkip():void {
     if (sessionStorage.getItem('wizard')) {

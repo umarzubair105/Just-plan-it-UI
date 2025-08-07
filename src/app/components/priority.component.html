@@ -1,9 +1,15 @@
-<div class="container-lg mt-4">
-  <div class="row">
-    <div class="col-md-8 offset-md-2">
+<div class="container-fluid px-4">
+  <div class="col-md-8 offset-md-2">
+    <div class="text-end mt-2">
+      <a aria-controls="helpSection" aria-expanded="false" class="btn btn-link text-decoration-none" data-bs-toggle="collapse"
+         href="#helpSection" role="button">
+        <i class="bi bi-info-circle me-1"></i> Need Help?
+      </a>
+    </div>
 
-      <!-- Intro Card -->
-      <div class="card shadow-sm mb-3">
+    <!-- Help Card (Collapsed by default) -->
+    <div class="collapse" id="helpSection">
+      <div class="card shadow-sm mb-3 mt-2">
         <div class="card-body">
           <h5 class="card-title">Priorities</h5>
           <p class="card-text">
@@ -11,26 +17,25 @@
           </p>
         </div>
       </div>
+    </div>
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0"><i class="bi bi-calendar-event me-2"></i> Define Priorities</h4>
+      </div>
+      <div class="card-body bg-white col-md-12">
 
-      <!-- Main Form Card -->
-      <div class="card shadow-lg">
-        <div class="card-header bg-primary text-white text-center">
-          <h2 class="h4 mb-0">Define Priorities</h2>
+
           <div *ngIf="errorMessage" class="alert alert-danger">
             {{ errorMessage }}
           </div>
+        <div class="text-end mb-2">
+          <button (click)="openModal(modelC)"
+                  class="btn btn-sm me-2"
+                  title="Add new resource">
+            <i class="bi bi-plus"></i> Add New Component
+          </button>
         </div>
 
-        <div class="container mt-2">
-          <h5 class="mb-2">Add New Priority</h5>
-          <div class="mb-3">
-            <label for="name" class="form-label">Priority <span class="text-danger">*</span></label>
-            <input id="name" [(ngModel)]="newModel.name" required class="form-control"/>
-          </div>
-          <div class="text-center mt-2 d-flex justify-content-center gap-2">
-            <button class="btn btn-primary w-20" (click)="addModel()" [disabled]="!newModel.name">Add</button>
-          </div>
-        </div>
 
         <div class="container mt-2">
           <div class="d-flex align-items-center mb-2">
@@ -64,115 +69,35 @@
       </div>
     </div>
   </div>
-</div>
 
-
-<!--
-
-
-<div class="container mt-4">
-  <h2>Define Priorities</h2>
-
-  &lt;!&ndash; Add New &ndash;&gt;
-  <div>
-    <h5 class="text-center">Add New Priority</h5>
-    <p>
-      Name: <input [(ngModel)]="newModel.name" required/>
-    </p>
-    <button (click)="addModel()" *ngIf="newModel.name">Add</button>
-  </div>
-  <h5 class="text-center">🖱️ Drag & Drop rows to update priority, keep most important on top</h5>
-  <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
-    @for (model of models; track model) {
-      <div  (click)="selectModel(model)" class="example-box" cdkDrag >
-        <div *ngIf="selectedModel != null && model.id === selectedModel.id">
-          <span cdkDragHandle>☰</span>
-          <input [(ngModel)]="selectedModel.name" required/>
+  <ng-template #modelC>
+    <div class="modal fade show d-block">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header text-white justify-content-between align-items-center py-2 px-3 ">
+            <h5 class="modal-title mb-0 fx-6">Add Priority</h5>
+            <button class="btn btn-sm text-white p-0" (click)="closeModal()">
+              <i class="bi bi-x-lg"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form  #resourceForm="ngForm" >
+              <div class="mb-3">
+                <label class="form-label">Name<span class="text-danger ms-1">*</span></label>
+                <input type="text" class="form-control" [(ngModel)]="newModel.name" name="name" required
+                       #name="ngModel"
+                       [ngClass]="{ 'is-invalid': name.invalid && (name.dirty || name.touched) }"
+                       [showErrors]="{ required: 'Name is required' }">
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-primary w-20" (click)="add()" *ngIf="newModel.id===0" [disabled]="resourceForm.invalid">Save</button>
+            <button class="btn btn-secondary w-20" (click)="closeModal()">Close</button>
+          </div>
         </div>
-        <div *ngIf="selectedModel == null || model.id !== selectedModel.id">
-          <span cdkDragHandle>☰</span>
-
-          {{model.name}}
-        </div>
-        &lt;!&ndash; <img *cdkDragPreview [src]="movie.poster" [alt]="movie.title">&ndash;&gt;
       </div>
-    }
-  </div>
-
-
-  &lt;!&ndash; Error Message &ndash;&gt;
-  <div *ngIf="errorMessage" class="alert alert-danger">
-    {{ errorMessage }}
-  </div>
-
-
-  &lt;!&ndash; Selected Details &ndash;&gt;
-  <div *ngIf="models.length>0">
-    <button (click)="updateModels()">Update</button>
-  </div>
-
-
-  &lt;!&ndash;  <button (click)="emitEvent()">Go Back</button>&ndash;&gt;
+    </div>
+  </ng-template>
 </div>
 
--->
-
-<!--
-
-<div class="container mt-4">
-  <h2>Define Priorities</h2>
-  <h3 class="text-center">🖱️ Drag & Drop Table Rows, keep most important on top</h3>
-
-  <div cdkDropList class="example-list" (cdkDropListDropped)="drop($event)">
-    @for (model of models; track model) {
-      <div  (click)="selectModel(model)" class="example-box" cdkDrag >
-        <div *ngIf="selectedModel != null && model.id === selectedModel.id">
-          <input [(ngModel)]="selectedModel.name" required/>
-        </div>
-        <div *ngIf="selectedModel == null || model.id !== selectedModel.id">
-          {{model.name}}
-        </div>
-        &lt;!&ndash; <img *cdkDragPreview [src]="movie.poster" [alt]="movie.title">&ndash;&gt;
-      </div>
-    }
-  </div>
-
-
-  &lt;!&ndash; Error Message &ndash;&gt;
-  <div *ngIf="errorMessage" class="alert alert-danger">
-    {{ errorMessage }}
-  </div>
-
-  &lt;!&ndash; List &ndash;&gt;
-  <ul>
-    <li *ngFor="let model of models" (click)="selectModel(model)">
-      {{ model.name }}
-      <button (click)="deleteModel(model.id); $event.stopPropagation()">Delete</button>
-    </li>
-  </ul>
-
-  &lt;!&ndash; Selected Details &ndash;&gt;
-  <div *ngIf="selectedModel">
-    <h3>Priority Details</h3>
-    <p>ID: {{ selectedModel.id }}</p>
-    <p>
-      Name: <input [(ngModel)]="selectedModel.name" required/>
-    </p>
-
-    <button (click)="updateModel(selectedModel)">Update</button>
-  </div>
-
-  &lt;!&ndash; Add New &ndash;&gt;
-  <div>
-    <h3>Add New Priority</h3>
-    <p>
-      Name: <input [(ngModel)]="newModel.name" required/>
-    </p>
-    <p>
-      Priority Level: <input [(ngModel)]="newModel.priorityLevel" required/>
-    </p>
-    <button (click)="addModel()">Add</button>
-  </div>
-  &lt;!&ndash;  <button (click)="emitEvent()">Go Back</button>&ndash;&gt;
-</div>
--->

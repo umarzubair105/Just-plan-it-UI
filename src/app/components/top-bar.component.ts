@@ -32,6 +32,7 @@ import { Location } from '@angular/common';
   //styleUrls: ['./top-bar.component.css']
 })
 export class TopBarComponent implements OnInit {
+  showIcon:boolean = false;
   userName: string | null = '';
   companyName: string | null = '';
   search: string = '';

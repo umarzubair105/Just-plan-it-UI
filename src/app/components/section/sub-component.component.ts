@@ -9,6 +9,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
 import {FormatDatePipe} from '../../pipes/format.date';
 import {ShowErrorsDirective} from '../../directives/show-errors.directive';
+import {isGlobalHR} from "../../utils/helper";
 
 @Component({
   selector: 'app-subComponent',
@@ -29,7 +30,6 @@ export class SubComponentComponent implements OnInit {
   modalRef?: BsModalRef;
   @ViewChild('modelC') myModal!: TemplateRef<any>;
   subComponents: SubComponent[] = [];
-  totalSubComponents : number = 0;
   errorMessage: string = '';
   subComponent: SubComponent = new SubComponent();
   subComponentService = inject(SubComponentService)
@@ -53,7 +53,6 @@ export class SubComponentComponent implements OnInit {
       next: (data) => {
         console.log(data);
         this.subComponents = data._embedded.components;
-        this.totalSubComponents = data.page.totalElements;
       },
       error: (err) => {this.errorMessage = err;this.utils.showErrorMessage(err);},
     });
@@ -127,4 +126,6 @@ export class SubComponentComponent implements OnInit {
   isWizard():boolean {
     return sessionStorage.getItem('wizard')!=null && sessionStorage.getItem('wizard')=='productSetup';
   }
+
+    protected readonly isGlobalHR = isGlobalHR;
 }

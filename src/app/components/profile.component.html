@@ -1,14 +1,14 @@
-<div class="container-lg mt-4">
-  <div class="row">
-    <div class="col-md-8 offset-md-2">
+<div class="container-fluid px-4">
+  <div class="col-md-4 offset-md-4 mt-2 mb-2">
+
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0"><i class="bi bi-person me-2"></i> My profile</h4>
+      </div>
+      <div class="card-body bg-white col-md-10 offset-md-1">
 
 
-      <!-- Main Form Card -->
-      <div class="card shadow-lg">
-        <div class="card-header bg-primary text-white text-center">
-          <h2 class="h4 mb-0">My profile</h2>
-        </div>
-        <div class="card-body">
+
           <form  #resourceForm="ngForm" >
             <div class="mb-3">
               <label for="nameR" class="form-label">Name <span class="text-danger">*</span></label>
@@ -70,7 +70,7 @@
                      [readOnly]="!isGlobalHR(this.rights)"
 
                      #lead="ngModel"
-                     class="form-check-input"
+                     class="form-check-input me-2"
                      [ngClass]="{ 'is-invalid': lead.invalid && (lead.dirty || lead.touched) }">
               <label for="lead" class="form-label">Leading a team</label>
               <div *ngIf="lead.invalid && (lead.dirty || lead.touched)" class="invalid-feedback">
@@ -144,9 +144,6 @@
       </div>
     </div>
   </div>
-
-
-</div>
 
 
 

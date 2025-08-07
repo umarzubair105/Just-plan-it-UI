@@ -17,6 +17,7 @@ import {DesignationService} from '../services/designation.service';
 import {CompanyService, MapDesignation} from '../services/company.service';
 import {Utils} from '../utils/utils';
 import {Designation, Role} from '../models/basic';
+import {messageChange} from "../utils/helper";
 @Component({
   selector: 'app-mapping-roles-designation',
   standalone: true,
@@ -97,5 +98,5 @@ export class MappingComponent implements OnInit {
   }
 
 
-
+    protected readonly messageChange = messageChange;
 }

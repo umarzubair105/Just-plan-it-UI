@@ -1,24 +1,32 @@
-<div class="container-lg mt-4">
-  <div class="row">
-    <div class="col-md-8 offset-md-2">
-      <!-- Description Card -->
-      <div class="card shadow-sm mb-2">
-        <!--
-            <img src="https://via.placeholder.com/150" class="card-img-top" alt="Placeholder Image">
-        -->
+<div class="container-fluid px-4">
+  <div class="col-md-4 offset-md-4">
+    <div class="text-end mt-2">
+      <a aria-controls="helpSection" aria-expanded="false" class="btn btn-link text-decoration-none"
+         data-bs-toggle="collapse"
+         href="#helpSection" role="button">
+        <i class="bi bi-info-circle me-1"></i> Need Help?
+      </a>
+    </div>
+
+    <!-- Help Card (Collapsed by default) -->
+    <div class="collapse" id="helpSection">
+      <div class="card shadow-sm mb-3 mt-2">
         <div class="card-body">
-          <h5 class="card-title">Map Designations with System Roles</h5>
+          <h5 class="card-title">Map Designations with Roles</h5>
           <p class="card-text">
-            Map your resource designations to <strong>AutoPlan</strong> roles. Later on in planning or so system roles will be used
+            Map your resource designations to roles. Later on in planning or so system roles will be used
             to assign task and so. Roles to resources can be changed based on product later on.
           </p>
         </div>
       </div>
-      <div class="card shadow-lg">
-    <div class="card-header bg-primary text-white text-center">
-      <h3>Map your Designations to system Roles</h3>
     </div>
-    <div class="card-body">
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0">Map Designations to Roles</h4>
+      </div>
+      <div class="card-body bg-white col-md-10 offset-md-1">
+
+
       <div *ngFor="let source of sourceModels"  class="mb-3">
         <label class="form-label">{{source.name}}</label>
         <select class="form-select" [(ngModel)]="source.roleId" >
@@ -33,7 +41,6 @@
   </div>
 </div>
   </div>
-</div>
 
 <!--
 

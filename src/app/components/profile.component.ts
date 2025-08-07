@@ -39,7 +39,7 @@ import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
 import {ReleaseStatusEnum} from '../models/planning';
 import {FormatDatePipe} from '../pipes/format.date';
 import {AuthService} from '../services/auth.service';
-import {isGlobalHR} from '../utils/helper';
+import {isGlobalHR, messageChange} from '../utils/helper';
 
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -164,4 +164,5 @@ export class ProfileComponent implements OnInit {
   }
 
   protected readonly isGlobalHR = isGlobalHR;
+    protected readonly messageChange = messageChange;
 }
