@@ -159,7 +159,7 @@ export class TopBarComponent implements OnInit {
     epic.productId = this.selectedProductId;
     epic.releaseId = null;
     const dialogRef = this.dialog.open(EpicComponent, {
-      width: '80%',
+      width: '100%',
       maxWidth: '90vw', // 90% of viewport width
       height: '100%',
       maxHeight: '80vh', // 80% of viewport height
@@ -184,7 +184,7 @@ export class TopBarComponent implements OnInit {
         next: (data) => {
 
           const dialogRef = this.dialog.open(EpicComponent, {
-            width: '80%',
+            width: '100%',
             maxWidth: '90vw', // 90% of viewport width
             height: '100%',
             maxHeight: '80vh', // 80% of viewport height

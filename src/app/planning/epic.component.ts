@@ -78,8 +78,8 @@ export class EpicComponent implements OnInit {
       this.epicBean.code='EpicCode';
       this.epicBean.estimates = [];
       this.makeTitleEditable = true;
-      this.makeDescEditable = true;
-      this.makeRiskEditable = true;
+      this.makeDescEditable = false;
+      this.makeRiskEditable = false;
     } else {
       this.epicService.getEpicBeanById(this.epicBean.id).subscribe({
         next: (data) => {

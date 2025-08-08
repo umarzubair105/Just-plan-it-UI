@@ -293,9 +293,9 @@ export class PersonalDashboardComponent implements OnInit {
   openDialogForEpic(epic: EpicBean): void {
     console.log("Planning epic:"+epic);
     const dialogRef = this.dialog.open(EpicComponent, {
-      width: '80%',
+      width: '100%',
       maxWidth: '90vw', // 90% of viewport width
-      height: '70%',
+      height: '100%',
       maxHeight: '80vh', // 80% of viewport height
       disableClose: true,
       data: { epicBean: epic, priorities: this.priorities, subComponents: this.subComponents },
