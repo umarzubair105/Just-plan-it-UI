@@ -136,22 +136,42 @@ export class TopBarComponent implements OnInit {
       // Handle the result here
     });
   }
-  openDialogForEntityDetail(): void {
-    var product =  this.products.filter(p=>p.id==this.selectedProductId).at(0);
+  openDialogForProductEntityDetail(): void {
+    var product = this.products.filter(p => p.id == this.selectedProductId).at(0);
     if (product) {
-    const dialogRef = this.dialog.open(EntityDetailComponent, {
-      width: '80%',
-      maxWidth: '90vw', // 90% of viewport width
-      height: '70%',
-      maxHeight: '80vh', // 80% of viewport height
-      disableClose: true,
-      data: { entityId: this.selectedProductId, entityType: EntityType.PRODUCT, entityName: product.name, label:'Artifacts' },
-    });
+      const dialogRef = this.dialog.open(EntityDetailComponent, {
+        width: '80%',
+        maxWidth: '90vw', // 90% of viewport width
+        height: '70%',
+        maxHeight: '80vh', // 80% of viewport height
+        disableClose: true,
+        data: {
+          entityId: this.selectedProductId,
+          entityType: EntityType.PRODUCT,
+          entityName: product.name,
+          label: 'Artifacts'
+        },
+      });
 
-    dialogRef.afterClosed().subscribe(result => {
+      dialogRef.afterClosed().subscribe(result => {
 
-    });
+      });
     }
+  }
+    openDialogForCompanyEntityDetail(): void {
+        const dialogRef = this.dialog.open(EntityDetailComponent, {
+          width: '80%',
+          maxWidth: '90vw', // 90% of viewport width
+          height: '70%',
+          maxHeight: '80vh', // 80% of viewport height
+          disableClose: true,
+          data: { entityId: this.utils.getCompanyId(), entityType: EntityType.COMPANY,
+            entityName: this.utils.getCompanyName(), label:'Artifacts' },
+        });
+
+        dialogRef.afterClosed().subscribe(result => {
+
+        });
   }
 
   openDialogForNewEpic():void {

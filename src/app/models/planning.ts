@@ -38,6 +38,7 @@ export enum EntityDetailType {
 export enum EntityType {
   COMPANY="COMPANY",
   RELEASE="RELEASE",
+  RESOURCE="RESOURCE",
   PRODUCT="PRODUCT"
 }
 export class Epic extends Audit {

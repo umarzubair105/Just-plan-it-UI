@@ -1,6 +1,8 @@
+import {environment} from '../environment/environment';
+
 export const AppConstants = {
-  API_URL: 'http://localhost:8080',
-  MAX_RETRIES: 3,
+  API_URL: environment.apiUrl,//'http://localhost:8080',
+  MAX_RETRIES: environment.maxRetries,
   DEFAULT_TIMEOUT: 5000,
   FEATURE_FLAGS: {
     ENABLE_NEW_DESIGN: true,

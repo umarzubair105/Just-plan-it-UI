@@ -16,40 +16,65 @@ export class HomeComponent {
   features = [
     {
       title: 'Projects',
-      description: 'Create and manage your projects',
+      description:
+        '<ul class="text-start"><li>Define Startup/End Dates</li><li>Define Iteration Duration</li><li>Define Team with Specific Roles</li>' +
+        '<li>Define Resource Time Allocation</li>' +
+        '<li>Project Artifacts</li><li>Auto planned Iterations</li></ul> ',
       icon: '📁',
-      link: '/product'
+      link: '/edit-product'
     },
     {
-      title: 'Tasks',
-      description: 'Assign and track tasks',
+      title: 'Deliverables',
+      description:
+        '<ul class="text-start"><li>Define deliverable items within a Release</li><li>Define Priority & How Important to Business</li>' +
+        '<li>Define Artifacts</li>' +
+        '<li>Define Relationship within Deliverables</li><li>Provide Time estimation per Role</li>' +
+        '<li>Artifacts</li></ul> ',
       icon: '✅',
-      link: '/tasks'
+      link: '/upload-epic'
     },
     {
       title: 'Team',
-      description: 'Upload Team Resources through Excel. Manage Resource Availability across Projects. Manage resource leave plan. Manage resource role for different projects.Upload Team Resources through Excel. Manage Resource Availability across Projects. Manage resource leave plan. Manage resource role for different projects',
+      description:
+        '<ul class="text-start"><li>Upload/Add Resources</li><li>Manage Leave Plan</li><li>Define Designation</li>' +
+        '<li>Define Role</li><li>Resource Availability</li><li>Artifacts</li></ul> ',
       icon: '👥',
-      link: '/team'
+      link: '/resource'
     },
     {
       title: 'Calendar',
-      description: 'View deadlines and milestones',
+      description:
+        '<ul class="text-start"><li>Maintain Working Minutes</li><li>Define explicit Working Minutes</li><li>Define Weekend</li>' +
+        '<li>Declare explicit Working Days</li><li>Decalre Holidays</li><li>Iteration Working Days</li></ul> ',
       icon: '🗓️',
-      link: '/calendar'
+      link: '/company-calendar'
     },
     {
-      title: 'Reports',
-      description: 'Track progress with reports',
+      title: 'Planning',
+      description:
+        '<ul class="text-start"><li>View unplanned Deliverables</li><li>Define time estimates in Hours</li>' +
+        '<li>Update Priorities</li>' +
+        '<li>Choose Delivarable to plan</li><li>Auto plan to first Release with matching capacity</li>' +
+        '<li>Auto Resource Assignment</li></ul> ',
       icon: '📊',
-      link: '/reports'
+      link: '/planning'
     },
     {
-      title: 'Settings',
-      description: 'Change preferences and profile',
-      icon: '⚙️',
-      link: '/settings'
+      title: 'Release',
+      description:
+        '<ul class="text-start"><li>Auto iteration creation</li><li>Freeze an Iteration</li><li>Dashborad with Iteration in action</li>' +
+        '<li>Resource Utilization</li><li>Arhived Releases</li><li>Release Artifacts</li></ul> ',
+      icon: '📦',
+      link: '/execution'
     }
   ];
   protected readonly messageChange = messageChange;
 }
+/*
+,
+{
+  title: 'Settings',
+    description: 'Change preferences and profile',
+  icon: '⚙️',
+  link: '/settings'
+}*/

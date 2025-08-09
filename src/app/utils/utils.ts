@@ -25,6 +25,10 @@ export class Utils {
   getCompanyId():number{
     return this.authService.getCompanyId();
   }
+
+  getCompanyName():string | null{
+    return this.authService.getCompanyName();
+  }
   getCompanyType():string|null{
     return this.authService.getCompanyType();
   }

@@ -1,29 +1,46 @@
 <div class="container mt-4">
-  <h2 class="mb-4">Welcome to AutoPlan - {{messageChange('Project Management Solution')}}</h2>
+  <h1 class="mb-0">Welcome to ProjectHaven</h1>
+  - Where projects feel at home.
 
-  <div class="row">
+
+  <h5 class="mt-2 mb-0">Our Mission</h5>
+  - Make the Project Management easy and accountable enough, so team can focus on timely business value addition rather management.
+  <!--<h5 class="mt-2 mb-0">How do we do it?</h5>
+  - Sign up your Company
+  - Define working hours & days
+  - Upload Resources
+  - Create a Project
+  - Upload Project Deliverables
+  - Define Project Team based on Roles
+  - Define Resource Time Allocation per Project
+  - Provide estimate for Deliverables per Role
+  - Pick the Deliverable to be planned
+  - System will schedule deliverable within first Release having resource capacity-->
+
+
+  <div class="row mt-3">
     <div class="col-md-4 mb-3" *ngFor="let feature of features">
       <div class="card h-100 shadow-sm text-center">
         <div class="card-body">
           <div class="mb-2 display-4">{{ feature.icon }}</div>
           <h5 class="card-title">{{ messageChange(feature.title) }}</h5>
-          <p class="card-text">{{ messageChange(feature.description) }}</p>
+          <p class="card-text text-start" [innerHTML]="messageChange(feature.description)"></p>
           <a [routerLink]="feature.link" class="btn btn-primary btn-sm">Go to {{ messageChange(feature.title) }}</a>
         </div>
       </div>
     </div>
   </div>
-
+<!--
   <div class="d-flex justify-content-between align-items-center">
     <div class="mt-20" style="margin-top: 20px;">Left</div>
     <div>Right</div>
   </div>
   <div class="row">
     <div class="col-md-6 offset-md-3">
-      <!-- Centered block (6 columns wide, 3 offset on each side) -->
+      &lt;!&ndash; Centered block (6 columns wide, 3 offset on each side) &ndash;&gt;
       <p class="text-center">Centered on md and larger screens btn-tight-custom btn-outline-primary btn-sm </p>
     </div>
-  </div>
+  </div>-->
 <!--
   py-2 → smaller top/bottom padding
 

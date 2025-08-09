@@ -1,8 +1,10 @@
+Desc on Home Page
+Footer
+Pricing Model
+Icon, SSL, UI Build, localhost:99 fixes
+Deploy, Url, Email
+
 Export in Excel Release plan
-UI
-Prepare test Data
-Insert meta data for Sample Companies
-Home Page Content
 
 #003366 — Deep Navy (professional + readable white text)
 

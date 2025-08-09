@@ -36,12 +36,13 @@ import {MatDialog} from '@angular/material/dialog';
 import {ResourceLeaveComponent} from '../leaves/resource.leave.component';
 import {DesignationService} from '../services/designation.service';
 import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
-import {ReleaseStatusEnum} from '../models/planning';
+import {EntityType, ReleaseStatusEnum} from '../models/planning';
 import {FormatDatePipe} from '../pipes/format.date';
 import {AuthService} from '../services/auth.service';
 import {isGlobalHR, isManager} from '../utils/helper';
 import {NgSelectComponent, NgSelectModule} from '@ng-select/ng-select';
 import {PrettyLabelPipe} from '../pipes/pretty.label';
+import {EntityDetailComponent} from '../planning/entity-detail.component';
 
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -247,6 +248,22 @@ export class ResourceComponent implements OnInit {
       error: (err) => (this.utils.showErrorMessage(err)),
     });
   };
+
+  openDialogForEntityDetail(resource:Resource): void {
+    const dialogRef = this.dialog.open(EntityDetailComponent, {
+      width: '80%',
+      maxWidth: '90vw', // 90% of viewport width
+      height: '70%',
+      maxHeight: '80vh', // 80% of viewport height
+      disableClose: true,
+      data: { entityId: resource.id, entityType: EntityType.RESOURCE,
+        entityName: resource.name, label:'Artifacts' },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+
+    });
+  }
   openModal(template: TemplateRef<any>) {
     this.resource = new Resource();
     this.modalRef = this.modalService.show(template);

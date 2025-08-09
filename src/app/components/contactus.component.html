@@ -1,24 +1,12 @@
-<div class="container-lg mt-4">
-  <div class="row">
-    <div class="col-md-8 offset-md-2">
+<div class="container-fluid px-4">
+  <div class="col-md-8 offset-md-2 mt-2 mb-2">
 
-      <!-- Intro Card -->
-      <div class="card shadow-sm mb-3">
-        <div class="card-body">
-          <h5 class="card-title">Ask your question</h5>
-          <p class="card-text">
-            You can reach to us in case you have any query, need any clarification or having any problem.
-          </p>
-        </div>
+    <div class="card">
+      <div class="card-header bg-primary text-white">
+        <h4 class="mb-0"><i class="bi bi-envelope me-2"></i> Contact Us</h4>
       </div>
-
-      <!-- Main Form Card -->
-      <div class="card shadow-lg">
-        <div class="card-header bg-primary text-white text-center">
-          <h2 class="h4 mb-0">Contact Us</h2>
-        </div>
+      <div class="card-body bg-white col-md-12">
         <form #useForm="ngForm" (ngSubmit)="onSubmit()">
-        <div class="card-body">
           <div *ngIf="errorMessage" class="error-message">
             {{ errorMessage }}
           </div>
@@ -94,10 +82,8 @@
             <button class="btn btn-primary w-20" type="submit" [disabled]="useForm.invalid">Save</button>
             <button type="reset" class="btn btn-secondary ms-2 w-20" >Reset</button>
           </div>
-        </div>
         </form>
       </div>
-
     </div>
   </div>
 </div>

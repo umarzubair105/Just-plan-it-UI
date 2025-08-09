@@ -1,8 +1,10 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light px-3 shadow-sm" >
   <div class="container-fluid">
-
+<!--
+    <img src="project-dashboard.png" alt="ProjectPulse dashboard with task tracking">
+-->
     <a class="navbar-brand d-flex align-items-center" href="#">
-      <i class="bi bi-kanban me-2"></i> AutoPlan
+      <i class="bi bi-kanban me-2"></i> ProjectHaven
     </a>
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
@@ -72,7 +74,7 @@
           </ul>
         </li>
         <li class="nav-item" *ngIf="selectedProductId > 0">
-          <a class="nav-link" (click)="openDialogForEntityDetail()">
+          <a class="nav-link" (click)="openDialogForProductEntityDetail()">
             <i *ngIf="showIcon" class="bi bi-file-earmark me-1"></i>{{ this.selectedProduct?.code }} Artifacts</a>
         </li>
 
@@ -94,7 +96,9 @@
           class="bi bi-people me-1"></i>Resources</a></li>
         <li class="nav-item"><a class="nav-link" routerLink="/company-calendar"><i ngIf="showIcon"
           class="bi bi-calendar-event me-1"></i>Calendar</a></li>
-
+        <li class="nav-item"><a class="nav-link" (click)="openDialogForCompanyEntityDetail()">
+          <i *ngIf="showIcon"
+             class="bi bi-file-earmark me-1"></i>Artifacts</a></li>
         <li class="nav-item dropdown" *ngIf="isGlobalHR(this.rights) || isGlobalManager(this.rights)">
           <a class="nav-link dropdown-toggle" href="#" id="userMenu4" role="button" data-bs-toggle="dropdown"
              aria-expanded="false">
@@ -119,7 +123,7 @@
         <li class="nav-item"><a class="nav-link" routerLink="#" ><i *ngIf="showIcon" class="bi 	bi-house me-1"></i>Home</a></li>
         <li class="nav-item"><a class="nav-link" routerLink="/contact-us"><i *ngIf="showIcon" class="bi bi-envelope me-1"></i>Contact Us</a></li>
         <li class="nav-item"><a class="nav-link" routerLink="/login" *ngIf="!userName"><i *ngIf="showIcon" class="bi bi-box-arrow-in-right me-1"></i>Login</a></li>
-        <li class="nav-item"><a class="nav-link" routerLink="/company" *ngIf="!userName"><i
+        <li class="nav-item"><a class="nav-link" routerLink="/company" *ngIf="!userName"><i *ngIf="showIcon"
           class="bi bi-person-plus me-1"></i>Company Sign Up</a></li>
 
         <li class="nav-item dropdown" *ngIf="userName">
@@ -157,6 +161,11 @@
         <li class="nav-item"><a class="nav-link" routerLink="/company-calendar">
           <i *ngIf="showIcon"
              class="bi bi-calendar-event me-1"></i>Calendar</a></li>
+        <li class="nav-item"><a class="nav-link" (click)="openDialogForCompanyEntityDetail()">
+          <i *ngIf="showIcon"
+             class="bi bi-file-earmark me-1"></i>Artifacts</a></li>
+
+
 
         <li class="nav-item dropdown" *ngIf="isGlobalHR(this.rights) || isGlobalManager(this.rights)">
           <a class="nav-link dropdown-toggle" href="#" id="userMenu3" role="button" data-bs-toggle="dropdown"
@@ -208,9 +217,9 @@
 
 
       <ul class="navbar-nav" *ngIf="utils.isDesktop()">
-        <li class="nav-item"><a class="nav-link" routerLink="/login" *ngIf="!userName"><i
+        <li class="nav-item"><a class="nav-link" routerLink="/login" *ngIf="!userName"><i *ngIf="showIcon"
           class="bi bi-box-arrow-in-right me-1"></i>Login</a></li>
-        <li class="nav-item"><a class="nav-link" routerLink="/company" *ngIf="!userName"><i
+        <li class="nav-item"><a class="nav-link" routerLink="/company" *ngIf="!userName"><i *ngIf="showIcon"
           class="bi bi-person-plus me-1"></i>Company Sign Up</a></li>
 
         <li class="nav-item dropdown" *ngIf="userName">
@@ -304,7 +313,7 @@
              [attr.aria-disabled]="!(selectedProductId > 0)"><i *ngIf="showIcon" class="bi bi-hourglass-split me-1"></i>Time Allocation</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link" (click)="openDialogForEntityDetail()"
+          <a class="nav-link" (click)="openDialogForProductEntityDetail()"
              [class.disabled]="!(selectedProductId > 0)"
              [style.pointer-events]="selectedProductId > 0 ? 'auto' : 'none'"
              [attr.aria-disabled]="!(selectedProductId > 0)"
