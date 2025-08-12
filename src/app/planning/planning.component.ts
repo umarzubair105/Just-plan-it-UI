@@ -233,7 +233,7 @@ export class PlanningComponent implements OnInit {
     return !!priority;
   }
   updatePriority(epic: EpicBean, priority: Priority) {
-    this.epicService.updateSpecificFieldsPasses(epic.id, {priorityId:priority.id}).subscribe({
+    this.epicService.updateSpecificFields(epic.id, {priorityId:priority.id}).subscribe({
       next: (data) => {
         epic.priorityLevel = priority.priorityLevel;
         epic.priorityName = priority.name;
@@ -249,13 +249,15 @@ export class PlanningComponent implements OnInit {
     this.rowIndex = this.rowIndex +1;
     return this.rowIndex % 2 === 0 ? 'even-row' : 'odd-row';
   }
-  planEpic(id: number) {
+  planEpic(epic: EpicBean) {
     if (window.confirm("Are you sure you want to plan it?")) {
-      this.planningService.planEpic(id).subscribe({
+      this.planningService.planEpic(epic.id).subscribe({
         next: (data) => {
           if (data.releaseToAddIn) {
             this.util.showSuccessMessage(`It is planned in release ${data.releaseToAddIn.name} starting from ${data.releaseToAddIn.startDate}.`);
-            this.unplannedEpics = this.unplannedEpics.filter(wh => wh.id !== id);
+            if (!epic.replicate) {
+              this.unplannedEpics = this.unplannedEpics.filter(wh => wh.id !== epic.id);
+            }
             this.reloadReleases(data.releaseToAddIn.id);
           }
         },
@@ -357,7 +359,16 @@ export class PlanningComponent implements OnInit {
   }
   changeEstimateTime(estimateBean: EpicEstimateBean) {
     //estimateBean.estimateStr = estimateStr as string;
+    if (estimateBean.estimateStr =='' || estimateBean.estimateStr == 'Invalid'){
+      estimateBean.estimateStr = 'Invalid';
+      return;
+    }
+
     estimateBean.estimate = convertToMinutes(estimateBean.estimateStr);
+    if (estimateBean.estimate<=0) {
+      estimateBean.estimateStr = 'Invalid';
+      return;
+    }
     if (estimateBean.id == 0) {
       this.epicEstimateService.create(estimateBean).subscribe({
         next: (data) => {
@@ -366,7 +377,6 @@ export class PlanningComponent implements OnInit {
           //estimateBean.resources = data.resources;
           estimateBean.estimateStr = transformToDhM(data.estimate);
           this.util.showSuccessMessage('Estimate is added.');
-          this.closeModal();
         },
         error: (err) => (this.util.showErrorMessage(err)),
       });
@@ -377,7 +387,6 @@ export class PlanningComponent implements OnInit {
           //estimateBean.resources = data.resources;
           estimateBean.estimateStr = transformToDhM(data.estimate);
           this.util.showSuccessMessage('Estimate is updated.');
-          this.closeModal();
         },
         error: (err) => (this.util.showErrorMessage(err)),
       });
@@ -385,7 +394,12 @@ export class PlanningComponent implements OnInit {
   }
 
   changeEstimateResources(estimateBean: EpicEstimateBean, resources: string) {
+    if (parseInt(resources, 10)<1 || parseInt(resources, 10)>99) {
+      estimateBean.resources =1;
+      return;
+    }
     estimateBean.resources = parseInt(resources, 10);
+
     if (estimateBean.resources==0) {
       estimateBean.estimateStr = "";
       estimateBean.estimate = convertToMinutes(estimateBean.estimateStr);
@@ -398,7 +412,6 @@ export class PlanningComponent implements OnInit {
           //estimateBean.resources = data.resources;
           estimateBean.estimateStr = transformToDhM(data.estimate);
           this.util.showSuccessMessage('Estimate is added.');
-          this.closeModal();
         },
         error: (err) => (this.util.showErrorMessage(err)),
       });
@@ -411,11 +424,46 @@ export class PlanningComponent implements OnInit {
           //estimateBean.resources = data.resources;
           estimateBean.estimateStr = transformToDhM(data.estimate);
           this.util.showSuccessMessage('Estimate is updated.');
-          this.closeModal();
         },
         error: (err) => (this.util.showErrorMessage(err)),
       });
     }
+  }
+
+  removeEstimate(epic: EpicBean, estimateBean: EpicEstimateBean) {
+    estimateBean.estimateStr = '';
+    estimateBean.estimate = 0;
+    estimateBean.resources = 1;
+    if (estimateBean.id == 0) {
+      if (epic.estimates) {
+        epic.estimates = epic.estimates.filter(e => e?.roleId !== estimateBean?.roleId);
+        this.epicEstimateService.create(estimateBean).subscribe({
+          next: (data) => {
+            estimateBean.id = data.id;
+            //estimateBean.estimate = data.estimate;
+            //estimateBean.resources = data.resources;
+            estimateBean.estimateStr = transformToDhM(data.estimate);
+            this.util.showSuccessMessage('Estimate is added.');
+          },
+          error: (err) => (this.util.showErrorMessage(err)),
+        });
+      }
+    } else {
+
+      this.epicEstimateService.updateSpecificFieldsPasses(estimateBean.id, {estimate: estimateBean.estimate}).subscribe({
+        next: (data) => {
+          if (epic.estimates) {
+            epic.estimates = epic.estimates.filter(e => e?.roleId !== estimateBean?.roleId);
+          }
+          //estimateBean.estimate = data.estimate;
+          //estimateBean.resources = data.resources;
+          estimateBean.estimateStr = transformToDhM(data.estimate);
+          this.util.showSuccessMessage('Estimate is updated.');
+        },
+        error: (err) => (this.util.showErrorMessage(err)),
+      });
+    }
+
   }
   showEstimates(epicEstimates: EpicEstimateBean[]): string {
     if (epicEstimates && epicEstimates.length > 0) {

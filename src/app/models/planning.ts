@@ -49,6 +49,7 @@ export class Epic extends Audit {
   public raisedByResourceId: number | null = null;
   public status: EpicStatusEnum = EpicStatusEnum.OPEN;
   public componentId: number | null = null;
+  public replicatedById: number | null = null;
   public requiredBy: Date | null = null;
   public priorityId: number | null = null;
   public comments: string = '';
@@ -58,6 +59,7 @@ export class Epic extends Audit {
   public forcefullyAdded: boolean = true;
   public startDate: Date | null = null;
   public endDate: Date | null = null;
+  public replicate: boolean = false;
 }
 export function EpicBeanCopyPasteUpdatedValues(source: EpicBean, target: EpicBean): void {
   target.title = source.title
@@ -80,6 +82,8 @@ export function EpicBeanCopyPasteUpdatedValues(source: EpicBean, target: EpicBea
   target.endDate = source.endDate;
   target.releaseId = source.releaseId;
   target.active = source.active;
+  target.replicate = source.replicate;
+  target.replicatedById = source.replicatedById;
 
 }
 export class EpicBean extends Epic {

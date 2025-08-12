@@ -93,17 +93,16 @@ export class CompanyComponent implements OnInit {
         // action: string = 'Close'
         //this.wizardService.setStepData('company', this.step1Data);
         this.util.showSuccessMessage('Company is added successfully.');
-        this.companyService.login({username: this.addCompany.email,
-          password: data.context,
-          companyCode: ''}).pipe()
-          .subscribe((resp: any) => {
-              this.util.saveToken(resp.token);
-              sessionStorage.setItem('wizard', 'companySetup');
-              this.router.navigate(['/upload-resource']);
-            },
-            (error) => {
-              this.errorMessage = error;
-            });
+
+        this.companyService.login({username: this.addCompany.email,password: data.context,companyCode: ''}).subscribe({
+          next: (resp) => {
+            this.util.saveToken(resp);
+            sessionStorage.setItem('wizard', 'companySetup');
+            this.router.navigate(['/upload-resource']);
+          },
+          error: (err) => (this.errorMessage = err)
+        });
+
       },
       error: (err) => (this.errorMessage = err)
     });

@@ -58,12 +58,7 @@ export class EpicService {
     );
   }
 
-  updateSpecificFields(id: number, fieldsToUpdate: Partial<{ status: string; startDate: string }>): Observable<any> {
-    return this.http.patch(`${this.baseUrl}/${id}`, fieldsToUpdate).pipe(
-      catchError(handleError)
-    );
-  }
-  updateSpecificFieldsPasses(id: number, fieldsToUpdate: Partial<{}>): Observable<any> {
+  updateSpecificFields(id: number, fieldsToUpdate: Partial<{}>): Observable<any> {
     return this.http.patch(`${this.baseUrl}/${id}`, fieldsToUpdate).pipe(
       catchError(handleError)
     );

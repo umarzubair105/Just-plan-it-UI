@@ -211,7 +211,7 @@ export class PlannedComponent implements OnInit {
     return !!priority;
   }
   updatePriority(epic: EpicBean, priority: Priority) {
-    this.epicService.updateSpecificFieldsPasses(epic.id, {priorityId:priority.id}).subscribe({
+    this.epicService.updateSpecificFields(epic.id, {priorityId:priority.id}).subscribe({
       next: (data) => {
         epic.priorityLevel = priority.priorityLevel;
         epic.priorityName = priority.name;

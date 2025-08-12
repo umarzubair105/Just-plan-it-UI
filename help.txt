@@ -1,10 +1,14 @@
+Add Epic Repeatively
+Export in Excel Release plan
+Stat on Dashboad
 Desc on Home Page
 Footer
 Pricing Model
 Icon, SSL, UI Build, localhost:99 fixes
 Deploy, Url, Email
 
-Export in Excel Release plan
+-- Shiraz Arshad
+
 
 #003366 — Deep Navy (professional + readable white text)
 
@@ -23,31 +27,13 @@ th {
   font-weight: 600;
 }
 
-Add Epic Repeatively
 change assign in execution/planned
 Export XLS on Closing Release
 On Release show Progress based on Days, Time Log, Epic Done
-
 Changes Release Dates manually
-
-
 ------Estimate Pick run time
-
-Release Auto Start, Release Completed status Overdue
-
-
-
-Release Auto Start, Release Completed status Overdue
+Release Auto Start
 UI-Use loggedTime in UI for ResourceCapInRelease in planning/planned
-
-
-
-Release Auto Start, Release Completed status Overdue
-
-
-Deployment in Production for Angular
-
-New System Roles & flexible Interconnectivity
 Buget
 Task Search List
 Country based Weekend end and Holidays fill

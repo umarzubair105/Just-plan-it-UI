@@ -8,7 +8,7 @@ import {
   EpicDetailType,
   EpicEstimate,
   EpicLink,
-  EpicLinkType,
+  EpicLinkType, EpicStatusEnum,
   Release
 } from '../models/planning';
 import {Audit, Priority, ResourceRightBean, SubComponent} from '../models/basic';
@@ -18,7 +18,7 @@ import {Utils} from '../utils/utils';
 import {EpicService} from '../services/epic.service';
 import {DecimalToTimePipe} from '../pipes/decimal.to.time';
 import {FormatDatePipe} from '../pipes/format.date';
-import {formatDate, isManager, messageChange} from '../utils/helper';
+import {formatDate, isGlobalHR, isManager, messageChange} from '../utils/helper';
 import {AppConstants} from '../configuration/app.constants';
 import {ResourceService} from '../services/resource.service';
 import {QuillEditorComponent} from 'ngx-quill';
@@ -366,8 +366,18 @@ export class EpicComponent implements OnInit {
         error: (err) => (this.util.showErrorMessage(err)),
       });
     } else {
-      this.epicService.update(this.epicBean.id,
-        this.epicBean).subscribe({
+      this.epicService.updateSpecificFields(this.epicBean.id,
+        {
+          priorityId:this.epicBean.priorityId,
+          componentId:this.epicBean.componentId,
+          valueGain:this.epicBean.valueGain,
+          requiredBy:this.epicBean.requiredBy,
+          replicate:this.epicBean.replicate,
+          title:this.epicBean.title,
+          risks:this.epicBean.risks,
+          details:this.epicBean.details
+        }
+      ).subscribe({
         next: (data) => {
           this.fillMetadata(data);
           this.util.showSuccessMessage('Data is updated');
@@ -421,4 +431,6 @@ export class EpicComponent implements OnInit {
   protected readonly AppConstants = AppConstants;
   protected readonly isManager = isManager;
     protected readonly messageChange = messageChange;
+  protected readonly isGlobalHR = isGlobalHR;
+  protected readonly EpicStatusEnum = EpicStatusEnum;
 }

@@ -148,6 +148,17 @@
 
 
               </div>
+              <div class=" mb-3 mt-2 col-md-4" *ngIf="!epicBean.replicatedById">
+                <input type="checkbox"
+                     name="replicate"
+                     id="replicate"
+                     [readOnly]="epicBean.status != EpicStatusEnum.OPEN"
+                     [(ngModel)]="epicBean.replicate"
+                     #replicate="ngModel"
+                     class="form-check-input me-2"
+                     [ngClass]="{ 'is-invalid': replicate.invalid && (replicate.dirty || replicate.touched) }">
+                <label for="replicate" class="form-label">Template</label>
+              </div>
               <div class=" mb-3 mt-2">
                 <label class="form-label" for="risks">Risks</label>
                 <span (click)="makeRiskEditable=true;" *ngIf="!makeRiskEditable" [innerHTML]="epicBean.risks"

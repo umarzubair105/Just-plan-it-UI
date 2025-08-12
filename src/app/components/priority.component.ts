@@ -123,7 +123,7 @@ export class PriorityComponent implements OnInit {
   }
   onSkip():void {
     if (sessionStorage.getItem('wizard')) {
-      this.router.navigate(['/section']);
+      this.router.navigate(['/planning']);
     }
   }
   isWizard():boolean {

@@ -83,35 +83,41 @@
                 {{ row.title }}
               </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column name="Dependends On">
+            <ngx-datatable-column name="Depends On" [maxWidth]="100">
               <ng-template let-row="row" ngx-datatable-cell-template>
                 <div [innerHTML]="relationData(row.dependsOn, EpicLinkType.DEPEND_ON, false)"
                      *ngIf="row.dependsOn && row.dependsOn.length>0"></div>
               </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column name="Related To">
+            <ngx-datatable-column name="Related To" [maxWidth]="100">
               <ng-template let-row="row" ngx-datatable-cell-template>
                 <div [innerHTML]="relationData(row.relatedTo, EpicLinkType.RELATED_TO, false)"
                      *ngIf="row.relatedTo && row.relatedTo.length>0"></div>
               </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column [maxWidth]="120" [minWidth]="120" [sortable]="true" [width]="120"
+            <ngx-datatable-column [maxWidth]="120"  [sortable]="true"
                                   name="Priority" prop="priorityLevel">
               <ng-template let-row="row" ngx-datatable-cell-template>
                 {{ row.priorityName }}
-                <a (click)="changePriorityToUpper(row)" *ngIf="showChangePriorityToUpper(row)"
+                <a (click)="changePriorityToUpper(row)" *ngIf="row.priorityId && showChangePriorityToUpper(row)"
                    title="Move it to higher priority">
                   <i class="bi bi-arrow-up-short"></i>
                 </a>
-                <a (click)="changePriorityToLower(row)" *ngIf="showChangePriorityToLower(row)"
+                <a (click)="changePriorityToLower(row)" *ngIf="row.priorityId &&showChangePriorityToLower(row)"
                    title="Move it to lower priority">
                   <i class="bi bi-arrow-down-short"></i>
                 </a>
 
               </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column [maxWidth]="100" name="Required By" prop="requiredBy"></ngx-datatable-column>
-            <ngx-datatable-column [maxWidth]="80" name="Value Gain" prop="valueGain"></ngx-datatable-column>
+            <ngx-datatable-column [maxWidth]="100" [sortable]="true" name="Required By" prop="requiredBy"></ngx-datatable-column>
+            <ngx-datatable-column [maxWidth]="80" [sortable]="true" name="Value Gain" prop="valueGain"></ngx-datatable-column>
+            <ngx-datatable-column [maxWidth]="80" [sortable]="true" name="Replicated">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.replicatedById ? 'Yes' : 'No' }}
+              </ng-template>
+            </ngx-datatable-column>
+
             <ngx-datatable-column [maxWidth]="300" [minWidth]="300" [width]="300" name="Assignment">
               <ng-template let-row="row" ngx-datatable-cell-template>
                 <div [innerHTML]="showAssignments(row.assignments)"></div>
@@ -120,15 +126,18 @@
             <ngx-datatable-column [maxWidth]="150" name="Actions" [headerClass]="'text-center'" >
               <ng-template let-row="row" ngx-datatable-cell-template>
                 <div style="text-align: center;">
-                <a (click)="unplanEpic(row.id, releaseDetail.release.id)" *ngIf="isManager(this.rights)"
+                <a (click)="unplanEpic(row.id, releaseDetail.release.id)" *ngIf="isManager(this.rights) && !row.replicatedById"
                    title="Remove it from release plan">
                   <i class="bi bi-dash-square me-2"></i>
                 </a>
 
                 <a (click)="openDialogForEpic(row, releaseDetail.release.id)" title="Edit"
                    >
-                  <i class="bi bi-pencil-square"></i>
+                  <i class="bi bi-pencil-square me-2"></i>
                 </a>
+                  <a (click)="deleteEpic(row.id)" title="Delete" *ngIf="isManager(this.rights) && row.replicatedById">
+                    <i class="bi bi-trash me-2"></i>
+                  </a>
                 </div>
               </ng-template>
             </ngx-datatable-column>
@@ -222,13 +231,13 @@
                 {{ row.title }}
               </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column name="Dependends On">
+            <ngx-datatable-column name="Depends On" [maxWidth]="100">
               <ng-template let-row="row" ngx-datatable-cell-template>
                 <div [innerHTML]="relationData(row.dependsOn, EpicLinkType.DEPEND_ON, false)"
                      *ngIf="row.dependsOn && row.dependsOn.length>0"></div>
               </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column name="Related To">
+            <ngx-datatable-column name="Related To" [maxWidth]="100">
               <ng-template let-row="row" ngx-datatable-cell-template>
                 <div [innerHTML]="relationData(row.relatedTo, EpicLinkType.RELATED_TO, false)"
                      *ngIf="row.relatedTo && row.relatedTo.length>0"></div>
@@ -237,19 +246,24 @@
             <ngx-datatable-column [maxWidth]="120" [sortable]="true" name="Priority" prop="priorityLevel">
               <ng-template let-row="row" ngx-datatable-cell-template>
                 {{ row.priorityName }}
-                <a (click)="changePriorityToUpper(row)" *ngIf="showChangePriorityToUpper(row)"
+                <a (click)="changePriorityToUpper(row)" *ngIf="row.priorityId && showChangePriorityToUpper(row)"
                    title="Move it to higher priority">
-                  <i class="bi bi-arrow-up-short action-icon"></i>
+                  <i class="bi bi-arrow-up-short"></i>
                 </a>
-                <a (click)="changePriorityToLower(row)" *ngIf="showChangePriorityToLower(row)"
+                <a (click)="changePriorityToLower(row)" *ngIf="row.priorityId && showChangePriorityToLower(row)"
                    title="Move it to lower priority">
-                  <i class="bi bi-arrow-down-short action-icon"></i>
+                  <i class="bi bi-arrow-down-short"></i>
                 </a>
 
               </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column [maxWidth]="100" name="Required By" prop="requiredBy"></ngx-datatable-column>
-            <ngx-datatable-column [maxWidth]="80" name="Value Gain" prop="valueGain"></ngx-datatable-column>
+            <ngx-datatable-column [maxWidth]="100" [sortable]="true" name="Required By" prop="requiredBy"></ngx-datatable-column>
+            <ngx-datatable-column [maxWidth]="80" [sortable]="true" name="Value Gain" prop="valueGain"></ngx-datatable-column>
+            <ngx-datatable-column [maxWidth]="80" [sortable]="true" name="Template">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                {{ row.replicate ? 'Yes' : 'No' }}
+              </ng-template>
+            </ngx-datatable-column>
             <ngx-datatable-column [maxWidth]="300" [minWidth]="300" [width]="300" name="Time Estimates by Role"
                                   prop="estimates">
               <ng-template let-row="row" ngx-datatable-cell-template>
@@ -260,7 +274,13 @@
 
                   <tbody>
                   <tr *ngFor="let estimate of row.estimates" class="{{estimateStatusClass(estimate)}}">
-                    <td>{{ estimate.roleName }}</td>
+                    <td width="70%">{{ estimate.roleName }}
+                      <a (click)="removeEstimate(row, estimate)"
+                         *ngIf="isManager(this.rights) || estimate.roleId==this.rights.productRoleId"
+                         title="Remove It">
+                        X
+                      </a>
+                    </td>
                     <td>
                       <!--
                                                 (blur)="changeEstimateTime(estimate)"
@@ -273,20 +293,25 @@
                         (keydown.enter)="changeEstimateTime(estimate)"
                         [(ngModel)]="estimate.estimateStr"
                         [readOnly]="!(isManager(this.rights) || estimate.roleId==this.rights.productRoleId)"
-                        class="form-control"
+                        class="form-control-sm p-1"
                         name="estimateStr"
                         type="text"
+                        style="width: 70px;"
                       />
                     </td>
                     <td>
                       <input
-                        title="Number of resources required."
+                        title="Number of resources required 1 - 99."
                         #resources="ngModel"
                         (ngModelChange)="changeEstimateResources(estimate, $event)"
                         [(ngModel)]="estimate.resources"
                         [readOnly]="!(isManager(this.rights) || estimate.roleId==this.rights.productRoleId)"
-                        class="form-control"
+                        class="form-control-sm p-1"
                         name="resources"
+                        maxlength="2"
+                        max="99"
+                        min="1"
+                        style="width: 50px;"
                         type="number"/>
                     </td>
 
@@ -309,7 +334,7 @@
                 <a (click)="openDialogForEpic(row,0)" title="Edit">
                   <i class="bi bi-pencil-square me-2"></i>
                 </a>
-                <a (click)="deleteEpic(row.id)" title="Delete">
+                <a (click)="deleteEpic(row.id)" title="Delete" *ngIf="isManager(this.rights)">
                   <i class="bi bi-trash me-2"></i>
                 </a>
                 </div>
