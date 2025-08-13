@@ -177,19 +177,26 @@ export function relationData(epics:RelatedEpicDetailBean[] | null, linkType: Epi
 
 export function assignmentStatusClass(assignment: EpicAssignmentBean): string {
   var classStr = 'table-light';
-  const today = new Date();
+/*  const today = new Date();
   today.setHours(0, 0, 0, 0);  // strip time
   if (assignment.status==EpicAssignmentStatusEnum.COMPLETED) {
-    classStr = 'table-success';
+//    classStr = 'table-success';
   } else if (assignment.expectedDeliveryDate && new Date(assignment.expectedDeliveryDate) < today) {
-    classStr = 'table-danger'
+  //  classStr = 'table-danger'
   } else if (assignment.status==EpicAssignmentStatusEnum.ON_HOLD || assignment.status==EpicAssignmentStatusEnum.OVERDUE) {
-    classStr = 'table-warning';
-  }
+    //classStr = 'table-warning';
+  }*/
   return classStr;
   //return `<span class="${classStr}" title="${e.title}">${e.code}:${e.status}${byDate}</span>&nbsp;&nbsp;`
 }
-
+export function prettyLabel(value: string): string {
+  if (!value) return '';
+  return value
+    .toLowerCase()              // convert to lowercase
+    .split('_')                 // split on underscores
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1)) // capitalize each word
+    .join(' ');
+}
 
 export function assignmentStatusShow(assignment: EpicAssignmentBean): string {
   var iconStr = '';
@@ -206,7 +213,7 @@ export function assignmentStatusShow(assignment: EpicAssignmentBean): string {
   } else if (assignment.status==EpicAssignmentStatusEnum.OPEN) {
     iconStr = 'bi-unlock';
   }
-  return `<span><i class="bi ${iconStr}" title="${assignment.status}"></i>&nbsp;${assignment.status}</span>`
+  return `<span><i class="bi ${iconStr}" title="${assignment.status}"></i>&nbsp;${prettyLabel(assignment.status)}</span>`
 }
 
 export function epicAssignmentStatusIconClass(assignments: EpicAssignmentBean[]|null): string {

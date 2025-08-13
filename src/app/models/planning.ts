@@ -130,8 +130,8 @@ export class EpicAssignment extends Audit {
   public status: EpicAssignmentStatusEnum = EpicAssignmentStatusEnum.OPEN;
 }
 export class EpicAssignmentBean extends EpicAssignment {
-  public roleName: string | null = null;
-  public resourceName: string | null = null;
+  public roleName: string = '';
+  public resourceName: string  = '';
   public minutesLogged: number = 0;
 
 }

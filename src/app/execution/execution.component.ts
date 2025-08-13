@@ -44,12 +44,13 @@ import {
 import {TruncateNumberPipe} from "../pipes/truncate.number";
 import {AuthService} from '../services/auth.service';
 import {EntityDetailComponent} from '../planning/entity-detail.component';
+import {PrettyLabelPipe} from '../pipes/pretty.label';
 
 @Component({
   selector: 'app-planning',
   standalone: true,
-    imports: [CommonModule, NgIf, NgFor, FormsModule, ModalModule, ReactiveFormsModule,
-        NgxDatatableModule, EpicEstimateComponent, RouterLink, DecimalToTimePipe, TruncateNumberPipe], // ✅ NO BrowserAnimationsModule here!
+  imports: [CommonModule, NgIf, NgFor, FormsModule, ModalModule, ReactiveFormsModule,
+    NgxDatatableModule, EpicEstimateComponent, RouterLink, DecimalToTimePipe, TruncateNumberPipe, PrettyLabelPipe], // ✅ NO BrowserAnimationsModule here!
   templateUrl: './execution.component.html',
   styleUrl: './execution.component.css',
   providers: [BsModalService]
@@ -85,6 +86,10 @@ export class ExecutionComponent implements OnInit {
   timeLogged: string = '';
   authService = inject(AuthService);
   rights  = new ResourceRightBean();
+
+  assignmentStatuses = Object.values(EpicAssignmentStatusEnum);
+  assignmentSummaryData: { resourceName: string; counts: { [key: string]: number } }[] = [];
+
   constructor(private readonly modalService: BsModalService, private readonly util: Utils, private readonly route: ActivatedRoute,
               private cdr: ChangeDetectorRef,
               public dialog: MatDialog,
@@ -154,12 +159,35 @@ export class ExecutionComponent implements OnInit {
       next: (data) => {
         console.log(data);
         this.releases = data;
-        this.releases.forEach(r=>{
-          r.epics.forEach(e=>this.toggleAssignmentsCheck(e));
-        })
+        this.assignmentUpdated();
       },
       error: (err) => (this.util.showErrorMessage(err)),
     });
+  }
+
+  assignmentUpdated(): void {
+        this.releases.forEach(r=>{
+          r.epics.forEach(e=>this.toggleAssignmentsCheck(e));
+          // Group by resource
+          const grouped: { [resource: string]: { [status: string]: number } } = {};
+          r.epics.forEach(e=> {
+            e.assignments?.forEach(a=>{
+              if (!grouped[a.resourceName]) {
+                grouped[a.resourceName] = {};
+              }
+              if (!grouped[a.resourceName][a.status]) {
+                grouped[a.resourceName][a.status] = 0;
+              }
+              grouped[a.resourceName][a.status]++;
+            })
+          });
+
+          // Convert to array for ngFor
+          this.assignmentSummaryData = Object.keys(grouped).map(resourceName => ({
+            resourceName,
+            counts: grouped[resourceName]
+          }));
+        });
   }
   changeAssignmentStatus(assignment: EpicAssignmentBean, status: EpicAssignmentStatusEnum) {
 
@@ -167,7 +195,7 @@ export class ExecutionComponent implements OnInit {
       next: (data) => {
         assignment.status = data.status;
         this.util.showSuccessMessage('Status is updated to '+data.status);
-        this.closeModal();
+        this.assignmentUpdated();
       },
       error: (err) => (this.util.showErrorMessage(err)),
     });

@@ -45,7 +45,7 @@
 
 
       <div *ngFor="let releaseDetail of releases;let i = index" [id]="'unplannedRelease'+i" class="row release">
-        <div class="mb-2 p-2 border rounded d-flex justify-content-between align-items-center flex-wrap release-info">
+        <div class="mb-2 p-2 d-flex justify-content-between align-items-center flex-wrap bg-primary-subtle">
           <div class="release-info-text text-dark text-center">
             Release: {{ releaseDetail.release?.name }} &nbsp;|&nbsp;
             Start Date: <strong>{{ releaseDetail.release?.startDate }}</strong> &nbsp;|&nbsp;
@@ -208,7 +208,7 @@
 
       </div>
       <div class="row release" id="unplannedEpics">
-        <div class="mb-2 p-2 border rounded d-flex justify-content-between align-items-center flex-wrap release-info">
+        <div class="mb-2 p-2 d-flex justify-content-between align-items-center flex-wrap bg-primary-subtle">
           <div class="release-info-text text-dark text-center">
             <strong>Deliverables</strong> awaiting for estimates and move forward to part of release.
           </div>

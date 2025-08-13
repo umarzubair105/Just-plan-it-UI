@@ -1,10 +1,14 @@
-Stat on Dashboad
-Export in Excel Release plan
+Plan It  - Issues
 Desc on Home Page
 Footer
 Pricing Model
-Icon, SSL, UI Build, localhost:99 fixes
+Icon
 Deploy, Url, Email
+
+
+Give QA option to reject Other tasks
+Export in Excel Release plan
+SSL,
 
 -- Shiraz Arshad
 
