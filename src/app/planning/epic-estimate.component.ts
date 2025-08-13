@@ -63,7 +63,7 @@ export class EpicEstimateComponent implements OnInit {
     console.log('Form Submitted!', form.value);
     const serviceCalls = this.epicEstimatBeans.map((es) => {
       es.estimate = convertToMinutes(es.estimateStr);
-      if (es.id === 0) {
+      if (es.id == undefined ||  es.id === 0) {
         // Create new epic estimate
         return this.epicEstimateService.create(es).pipe(
           tap((data) => {

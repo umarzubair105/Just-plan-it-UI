@@ -114,6 +114,7 @@ export class CompanyComponent implements OnInit {
         console.log(data);
         this.countries = data.countries;
         this.sampleCompanies = data.sampleCompanies;
+        this.sampleCompanies = this.sampleCompanies.sort((a, b) => a.id - b.id)
       },
       error: (err) => (this.util.showErrorMessage(err)),
     });
