@@ -235,20 +235,31 @@ export function estimateStatusClass(estimate: EpicEstimateBean): string {
 }
 
 export function isDateOver(date: Date|null): boolean {
+
+  if (!date) return false;
+
   const today = new Date();
-  today.setHours(0, 0, 0, 0);  // strip time
-  if (date) {
-    return new Date(date) >= today;
-  }
-  return false;
+  today.setHours(0, 0, 0, 0); // Strip time from today
+
+  const givenDate = new Date(date);
+  if (isNaN(givenDate.getTime())) return false; // Invalid date
+
+  givenDate.setHours(0, 0, 0, 0); // Strip time from given date
+  return givenDate >= today;
 }
 export function isDateStarted(date: Date|null): boolean {
+
+  if (!date) return false;
+
   const today = new Date();
-  today.setHours(0, 0, 0, 0);  // strip time
-  if (date) {
-    return new Date(date) <= today;
-  }
-  return false;
+  today.setHours(0, 0, 0, 0); // Strip time from today
+
+  const givenDate = new Date(date);
+  if (isNaN(givenDate.getTime())) return false; // Invalid date
+
+  givenDate.setHours(0, 0, 0, 0); // Strip time from given date
+  return givenDate <= today;
+
 }
 
 export function messageChange(input:string): string {

@@ -61,19 +61,19 @@
                   <button (click)="toggleAssignments(row)" class="btn btn-sm">
                     <i [ngClass]="{'bi bi-toggle-on': row.expanded, 'bi bi-toggle-off': !row.expanded}"></i></button>
                 </td>
-                <td><i class="{{epicAssignmentStatusIconClass(row.assignments)}}"></i>{{ row.code }}</td>
+                <td width="8%"><i class="{{epicAssignmentStatusIconClass(row.assignments)}}"></i>{{ row.code }}</td>
                 <td>{{ row.title }}</td>
-                <td>
+                <td width="8%">
                   <div [innerHTML]="relationData(row.dependsOn, EpicLinkType.DEPEND_ON, false)"
                        *ngIf="row.dependsOn && row.dependsOn.length>0"></div>
                 </td>
-                <td>
+                <td width="8%">
                   <div [innerHTML]="relationData(row.relatedTo, EpicLinkType.RELATED_TO, false)"
                        *ngIf="row.relatedTo && row.relatedTo.length>0"></div>
                 </td>
-                <td>{{ row.priorityName }}</td>
-                <td>{{ row.requiredBy }}</td>
-                <td>{{ row.valueGain }}</td>
+                <td width="8%">{{ row.priorityName }}</td>
+                <td width="8%">{{ row.requiredBy }}</td>
+                <td width="8%">{{ row.valueGain }}</td>
                 <td class="text-center">
                   <a (click)="openDialogForEpic(row)" title="Add achievements">
                     <i class="bi bi-box-seam"></i>

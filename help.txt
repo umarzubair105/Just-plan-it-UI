@@ -1,6 +1,5 @@
-Add Epic Repeatively
-Export in Excel Release plan
 Stat on Dashboad
+Export in Excel Release plan
 Desc on Home Page
 Footer
 Pricing Model
