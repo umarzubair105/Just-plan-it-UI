@@ -97,6 +97,9 @@ export class EpicBean extends Epic {
   public dependsOn: RelatedEpicDetailBean[] | null = null;
   public relatedTo: RelatedEpicDetailBean[] | null = null;
   public expanded: boolean = true;
+  public editingPriority: boolean = false;
+  public editingValueGain: boolean = false;
+  public editingRequiredBy: boolean = false;
 //  public : boolean = true;
 }
 
@@ -119,6 +122,8 @@ export class EpicEstimate extends Basic {
 }
 export class EpicEstimateBean extends EpicEstimate {
   public roleName: string | null = null;
+  public editingResources: boolean = false;
+  public editingTime: boolean = false;
 }
 export class EpicAssignment extends Audit {
   public epicId: number = 0;
@@ -127,6 +132,7 @@ export class EpicAssignment extends Audit {
   public estimate: number = 0;
   public roleId: number = 0;
   public expectedDeliveryDate: Date | null = null;
+  public editingExpectedDeliveryDate: boolean = false;
   public status: EpicAssignmentStatusEnum = EpicAssignmentStatusEnum.OPEN;
 }
 export class EpicAssignmentBean extends EpicAssignment {

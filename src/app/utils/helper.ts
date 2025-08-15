@@ -119,13 +119,17 @@ export function convertToMinutes(timeString: string): number {
 }
 export function transformToDhM(totalMinutes: number): string {
   if (isNaN(totalMinutes) || totalMinutes < 0) {
-    return 'Invalid time';
+    return '';
   }
+  if (!totalMinutes && totalMinutes !== 0) return '';
+  if (totalMinutes==0) {
+    return '';
+  }
+  const hours = totalMinutes / 60;
+  return Number.isInteger(hours) ? `${hours}h` : `${hours.toFixed(1)}h`;
 
-  //const days = Math.floor(totalMinutes / (24 * 60));
-  //const hours = Math.floor((totalMinutes % (24 * 60)) / 60);
-  //const minutes = totalMinutes % 60;
 
+/*
   const hours = Math.floor(totalMinutes / 60);
   const minutes = totalMinutes % 60;
   //return `${hours}h ${totalMinutes}m`;
@@ -134,10 +138,7 @@ export function transformToDhM(totalMinutes: number): string {
   //if (days > 0) result += `${days}d `;
   if (hours > 0) result += `${hours}h `;
   if (minutes > 0) result += `${minutes}m`;
-
-
-
-  return result.trim();
+  return result.trim();*/
 }
 
 export function releaseStatusClass(status: ReleaseStatusEnum | undefined): string {

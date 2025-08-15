@@ -37,11 +37,12 @@ import {
 import {DecimalToTimePipe} from '../pipes/decimal.to.time';
 import {TruncateNumberPipe} from '../pipes/truncate.number';
 import {AuthService} from '../services/auth.service';
+import {NgSelectComponent} from "@ng-select/ng-select";
 @Component({
   selector: 'app-planning',
   standalone: true,
   imports: [CommonModule, NgIf, NgFor, FormsModule, ModalModule, ReactiveFormsModule,
-    NgxDatatableModule, EpicEstimateComponent, RouterLink, DecimalToTimePipe, TruncateNumberPipe], // ✅ NO BrowserAnimationsModule here!
+    NgxDatatableModule, EpicEstimateComponent, RouterLink, DecimalToTimePipe, TruncateNumberPipe, NgSelectComponent], // ✅ NO BrowserAnimationsModule here!
   templateUrl: './planned.component.html',
   styleUrl: './planned.component.css',
   providers: [BsModalService]
@@ -221,6 +222,51 @@ export class PlannedComponent implements OnInit {
       },
       error: (err) => (this.util.showErrorMessage(err)),
     });
+  }
+  savePriority(epic:EpicBean) {
+    if (epic.priorityId) {
+      const pri = this.priorities.find(p => p.id == epic.priorityId);
+      if (pri) {
+        this.updatePriority(epic, pri);
+      }
+    } else {
+      this.epicService.updateSpecificFields(epic.id, {priorityId:null}).subscribe({
+        next: (data) => {
+          epic.priorityLevel = 0;
+          epic.priorityName = '';
+          epic.priorityId = null;
+          this.util.showSuccessMessage('Priority is removed');
+        },
+        error: (err) => (this.util.showErrorMessage(err)),
+      });
+    }
+    epic.editingPriority = false;
+  }
+  saveValueGain(epic:EpicBean) {
+    if (epic.valueGain && epic.valueGain>=0) {
+      this.epicService.updateSpecificFields(epic.id, {valueGain:epic.valueGain}).subscribe({
+        next: (data) => {
+          //epic.valueGain = null;
+          epic.valueGain =data.valueGain;
+          this.util.showSuccessMessage('Value gain is updated.');
+        },
+        error: (err) => (this.util.showErrorMessage(err)),
+      });
+      epic.editingValueGain = false;
+    }
+  }
+  saveRequiredBy(epic:EpicBean) {
+    if (epic.requiredBy) {
+      this.epicService.updateSpecificFields(epic.id, {requiredBy:epic.requiredBy}).subscribe({
+        next: (data) => {
+          //epic.valueGain = null;
+          epic.requiredBy =data.requiredBy;
+          this.util.showSuccessMessage('Required by date is updated.');
+        },
+        error: (err) => (this.util.showErrorMessage(err)),
+      });
+      epic.editingRequiredBy = false;
+    }
   }
   rowIndex: number=0;
   getRowClass(row: any): string {

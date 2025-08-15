@@ -37,11 +37,12 @@ import {
 import {DecimalToTimePipe} from '../pipes/decimal.to.time';
 import {TruncateNumberPipe} from '../pipes/truncate.number';
 import {AuthService} from '../services/auth.service';
+import {NgSelectComponent} from "@ng-select/ng-select";
 @Component({
   selector: 'app-planning',
   standalone: true,
   imports: [CommonModule, NgIf, NgFor, FormsModule, ModalModule, ReactiveFormsModule,
-    NgxDatatableModule, EpicEstimateComponent, RouterLink, DecimalToTimePipe, TruncateNumberPipe], // ✅ NO BrowserAnimationsModule here!
+    NgxDatatableModule, EpicEstimateComponent, RouterLink, DecimalToTimePipe, TruncateNumberPipe, NgSelectComponent], // ✅ NO BrowserAnimationsModule here!
   templateUrl: './planning.component.html',
   styleUrl: './planning.component.css',
   providers: [BsModalService]
@@ -232,6 +233,25 @@ export class PlanningComponent implements OnInit {
     const priority = this.priorities.find(p=>p.priorityLevel<epic.priorityLevel);
     return !!priority;
   }
+  savePriority(epic:EpicBean) {
+    if (epic.priorityId) {
+      const pri = this.priorities.find(p => p.id == epic.priorityId);
+      if (pri) {
+        this.updatePriority(epic, pri);
+      }
+    } else {
+      this.epicService.updateSpecificFields(epic.id, {priorityId:null}).subscribe({
+        next: (data) => {
+          epic.priorityLevel = 0;
+          epic.priorityName = '';
+          epic.priorityId = null;
+          this.util.showSuccessMessage('Priority is removed');
+        },
+        error: (err) => (this.util.showErrorMessage(err)),
+      });
+    }
+    epic.editingPriority = false;
+  }
   updatePriority(epic: EpicBean, priority: Priority) {
     this.epicService.updateSpecificFields(epic.id, {priorityId:priority.id}).subscribe({
       next: (data) => {
@@ -239,10 +259,35 @@ export class PlanningComponent implements OnInit {
         epic.priorityName = priority.name;
         epic.priorityId = priority.id;
         this.util.showSuccessMessage('Priority is updated');
-        this.closeModal();
       },
       error: (err) => (this.util.showErrorMessage(err)),
     });
+  }
+  saveValueGain(epic:EpicBean) {
+    if (epic.valueGain && epic.valueGain>=0) {
+      this.epicService.updateSpecificFields(epic.id, {valueGain:epic.valueGain}).subscribe({
+        next: (data) => {
+          //epic.valueGain = null;
+          epic.valueGain =data.valueGain;
+          this.util.showSuccessMessage('Value gain is updated.');
+        },
+        error: (err) => (this.util.showErrorMessage(err)),
+      });
+      epic.editingValueGain = false;
+    }
+  }
+  saveRequiredBy(epic:EpicBean) {
+    if (epic.requiredBy) {
+      this.epicService.updateSpecificFields(epic.id, {requiredBy:epic.requiredBy}).subscribe({
+        next: (data) => {
+          //epic.valueGain = null;
+          epic.requiredBy =data.requiredBy;
+          this.util.showSuccessMessage('Required by date is updated.');
+        },
+        error: (err) => (this.util.showErrorMessage(err)),
+      });
+      epic.editingRequiredBy = false;
+    }
   }
   rowIndex: number=0;
   getRowClass(row: any): string {
@@ -393,16 +438,17 @@ export class PlanningComponent implements OnInit {
     }
   }
 
-  changeEstimateResources(estimateBean: EpicEstimateBean, resources: string) {
-    if (parseInt(resources, 10)<1 || parseInt(resources, 10)>99) {
+  changeEstimateResources(estimateBean: EpicEstimateBean) {
+    /*if (parseInt(resources, 10)<1 || parseInt(resources, 10)>99) {
       estimateBean.resources =1;
       return;
     }
     estimateBean.resources = parseInt(resources, 10);
-
-    if (estimateBean.resources==0) {
-      estimateBean.estimateStr = "";
-      estimateBean.estimate = convertToMinutes(estimateBean.estimateStr);
+*/
+    alert(estimateBean.resources);
+    if (!estimateBean.resources || estimateBean.resources<1) {
+      estimateBean.resources = 1;
+      return;
     }
     if (estimateBean.id == 0) {
       this.epicEstimateService.create(estimateBean).subscribe({

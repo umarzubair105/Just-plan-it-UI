@@ -95,23 +95,87 @@
                      *ngIf="row.relatedTo && row.relatedTo.length>0"></div>
               </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column [maxWidth]="120"  [sortable]="true"
-                                  name="Priority" prop="priorityLevel">
+            <ngx-datatable-column [maxWidth]="120" [sortable]="true" name="Priority" prop="priorityLevel">
               <ng-template let-row="row" ngx-datatable-cell-template>
-                {{ row.priorityName }}
+                <div *ngIf="!row.editingPriority" (click)="row.editingPriority = true"
+                     title="Priority. Click over it to change.">
+                  {{ row.priorityName?row.priorityName:'+' }}
+                </div>
+                <div  *ngIf="row.editingPriority">
+                  <ng-select
+
+                    #priorityId="ngModel"
+                    [(ngModel)]="row.priorityId"
+                    [clearable]="true"
+                    [items]="priorities"
+                    [searchable]="true"
+                    appendTo="body"
+                    bindLabel="name"
+                    bindValue="id"
+                    class="form-control"
+                    name="priorityId"
+                    (blur)="row.editPriority = false"
+                    (change)="savePriority(row)"
+                  >
+                  </ng-select>
+                </div>
+
                 <a (click)="changePriorityToUpper(row)" *ngIf="row.priorityId && showChangePriorityToUpper(row)"
                    title="Move it to higher priority">
                   <i class="bi bi-arrow-up-short"></i>
                 </a>
-                <a (click)="changePriorityToLower(row)" *ngIf="row.priorityId &&showChangePriorityToLower(row)"
+                <a (click)="changePriorityToLower(row)" *ngIf="row.priorityId && showChangePriorityToLower(row)"
                    title="Move it to lower priority">
                   <i class="bi bi-arrow-down-short"></i>
                 </a>
 
               </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column [maxWidth]="100" [sortable]="true" name="Required By" prop="requiredBy"></ngx-datatable-column>
-            <ngx-datatable-column [maxWidth]="80" [sortable]="true" name="Value Gain" prop="valueGain"></ngx-datatable-column>
+            <ngx-datatable-column [maxWidth]="105" [sortable]="true" name="Required By" prop="requiredBy">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <div *ngIf="!row.editingRequiredBy" (click)="row.editingRequiredBy = true"
+                     title="Required by date. Click over it to change.">
+                  {{ row.requiredBy?row.requiredBy:'+' }}
+                </div>
+
+                <input *ngIf="row.editingRequiredBy"
+                       title="Delivery is required by date."
+                       #requiredBy="ngModel"
+                       (blur)="saveRequiredBy(row)"
+                       (keydown.enter)="saveRequiredBy(row)"
+                       [(ngModel)]="row.requiredBy"
+                       [readOnly]="!(isManager(this.rights))"
+                       class="form-control-sm p-1"
+                       name="requiredBy"
+                       min="0"
+                       style="width: 90px;"
+                       type="date"/>
+              </ng-template>
+
+            </ngx-datatable-column>
+            <ngx-datatable-column [maxWidth]="80" [sortable]="true" name="Value Gain" prop="valueGain">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <div *ngIf="!row.editingValueGain" (click)="row.editingValueGain = true"
+                     title="Value to be gained. Click over it to change.">
+                  {{ row.valueGain }}
+                </div>
+                <!--
+                                (blur)="row.editingValueGain = false"
+                -->
+                <input *ngIf="row.editingValueGain"
+                       title="Value to gain on completion of."
+                       #valueGain="ngModel"
+                       (blur)="saveValueGain(row)"
+                       (keydown.enter)="saveValueGain(row)"
+                       [(ngModel)]="row.valueGain"
+                       [readOnly]="!(isManager(this.rights))"
+                       class="form-control-sm p-1"
+                       name="valueGain"
+                       min="0"
+                       style="width: 70px;"
+                       type="number"/>
+              </ng-template>
+            </ngx-datatable-column>
             <ngx-datatable-column [maxWidth]="80" [sortable]="true" name="Replicated">
               <ng-template let-row="row" ngx-datatable-cell-template>
                 {{ row.replicatedById ? 'Yes' : 'No' }}
@@ -246,7 +310,30 @@
             </ngx-datatable-column>
             <ngx-datatable-column [maxWidth]="120" [sortable]="true" name="Priority" prop="priorityLevel">
               <ng-template let-row="row" ngx-datatable-cell-template>
-                {{ row.priorityName }} {{ row.id }}
+                <div *ngIf="!row.editingPriority" (click)="row.editingPriority = true"
+                     title="Priority. Click over it to change.">
+                  {{ row.priorityName?row.priorityName:'+' }}
+                </div>
+                <div  *ngIf="row.editingPriority">
+                <ng-select
+
+                  #priorityId="ngModel"
+                  [(ngModel)]="row.priorityId"
+                  [clearable]="true"
+                  [items]="priorities"
+                  [searchable]="true"
+                  appendTo="body"
+                  bindLabel="name"
+                  bindValue="id"
+                  class="form-control"
+                  id="priorityId"
+                  name="priorityId"
+                  (blur)="row.editPriority = false"
+                  (change)="savePriority(row)"
+                >
+                </ng-select>
+                </div>
+
                 <a (click)="changePriorityToUpper(row)" *ngIf="row.priorityId && showChangePriorityToUpper(row)"
                    title="Move it to higher priority">
                   <i class="bi bi-arrow-up-short"></i>
@@ -258,8 +345,51 @@
 
               </ng-template>
             </ngx-datatable-column>
-            <ngx-datatable-column [maxWidth]="100" [sortable]="true" name="Required By" prop="requiredBy"></ngx-datatable-column>
-            <ngx-datatable-column [maxWidth]="80" [sortable]="true" name="Value Gain" prop="valueGain"></ngx-datatable-column>
+            <ngx-datatable-column [maxWidth]="105" [sortable]="true" name="Required By" prop="requiredBy">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <div *ngIf="!row.editingRequiredBy" (click)="row.editingRequiredBy = true"
+                     title="Required by date. Click over it to change.">
+                  {{ row.requiredBy?row.requiredBy:'+' }}
+                </div>
+
+                <input *ngIf="row.editingRequiredBy"
+                       title="Delivery is required by date."
+                       #requiredBy="ngModel"
+                       (blur)="saveRequiredBy(row)"
+                       (keydown.enter)="saveRequiredBy(row)"
+                       [(ngModel)]="row.requiredBy"
+                       [readOnly]="!(isManager(this.rights))"
+                       class="form-control-sm p-1"
+                       name="requiredBy"
+                       min="0"
+                       style="width: 90px;"
+                       type="date"/>
+              </ng-template>
+
+            </ngx-datatable-column>
+            <ngx-datatable-column [maxWidth]="80" [sortable]="true" name="Value Gain" prop="valueGain">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+              <div *ngIf="!row.editingValueGain" (click)="row.editingValueGain = true"
+                   title="Value to be gained. Click over it to change.">
+                {{ row.valueGain }}
+              </div>
+<!--
+                (blur)="row.editingValueGain = false"
+-->
+                <input *ngIf="row.editingValueGain"
+                     title="Value to gain on completion of."
+                     #valueGain="ngModel"
+                       (blur)="saveValueGain(row)"
+                     (keydown.enter)="saveValueGain(row)"
+                     [(ngModel)]="row.valueGain"
+                     [readOnly]="!(isManager(this.rights))"
+                     class="form-control-sm p-1"
+                     name="valueGain"
+                     min="0"
+                     style="width: 70px;"
+                     type="number"/>
+              </ng-template>
+            </ngx-datatable-column>
             <ngx-datatable-column [maxWidth]="80" [sortable]="true" name="Template">
               <ng-template let-row="row" ngx-datatable-cell-template>
                 {{ row.replicate ? 'Yes' : 'No' }}
@@ -278,15 +408,17 @@
                     <td width="70%">{{ estimate.roleName }}
                       <a (click)="removeEstimate(row, estimate)"
                          *ngIf="isManager(this.rights) || estimate.roleId==this.rights.productRoleId"
-                         title="Remove It">
-                        X
+                         title="This role is not required.">
+                        <i class="bi bi-x me-2"></i>
                       </a>
                     </td>
-                    <td>
+                    <td width="15%">
                       <!--
                                                 (blur)="changeEstimateTime(estimate)"
                                                 (keydown.enter)="changeEstimateTime(estimate)"
                       -->
+
+
                       <input
                         title="Estimate to be provided in hours."
                         #estimateStr="ngModel"
@@ -297,23 +429,30 @@
                         class="form-control-sm p-1"
                         name="estimateStr"
                         type="text"
-                        style="width: 70px;"
+                        style="width: 50px;"
                       />
                     </td>
-                    <td>
-                      <input
-                        title="Number of resources required 1 - 99."
-                        #resources="ngModel"
-                        (ngModelChange)="changeEstimateResources(estimate, $event)"
-                        [(ngModel)]="estimate.resources"
-                        [readOnly]="!(isManager(this.rights) || estimate.roleId==this.rights.productRoleId)"
-                        class="form-control-sm p-1"
-                        name="resources"
-                        maxlength="2"
-                        max="99"
-                        min="1"
-                        style="width: 50px;"
-                        type="number"/>
+                    <td  width="15%">
+                      <div *ngIf="!estimate.editingResources" (click)="estimate.editingResources = true"
+                           title="Number of resources required. Click over it to change.">
+                        By {{ estimate.resources }}
+                      </div>
+<!--$event-->
+                      <input *ngIf="estimate.editingResources"
+                             title="Number of resources required 1 - 99."
+                             #resources="ngModel"
+                             (blur)="changeEstimateResources(estimate);estimate.editingResources = false"
+                             (keydown.enter)="changeEstimateResources(estimate);estimate.editingResources = false"
+                             [(ngModel)]="estimate.resources"
+                             [readOnly]="!(isManager(this.rights) || estimate.roleId==this.rights.productRoleId)"
+                             class="form-control-sm p-1"
+                             name="resources"
+                             maxlength="2"
+                             max="99"
+                             min="1"
+                             style="width: 40px;"
+                             type="number"/>
+
                     </td>
 
                   </tr>

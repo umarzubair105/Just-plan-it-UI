@@ -123,14 +123,23 @@
                         <td  width="10%">{{ assignment.estimate | decimalToTime }}</td>
                         <td  width="10%">{{ assignment.minutesLogged | decimalToTime }}</td>
                         <td [innerHTML]="assignmentStatusShow(assignment)"  width="10%"></td>
-                        <td class="mb-0 mt-0"  width="10%">
-                          <input
+                        <td class="mb-0 mt-0"  width="8%">
+
+                          <div *ngIf="!assignment.editingExpectedDeliveryDate" (click)="assignment.editingExpectedDeliveryDate = true"
+                               title="Required by date. Click over it to change.">
+                            {{ assignment.expectedDeliveryDate?assignment.expectedDeliveryDate:'+' }}
+                          </div>
+
+
+                          <input *ngIf="assignment.editingExpectedDeliveryDate"
                             type="date"
-                            class="form-control form-control-sm"
+                            class="form-control-sm p-0"
                             [min]="releaseDetail.release.startDate"
                             [max]="releaseDetail.release.endDate"
                             [ngModel]="assignment.expectedDeliveryDate"
-                            (ngModelChange)="changeAssignmentDeliveryDate(assignment, $event)"/>
+                            (ngModelChange)="changeAssignmentDeliveryDate(assignment, $event);assignment.editingExpectedDeliveryDate=false"
+                                 style="width: 100px;"
+                          />
                         </td>
                         <td *ngIf="isManager(this.rights) || this.rights.resourceId==assignment.resourceId "
                             class="text-center me-2"  width="10%">
