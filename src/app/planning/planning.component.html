@@ -57,7 +57,7 @@
 
           <div class="mt-2 mt-lg-0">
             <button (click)="planRelease(releaseDetail)" *ngIf="isManager(this.rights)"
-                    class="btn btn-sm me-2"
+                    class="btn btn-lg me-2"
                     title="Plan the release">
               <i class="bi bi-clipboard-check"></i> Plan
             </button>
@@ -199,7 +199,7 @@
                    >
                   <i class="bi bi-pencil-square me-2"></i>
                 </a>
-                  <a (click)="deleteEpic(row.id)" title="Delete" *ngIf="isManager(this.rights) && row.replicatedById">
+                  <a (click)="deleteEpic(row.id, releaseDetail.release.id)" title="Delete" *ngIf="isManager(this.rights) && row.replicatedById">
                     <i class="bi bi-trash me-2"></i>
                   </a>
                 </div>
@@ -401,7 +401,13 @@
                 <!--
                                     <a (click)="openDialogForEstimates(row)" title="Change Estimates"><div [innerHTML]="showEstimates(row.estimates)"></div></a>
                 -->
-                <table>
+                <ng-container *ngIf="row.estimates==0">
+                  <a (click)="openDialogForEstimates(row)" title="Add Estimates" class="btn btn-sm me-2">
+                    Add Estimates
+                  </a>
+                </ng-container>
+
+                <table *ngIf="row.estimates.length>0">
 
                   <tbody>
                   <tr *ngFor="let estimate of row.estimates" class="{{estimateStatusClass(estimate)}}">
@@ -464,7 +470,7 @@
               <ng-template let-row="row" ngx-datatable-cell-template>
                 <div style="text-align: center;">
                 <a (click)="planEpic(row)"
-                   *ngIf="row.estimates && row.estimates.length > 0 && isManager(this.rights)"
+                   *ngIf="isManager(this.rights)"
                    title="Make it part of release plan">
                   <i class="bi bi-plus-square me-2"></i>
                 </a>
@@ -474,7 +480,7 @@
                 <a (click)="openDialogForEpic(row,0)" title="Edit">
                   <i class="bi bi-pencil-square me-2"></i>
                 </a>
-                <a (click)="deleteEpic(row.id)" title="Delete" *ngIf="isManager(this.rights)">
+                <a (click)="deleteEpic(row.id, 0)" title="Delete" *ngIf="isManager(this.rights)">
                   <i class="bi bi-trash me-2"></i>
                 </a>
                 </div>

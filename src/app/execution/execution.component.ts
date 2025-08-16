@@ -143,15 +143,21 @@ export class ExecutionComponent implements OnInit {
     });
   }
   completeRelease(releaseDetail: ReleaseDetailBean) {
-    console.log('Planning it:'+releaseDetail.release?.name);
+    if (!isDateOver(releaseDetail.release.endDate)) {
+      if (!window.confirm("Release end date yet to come. Still do you want to continue to complete it?")) {
+        return;
+      }
+    }
     if (releaseDetail.release) {
-      this.releaseService.completeRelease(releaseDetail.release.id).subscribe({
-        next: (data) => {
-          this.util.showSuccessMessage('Release is closed.');
-          this.releases = this.releases.filter(wh => wh.release?.id !== releaseDetail.release?.id);
-        },
-        error: (err) => (this.util.showErrorMessage(err)),
-      });
+      if (window.confirm("Are you sure you want to complete it?")) {
+        this.releaseService.completeRelease(releaseDetail.release.id).subscribe({
+          next: (data) => {
+            this.util.showSuccessMessage('Release is closed.');
+            this.releases = this.releases.filter(wh => wh.release?.id !== releaseDetail.release?.id);
+          },
+          error: (err) => (this.util.showErrorMessage(err)),
+        });
+      }
     }
   }
   loadReleases(): void {

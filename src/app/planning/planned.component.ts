@@ -138,14 +138,21 @@ export class PlannedComponent implements OnInit {
   }
 
   startRelease(releaseDetail: ReleaseDetailBean) {
+    if (!isDateStarted(releaseDetail.release.startDate)) {
+      if (!window.confirm("Release start date yet to come. Still do you want to continue to start it?")) {
+        return;
+      }
+    }
     if (releaseDetail.release) {
-      this.releaseService.startRelease(releaseDetail.release.id).subscribe({
-        next: (data) => {
-          this.util.showSuccessMessage('Release is started to work upon.');
-          this.releases = this.releases.filter(wh => wh.release?.id !== releaseDetail.release?.id);
-        },
-        error: (err) => (this.util.showErrorMessage(err)),
-      });
+      if (window.confirm("Are you sure you want to start it?")) {
+        this.releaseService.startRelease(releaseDetail.release.id).subscribe({
+          next: (data) => {
+            this.util.showSuccessMessage('Release is started to work upon.');
+            this.releases = this.releases.filter(wh => wh.release?.id !== releaseDetail.release?.id);
+          },
+          error: (err) => (this.util.showErrorMessage(err)),
+        });
+      }
     }
   }
   loadPlannedReleases(): void {

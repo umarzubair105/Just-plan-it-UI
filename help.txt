@@ -1,12 +1,15 @@
-Plan It  - Issues
+login Issue
+Project manager Email issue/Add Product
 Site Tour
-Start /Complete Release show and show error message
+Show Working Days and Total Times in Release, Check Total Time
+Show error/success message more prominent
 Footer
 Pricing Model
 Icon
 Deploy, Url, Email
 Disable Spring boot exposable Urls
 Disable Dev Console
+Company Capacity
 
 
 Give QA option to reject Other tasks

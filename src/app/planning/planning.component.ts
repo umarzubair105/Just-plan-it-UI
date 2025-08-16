@@ -135,13 +135,15 @@ export class PlanningComponent implements OnInit {
   planRelease(releaseDetail: ReleaseDetailBean) {
     console.log('Planning it:'+releaseDetail.release?.name);
     if (releaseDetail.release) {
-      this.releaseService.updateSpecificFieldsPasses(releaseDetail.release.id, {status: ReleaseStatusEnum.PLANNED}).subscribe({
-        next: (data) => {
-          this.util.showSuccessMessage('Release is planned.');
-          this.releases = this.releases.filter(wh => wh.release?.id !== releaseDetail.release?.id);
-        },
-        error: (err) => (this.util.showErrorMessage(err)),
-      });
+      if (window.confirm("Are you sure you want to plan it?")) {
+        this.releaseService.updateSpecificFieldsPasses(releaseDetail.release.id, {status: ReleaseStatusEnum.PLANNED}).subscribe({
+          next: (data) => {
+            this.util.showSuccessMessage('Release is planned.');
+            this.releases = this.releases.filter(wh => wh.release?.id !== releaseDetail.release?.id);
+          },
+          error: (err) => (this.util.showErrorMessage(err)),
+        });
+      }
     }
   }
   loadUnplannedReleases(): void {
@@ -159,7 +161,11 @@ export class PlanningComponent implements OnInit {
       next: (data) => {
         console.log(data);
         const index = this.releases.findIndex(r => r.release.id === releaseId);
-        this.releases.splice(index, 1, data);
+        if (index>-1) {
+          this.releases.splice(index, 1, data);
+        } else {
+          this.releases.push(data);
+        }
       },
       error: (err) => (this.util.showErrorMessage(err)),
     });
@@ -195,11 +201,20 @@ export class PlanningComponent implements OnInit {
         error: (err) => (this.util.showErrorMessage(err)),
       });
   }
-  deleteEpic(id: number) {
+  deleteEpic(id: number, releaseId: number) {
     if (window.confirm("Are you sure you want to delete?")) {
+        if (releaseId>0) {
+          this.planningService.unplanEpic(id).subscribe({
+            next: (data) => {
+              this.reloadReleases(releaseId);
+            },
+            error: (err) => {
+              this.util.showErrorMessage(err);},
+          });
+        }
         this.epicService.delete(id).subscribe({
           next: (data) => {
-            this.util.showSuccessMessage('Data is deleted');
+            this.util.showSuccessMessage('Deliverable is deleted.');
             this.unplannedEpics = this.unplannedEpics.filter(wh => wh.id !== id);
           },
           error: (err) => (this.util.showErrorMessage(err)),
@@ -294,7 +309,17 @@ export class PlanningComponent implements OnInit {
     this.rowIndex = this.rowIndex +1;
     return this.rowIndex % 2 === 0 ? 'even-row' : 'odd-row';
   }
+  isEstimateGiven(epic: EpicBean):boolean {
+    if (epic.estimates && epic.estimates.length > 0) {
+      return epic.estimates.every(e => e.id > 0);
+    }
+    return false;
+  }
   planEpic(epic: EpicBean) {
+    if (!this.isEstimateGiven(epic)) {
+      alert('All estimates are not provided. Either give estimates or remove unwanted.');
+      return;
+    }
     if (window.confirm("Are you sure you want to plan it?")) {
       this.planningService.planEpic(epic.id).subscribe({
         next: (data) => {
@@ -445,7 +470,6 @@ export class PlanningComponent implements OnInit {
     }
     estimateBean.resources = parseInt(resources, 10);
 */
-    alert(estimateBean.resources);
     if (!estimateBean.resources || estimateBean.resources<1) {
       estimateBean.resources = 1;
       return;

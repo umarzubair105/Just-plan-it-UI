@@ -41,6 +41,9 @@ export class EpicEstimateComponent implements OnInit {
         next: (data) => {
           this.epicEstimatBeans = data;
           this.epicEstimatBeans.forEach(e=> {
+            if (e.id == undefined) {
+              e.id = 0;
+            }
             e.estimateStr = transformToDhM(e.estimate);
           });
         },
@@ -103,9 +106,23 @@ export class EpicEstimateComponent implements OnInit {
     console.log('Child component initialized');
   }
   closeDialog(): void {
-    let result = {estimates:this.epicEstimatBeans};
-    console.log('Closing with:'+result);
-    this.dialogRef.close(result);
+    this.epicEstimateService.getPossibleEpicEstimateByEpicId(this.epicBean.id).subscribe({
+      next: (data) => {
+        this.epicEstimatBeans = data;
+        this.epicEstimatBeans.forEach(e=> {
+          if (e.id == undefined) {
+            e.id = 0;
+          }
+          e.estimateStr = transformToDhM(e.estimate);
+        });
+
+        let result = {estimates:this.epicEstimatBeans};
+        console.log('Closing with:'+this.epicEstimatBeans.length);
+        this.dialogRef.close(result);
+      },
+      error: (err) => (this.util.showErrorMessage(err)),
+    });
+
   }
   deleteEpicEstimate(id: number): void {
     if (window.confirm("Are you sure you want to delete?")) {

@@ -101,7 +101,7 @@ export function convertToMinutes(timeString: string): number {
     //totalMinutes += parseInt(dayMatch[1], 10) * 24 * 60;
   //}
   if (hourMatch) {
-    totalMinutes += parseInt(hourMatch[1], 10) * 60;
+    totalMinutes += parseFloat(hourMatch[1]) * 60;
   }
   if (minuteMatch) {
     totalMinutes += parseInt(minuteMatch[1], 10);

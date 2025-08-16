@@ -18,7 +18,7 @@
 
       <div class="row release" *ngFor="let releaseDetail of releases;let i = index" [id]="'eRelease'+i">
         <!-- Release Details -->
-        <div class="mb-2 p-2 border rounded d-flex justify-content-between align-items-center flex-wrap release-info">
+        <div class="mb-2 p-2 d-flex justify-content-between align-items-center flex-wrap bg-primary-subtle">
           <div class="release-info-text text-dark text-center">
             {{messageChange('Product')}}: <strong>{{ releaseDetail.product.name }}</strong> &nbsp;|&nbsp;
             Release: {{ releaseDetail.release?.name }} &nbsp;|&nbsp;
@@ -28,13 +28,13 @@
           </div>
 
           <div class="mt-2 mt-lg-0">
-            <button class="btn btn-sm me-2"
-                    *ngIf="isManager(this.rights) && isDateOver(releaseDetail.release.endDate)"
+            <button class="btn btn-lg me-2"
+                    *ngIf="isManager(this.rights)"
                     (click)="completeRelease(releaseDetail)" title="Mark release to complete.">
               <i class="bi bi-x-circle"></i> Complete
             </button>
 
-            <button class="btn btn-sm"
+            <button class="btn btn-lg"
                     (click)="openDialogForEntityDetail(releaseDetail.release)" title="Release Artifacts">
               <i class="bi bi-file-earmark"></i> Release Artifacts
             </button>
@@ -43,7 +43,6 @@
         <!--
                   <h5 class="mb-1"><i class="bi bi-journal me-2"></i> Deliverables</h5>
         -->
-        <div class="table-responsive mb-2">
           <table class="table table-bordered table-hover align-middle compact-table">
             <thead class="table-light">
             <tr>
@@ -60,7 +59,7 @@
             </thead>
             <tbody>
             <ng-container *ngFor="let row of releaseDetail.epics">
-              <tr>
+              <tr class="table-bordered border-2 table-success">
                 <td><button (click)="toggleAssignments(row)"  class="btn btn-sm">
                   <i [ngClass]="{'bi bi-toggle-on': row.expanded, 'bi bi-toggle-off': !row.expanded}"></i></button></td>
                 <td width="8%"><i class="{{epicAssignmentStatusIconClass(row.assignments)}}" ></i>{{row.code}}</td>
@@ -77,7 +76,7 @@
                 </td>
               </tr>
               <tr *ngIf="row.expanded" >
-                <td colspan="10" >
+                <td colspan="5">
                   <table class="table table-bordered table-hover align-middle mb-0 compact-table">
                     <thead class="table-light">
                     <tr>
@@ -92,20 +91,29 @@
                     <tbody>
                     <ng-container *ngFor="let assignment of row.assignments">
                       <tr class="{{assignmentStatusClass(assignment)}}">
-                        <td>{{ assignment.resourceName }}</td>
-                        <td>{{ assignment.estimate | decimalToTime }}</td>
-                        <td>{{ assignment.minutesLogged | decimalToTime }}</td>
-                        <td [innerHTML]="assignmentStatusShow(assignment)"></td>
-                        <td class="mb-0 mt-0">
-                          <input
-                            type="date"
-                            class="form-control form-control-sm"
-                            [min]="releaseDetail.release.startDate"
-                            [max]="releaseDetail.release.endDate"
-                            [ngModel]="assignment.expectedDeliveryDate"
-                            (ngModelChange)="changeAssignmentDeliveryDate(assignment, $event)" />
+                        <td width="20%">{{ assignment.resourceName }}</td>
+                        <td width="10%">{{ assignment.estimate | decimalToTime }}</td>
+                        <td width="10%">{{ assignment.minutesLogged | decimalToTime }}</td>
+                        <td [innerHTML]="assignmentStatusShow(assignment)" width="10%"></td>
+                        <td class="mb-0 mt-0"  width="8%">
+
+                          <div *ngIf="!assignment.editingExpectedDeliveryDate" (click)="assignment.editingExpectedDeliveryDate = true"
+                               title="Required by date. Click over it to change.">
+                            {{ assignment.expectedDeliveryDate?assignment.expectedDeliveryDate:'+' }}
+                          </div>
+
+
+                          <input *ngIf="assignment.editingExpectedDeliveryDate"
+                                 type="date"
+                                 class="form-control-sm p-0"
+                                 [min]="releaseDetail.release.startDate"
+                                 [max]="releaseDetail.release.endDate"
+                                 [ngModel]="assignment.expectedDeliveryDate"
+                                 (ngModelChange)="changeAssignmentDeliveryDate(assignment, $event);assignment.editingExpectedDeliveryDate=false"
+                                 style="width: 100px;"
+                          />
                         </td>
-                        <td *ngIf="isManager(this.rights) || this.rights.resourceId==assignment.resourceId " [width]="150"  class="text-center">
+                        <td width="10%" *ngIf="isManager(this.rights) || this.rights.resourceId==assignment.resourceId " class="text-center">
                           <a (click)="changeAssignmentStatus(assignment, EpicAssignmentStatusEnum.OPEN)"
                              title="Re open it"
                              *ngIf="assignment.status === EpicAssignmentStatusEnum.COMPLETED || assignment.status === EpicAssignmentStatusEnum.ON_HOLD
@@ -138,7 +146,7 @@
                             <i class="bi bi-clock me-2"></i>
                           </a>
                         </td>
-                        <td *ngIf="!(isManager(this.rights) || this.rights.resourceId==assignment.resourceId)" [width]="150">
+                        <td *ngIf="!(isManager(this.rights) || this.rights.resourceId==assignment.resourceId)" width="10%">
                         </td>
                       </tr>
                     </ng-container>
@@ -150,12 +158,10 @@
             </tbody>
           </table>
 
-        </div>
         <!-- Resource Allocation -->
         <!--
                   <h5 class="mb-1"><i class="bi bi-people me-2"></i> Resource Allocation</h5>
         -->
-        <div class="table-responsive">
           <table class="table table-bordered table-hover align-middle compact-table">
             <thead class="table-light">
             <tr>
@@ -196,7 +202,6 @@
             </tr>
             </tbody>
           </table>
-        </div>
         <div>
           <div class="d-flex">
             <ul class="navbar-nav d-flex flex-row flex-wrap gap-2 mb-2 mb-lg-0 ms-auto">
