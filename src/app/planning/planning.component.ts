@@ -1,4 +1,4 @@
-import {ChangeDetectorRef, Component, inject, OnInit, TemplateRef, ViewChild} from '@angular/core';
+import {ChangeDetectorRef, Component, inject, OnInit, ViewChild} from '@angular/core';
 import {CommonModule, NgFor, NgIf, ViewportScroller} from '@angular/common'; // ✅ Use CommonModule
 import {FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {BsModalRef, BsModalService, ModalModule} from 'ngx-bootstrap/modal';
@@ -41,14 +41,12 @@ import {NgSelectComponent} from "@ng-select/ng-select";
 @Component({
   selector: 'app-planning',
   standalone: true,
-  imports: [CommonModule, NgIf, NgFor, FormsModule, ModalModule, ReactiveFormsModule,
+  imports: [CommonModule, NgIf, NgFor, FormsModule, ReactiveFormsModule,
     NgxDatatableModule, EpicEstimateComponent, RouterLink, DecimalToTimePipe, TruncateNumberPipe, NgSelectComponent], // ✅ NO BrowserAnimationsModule here!
   templateUrl: './planning.component.html',
-  styleUrl: './planning.component.css',
-  providers: [BsModalService]
+  styleUrl: './planning.component.css'
 })
 export class PlanningComponent implements OnInit {
-  modalRef?: BsModalRef;
 
   priorities: Priority[] = [];
   subComponents: SubComponent[] = [];
@@ -75,8 +73,7 @@ export class PlanningComponent implements OnInit {
   assignableRoles: Role[] = [];
   authService = inject(AuthService);
   rights  = new ResourceRightBean();
-  constructor(private readonly modalService: BsModalService, private readonly util: Utils, private readonly route: ActivatedRoute,
-              private cdr: ChangeDetectorRef,
+  constructor( private readonly util: Utils, private readonly route: ActivatedRoute,
               public dialog: MatDialog,
               private viewportScroller: ViewportScroller) {
     this.companyId = this.util.getCompanyId();
@@ -196,7 +193,6 @@ export class PlanningComponent implements OnInit {
           this.editEpic.componentName = subComp.name;
           this.editEpic = new EpicBean();
           this.util.showSuccessMessage('Data is updated');
-          this.closeModal();
         },
         error: (err) => (this.util.showErrorMessage(err)),
       });
@@ -355,51 +351,6 @@ export class PlanningComponent implements OnInit {
     }
   }
 
-  createEpic() {
-      this.editEpic.active=true;
-      this.editEpic.forcefullyAdded=false;
-      this.editEpic.code='EpicCode';
-      this.editEpic.releaseId=null;
-      this.editEpic.productId = this.productId;
-      //this.editEpic.raisedByResourceId = this.au;
-      return this.epicService.create(this.editEpic).subscribe({
-        next: (data) => {
-          this.editEpic.id = data.id;
-          const priority = this.priorities.find(p => p.id === data.priorityId)
-            ?? new Priority();
-          this.editEpic.priorityName = priority.name;
-          this.editEpic.priorityLevel = priority.priorityLevel;
-          const subComp = this.subComponents.find(p => p.id === data.componentId)
-            ?? new SubComponent();
-          this.editEpic.componentName = subComp.name;
-          //this.unplannedEpics.push(this.editEpic);
-          this.unplannedEpics = [...this.unplannedEpics, this.editEpic];
-          this.editEpic = new EpicBean();
-          this.util.showSuccessMessage('Data is inserted.');
-          this.closeModal();
-        },
-        error: (err) => (this.util.showErrorMessage(err)),
-      });
-  }
-
-
-
-  // Open modal
-  createEpicModal(template: TemplateRef<any>) {
-    this.editEpic = new EpicBean();
-    this.modalRef = this.modalService.show(template);
-  }
-  updateEpicModal(template: TemplateRef<any>, id: number) {
-    if (id) {
-      this.editEpic = this.unplannedEpics.find((x) => x.id === id)
-        ?? new EpicBean();
-      this.modalRef = this.modalService.show(template);
-    }
-  }
-  // Close modal
-  closeModal() {
-    this.modalRef?.hide();
-  }
   showEstimatesForEdit(epic:EpicBean): void {
     var epicEstimates: EpicEstimateBean[] = epic.estimates??[];
     if (!epic.estimates) {
@@ -609,7 +560,11 @@ export class PlanningComponent implements OnInit {
   }
 
   getAssignedPercentage(row: any): number {
-    const total = row.prodBasedAssignableTime;
+    let total = row.prodBasedAssignableTime;
+    if (total==0 && row.prodBasedAssignedTime>0) {
+      // when 0 time is assigned Just to show Red bar
+      total=1;
+    }
     if (!total || total <= 0) return 0;
     return (row.prodBasedAssignedTime / total) * 100;
   }

@@ -82,9 +82,11 @@ export function handleErrorLogin(error: HttpErrorResponse): Observable<never> {
 
 export function getLocalDate(): Date {
   const today = new Date();
+  //today.setHours(0, 0, 0, 0); // Strip time from given date
+  return today;
   // Create YYYY-MM-DD string in local time
-  const localDateString = today.toISOString().split('T')[0];
-  return new Date(localDateString);
+  //const localDateString = today.toISOString().split('T')[0];
+  //return new Date(localDateString);
 }
 
 export function convertToMinutes(timeString: string): number {

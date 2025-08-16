@@ -304,7 +304,11 @@ export class PlannedComponent implements OnInit {
     }
   }
   getAssignedPercentage(row: any): number {
-    const total = row.prodBasedAssignableTime;
+    let total = row.prodBasedAssignableTime;
+    if (total==0 && row.prodBasedAssignedTime>0) {
+      // when 0 time is assigned Just to show Red bar
+      total=1;
+    }
     if (!total || total <= 0) return 0;
     return (row.prodBasedAssignedTime / total) * 100;
   }

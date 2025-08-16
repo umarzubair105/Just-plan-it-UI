@@ -204,12 +204,20 @@ export class ExecutedComponent implements OnInit {
     epic.expanded = !epic.expanded;
   }
   getLoggedPercentage(row: any): number {
-    const total = row.prodBasedAssignableTime;
+    let total = row.prodBasedAssignableTime;
+    if (total==0 && row.loggedTime>0) {
+      // when 0 time is assigned Just to show Red bar
+      total=1;
+    }
     if (!total || total <= 0) return 0;
     return (row.loggedTime / total) * 100;
   }
   getLoggedPercentageAgainstEstimated(row: any): number {
-    const total = row.prodBasedAssignedTime;
+    let total = row.prodBasedAssignedTime;
+    if (total==0 && row.loggedTime>0) {
+      // when 0 time is assigned Just to show Red bar
+      total=1;
+    }
     if (!total || total <= 0) return 0;
     return (row.loggedTime / total) * 100;
   }

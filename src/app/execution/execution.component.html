@@ -171,7 +171,7 @@
                             <i class="bi bi-exclamation-circle-fill me-2"></i>
                           </a>
                           <a
-                            (click)="updateTimeLoggingModal(timeLoggingTemplate, releaseDetail.release?.id, assignment)"
+                            (click)="updateTimeLoggingModal(timeLoggingTemplate, releaseDetail, assignment)"
                             title="Log your work"
                             *ngIf="assignment.status === EpicAssignmentStatusEnum.STARTED">
                             <i class="bi bi-clock"></i>
@@ -263,20 +263,27 @@
     <div class="modal fade show d-block">
       <div class="modal-dialog">
         <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title">Add Time Logging</h5>
-            <button type="button" class="btn-close" (click)="closeModal()"></button>
+          <div class="modal-header text-white justify-content-between align-items-center py-2 px-3 ">
+            <h5 class="modal-title mb-0 fx-6">Add Time Logging</h5>
+            <button class="btn btn-sm text-white p-0" (click)="closeModal()">
+              <i class="bi bi-x-lg"></i>
+            </button>
           </div>
           <div class="modal-body">
             <form>
               <div class="mb-3">
                 <label class="form-label">Logging For</label><label class="required-label"><span
                 class="text-danger ms-1">*</span></label>
-                <input type="date" class="form-control" [(ngModel)]="timeLogging.loggedForDate" name="loggedForDate"
-                       required>
+                <input type="date" class="form-control"
+                       [(ngModel)]="timeLogging.loggedForDate" name="loggedForDate"
+                       required
+                       [min]="selectedRelease?.release?.startDate"
+                       [max]="selectedRelease?.release?.endDate"
+                >
+
               </div>
               <div class="mb-3">
-                <label class="form-label">Time to log (2h 30min)</label>
+                <label class="form-label">Time to log (2h 30m)</label>
                 <input type="text" class="form-control" [(ngModel)]="timeLogged" name="timeLogged">
               </div>
               <div class="mb-3">
@@ -286,8 +293,8 @@
             </form>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-success w-20" (click)="addTimeLogging()">Add</button>
-            <button class="btn btn-secondary w-20" (click)="closeModal()">Cancel</button>
+            <button class="btn btn-primary w-20" (click)="addTimeLogging()">Add</button>
+            <button class="btn btn-secondary w-20" (click)="closeModal()">Close</button>
           </div>
         </div>
       </div>

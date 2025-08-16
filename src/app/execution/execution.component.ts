@@ -69,6 +69,7 @@ export class ExecutionComponent implements OnInit {
 
   editEpicEstimates: EpicEstimateBean[] = [];
 
+  selectedRelease: ReleaseDetailBean | null = null;
 
   companyId:number;
   productId:number;
@@ -225,13 +226,14 @@ export class ExecutionComponent implements OnInit {
       error: (err) => (this.util.showErrorMessage(err)),
     });
   }
-  updateTimeLoggingModal(template: TemplateRef<any>, releaseId: any, assignment: EpicAssignmentBean) {
+  updateTimeLoggingModal(template: TemplateRef<any>, releaseDB: ReleaseDetailBean, assignment: EpicAssignmentBean) {
+    this.selectedRelease = releaseDB;
     this.timeLogged = '';
     this.selectedEpicAssignment = assignment;
     this.timeLogging = new TimeLogging();
     this.timeLogging.epicId = assignment.epicId;
     this.timeLogging.resourceId = assignment.resourceId;
-    this.timeLogging.releaseId = releaseId;
+    this.timeLogging.releaseId = releaseDB.release.id;
     this.timeLogging.loggedForDate = getLocalDate();
     this.modalRef = this.modalService.show(template);
   }
@@ -388,12 +390,20 @@ export class ExecutionComponent implements OnInit {
 
 
   getLoggedPercentage(row: any): number {
-    const total = row.prodBasedAssignableTime;
+    let total = row.prodBasedAssignableTime;
+    if (total==0 && row.loggedTime>0) {
+      // when 0 time is assigned Just to show Red bar
+      total=1;
+    }
     if (!total || total <= 0) return 0;
     return (row.loggedTime / total) * 100;
   }
   getLoggedPercentageAgainstEstimated(row: any): number {
-    const total = row.prodBasedAssignedTime;
+    let total = row.prodBasedAssignedTime;
+    if (total==0 && row.loggedTime>0) {
+      // when 0 time is assigned Just to show Red bar
+      total=1;
+    }
     if (!total || total <= 0) return 0;
     return (row.loggedTime / total) * 100;
   }
