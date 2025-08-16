@@ -1,11 +1,9 @@
 Site Tour
-Show Working Days and Total Times in Release, Check Total Time
-Show error/success message more prominent
+Deploy, Url, Email
+
 Footer
 Pricing Model
 Icon
-Deploy, Url, Email
-Disable Spring boot exposable Urls
 Disable Dev Console
 Company Capacity
 Show Last 10 messages

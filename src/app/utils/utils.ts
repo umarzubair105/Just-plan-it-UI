@@ -56,7 +56,7 @@ export class Utils {
 
   showMessage(message: string, action: string) {
     this.snackBar.open(messageChange(message), action, {
-      duration: 3000, // 3 seconds
+      duration: 5000, // 5 seconds
       horizontalPosition: 'right',
       verticalPosition: 'top',
     });
