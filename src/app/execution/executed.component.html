@@ -5,6 +5,7 @@
       <h4 class="mb-0"><i class="bi bi-book me-2"></i> {{ messageChange('Product') }} Release History</h4>
     </div>
     <div class="card-body bg-white">
+      <ng-container *ngIf="releases.length==0">There is no release completed yet.</ng-container>
       <div class="d-flex">
         <ul class="navbar-nav d-flex flex-row flex-wrap gap-2 mb-2 mb-lg-0 ms-auto">
           <li class="nav-item" *ngFor="let releaseDetailLink of releases;let i = index">
@@ -16,8 +17,8 @@
       <div class="row release" *ngFor="let releaseDetail of releases;let i = index" [id]="'eRelease'+i">
         <!-- Release Details -->
 <!--        <div class="mb-2 p-2 border rounded d-flex justify-content-between align-items-center flex-wrap release-info">-->
-        <div class="mb-2 p-2 d-flex justify-content-between align-items-center flex-wrap bg-primary-subtle">
-          <div class="release-info-text text-dark text-center">
+        <div class="mb-2 px-2 p-0 d-flex justify-content-between align-items-center flex-wrap bg-primary-subtle">
+          <div class="release-info-text text-dark text-center fs-5">
             Release: {{ releaseDetail.release?.name }} &nbsp;|&nbsp;
             Start Date: <strong>{{ releaseDetail.release?.startDate }}</strong> &nbsp;|&nbsp;
             End Date: <strong>{{ releaseDetail.release?.endDate }}</strong> &nbsp;|&nbsp;
@@ -26,17 +27,17 @@
           </div>
 
           <div class="mt-2 mt-lg-0">
-            <button class="btn btn-lg me-2" title="Expand the release"
+            <button class="btn btn-lg me-2 p-1" title="Expand the release"
                     *ngIf="!releaseDetail.expanded"
                     (click)="expand(releaseDetail)">
               <i class="bi bi-arrows-angle-expand"></i> Expand
             </button>
-            <button class="btn btn-lg me-2" title="Collapse the release"
+            <button class="btn btn-lg me-2 p-1" title="Collapse the release"
                     *ngIf="releaseDetail.expanded"
                     (click)="releaseDetail.expanded=false;">
               <i class="bi bi-arrows-angle-contract"></i> Collapse
             </button>
-            <button class="btn btn-lg"
+            <button class="btn btn-lg me-1 p-1"
                     (click)="openDialogForEntityDetail(releaseDetail.release)" title="Release Artifacts">
               <i class="bi bi-file-earmark"></i> Release Artifacts
             </button>

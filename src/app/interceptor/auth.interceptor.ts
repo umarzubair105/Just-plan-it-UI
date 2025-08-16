@@ -4,10 +4,8 @@ import {AuthService} from '../services/auth.service';
 import { Observable, tap,throwError } from 'rxjs';
 import {catchError} from 'rxjs/operators';
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
-  console.log('authInterceptor In filter');
   const authService = inject(AuthService);
   const token = authService.getToken(); // Retrieve the token from storage
-  console.log('authInterceptor In filter'+token);
   if (token) {
     // Clone the request and add the Authorization header
     const clonedReq = req.clone({
@@ -24,15 +22,17 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
         next: (event: HttpEvent<any>) => {
           if (event instanceof HttpResponse) {
             // Successful responses (status code 2xx)
-            console.log('Response Status:', event.status);
-            console.log('Response Body:', event.body);
+            //console.log('Response Status:', event.status);
+            //console.log('Response Body:', event.body);
           }
         },
         error: (error: HttpErrorResponse) => {
+          //console.error('An error status:', error.status);
           if (error.status === 0) {
             authService.logout();
+            window.location.reload();
             // Handle status 0 (network or CORS error)
-            console.error('An error occurred:', error.error);
+            //console.error('An error occurred:', error.error);
             //alert('A network error occurred. Please check your connection or CORS settings or token is expired.');
           } else {
             // Handle other HTTP errors

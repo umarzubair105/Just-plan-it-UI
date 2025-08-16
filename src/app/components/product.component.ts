@@ -15,8 +15,10 @@ import {MatIcon} from '@angular/material/icon';
 import {ShowErrorsDirective} from '../directives/show-errors.directive';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Utils} from '../utils/utils';
-import {getToDayDate, messageChange, ReleaseIteration} from '../utils/helper';
+import {getToDayDate, isGlobalHR, messageChange, ReleaseIteration} from '../utils/helper';
 import {AuthService} from '../services/auth.service';
+import {Resource} from '../models/basic';
+import {ResourceService} from '../services/resource.service';
 
 //import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
@@ -52,6 +54,8 @@ export class ProductComponent implements OnInit {
   companyService = inject(CompanyService)
   //constructor(private companyService: CompanyService) {}
   addProduct: AddProduct = new AddProduct();
+  resources: Resource[] = [];
+  resourceService = inject(ResourceService);
 
   constructor(private utils: Utils,
               private router: Router, private route: ActivatedRoute,
@@ -62,6 +66,7 @@ export class ProductComponent implements OnInit {
     this.companyId =  this.utils.getCompanyId();
     //Number(this.route.snapshot.paramMap.get("companyId"));
     console.log('Testing:'+this.companyId)
+    this.loadResources();
   }
 
   onSubmit() {
@@ -82,7 +87,17 @@ export class ProductComponent implements OnInit {
         error: (err) => {this.errorMessage = err; this.utils.showErrorMessage(err);},
       });
   }
-
+  loadResources(): void {
+    this.resourceService.getByCompanyId(this.companyId).subscribe({
+      next: (data) => {
+        var tempR : Resource[] = data._embedded.resources;
+        this.resources = tempR;
+        this.resources.sort((a, b) => a.name.localeCompare(b.name));
+      },
+      error: (err) => (this.errorMessage = err),
+    });
+  }
   protected readonly messageChange = messageChange;
   protected readonly getToDayDate = getToDayDate;
+  protected readonly isGlobalHR = isGlobalHR;
 }

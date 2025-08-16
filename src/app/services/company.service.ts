@@ -33,6 +33,7 @@ export class AddCompany {
 export class AddProduct {
   name: string = '';
   emailProductManager: string = '';
+  productManagerId: number = 0;
   code: string = '';
   companyId: number|null=null;
   otherActivitiesPercentTime: number=10;

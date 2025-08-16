@@ -70,7 +70,7 @@
               type="text"
             />
           </div>
-          <div class="mb-3">
+          <div class="mb-3" *ngIf="resources.length==1">
             <label class="form-label" for="emailProductManager">{{ messageChange('Product') }} Manager Email<span
               class="text-danger ms-1">*</span></label>
             <input
@@ -87,6 +87,20 @@
 
               type="email"
             />
+          </div>
+          <div class="mb-3" *ngIf="resources.length>1">
+            <label class="form-label" for="productManagerId">{{ messageChange('Product') }} Manager<span
+              class="text-danger ms-1">*</span></label>
+            <select name="productManagerId" id="productManagerId"  [(ngModel)]="addProduct.productManagerId" class="form-control"
+                    required
+                    #productManagerId="ngModel"
+                    [ngClass]="{ 'is-invalid': productManagerId.invalid && (productManagerId.dirty || productManagerId.touched) }"
+                    [showErrors]="{ required: 'It is required' }">
+              <option *ngFor="let scope of resources" [value]="scope.id">
+                {{ scope.name }}
+              </option>
+            </select>
+
           </div>
 
           <div class="mb-3">
@@ -109,6 +123,7 @@
               type="text"
             />
           </div>
+
           <div class="mb-3">
             <label class="form-label" for="releaseIteration">Release Duration<span
               class="text-danger ms-1">*</span></label>

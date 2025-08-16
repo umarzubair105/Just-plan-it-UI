@@ -1,5 +1,3 @@
-login Issue
-Project manager Email issue/Add Product
 Site Tour
 Show Working Days and Total Times in Release, Check Total Time
 Show error/success message more prominent
@@ -10,7 +8,9 @@ Deploy, Url, Email
 Disable Spring boot exposable Urls
 Disable Dev Console
 Company Capacity
-
+Show Last 10 messages
+On team def by default select User Main Roles
+BUG On Modal Close wiythout save Data in grid should not be updated
 
 Give QA option to reject Other tasks
 Export in Excel Release plan
