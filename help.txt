@@ -1,15 +1,18 @@
 Plan It  - Issues
-Desc on Home Page
+Site Tour
+Start /Complete Release show and show error message
 Footer
 Pricing Model
 Icon
 Deploy, Url, Email
+Disable Spring boot exposable Urls
+Disable Dev Console
 
 
 Give QA option to reject Other tasks
 Export in Excel Release plan
 SSL,
-
+-- Start managing your projects smarter today.
 -- Shiraz Arshad
 
 

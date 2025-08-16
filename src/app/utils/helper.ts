@@ -274,14 +274,14 @@ export function messageChange(input:string): string {
   var companyType = localStorage.getItem('companyType');
   if (!companyType || companyType==undefined) {
     return input;
-  } else if (companyType==CompanyType.IT_PRODUCT_BASE) {
+  } else if (companyType==CompanyType.IT_PROJECT_BASE) {
     let output = input.replace(/\bProject\b/g, 'Product');
     output = output.replace(/\bProjects\b/g, 'Products');
     output = output.replace(/\bprojects\b/g, 'products');
     output = output.replace(/\bproject\b/g, 'product');
     output = output.replace(/\BPROJECT\b/g, 'PRODUCT');
     return output;
-  } else if (companyType==CompanyType.IT_PROJECT_BASE) {
+  } else if (companyType==CompanyType.IT_PRODUCT_BASE) {
     let output = input.replace(/\bProduct\b/g, 'Project');
     output = output.replace(/\bProducts\b/g, 'Projects');
     output = output.replace(/\bproducts\b/g, 'projects');

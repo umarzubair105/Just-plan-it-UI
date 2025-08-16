@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {RouterLink, RouterOutlet} from '@angular/router';
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatFormField, MatLabel} from '@angular/material/form-field';
 import {MatRadioButton, MatRadioGroup} from '@angular/material/radio';
@@ -36,7 +36,7 @@ import {MatSidenav, MatSidenavContainer, MatSidenavContent} from '@angular/mater
     MatCardHeader, MatCardActions, MatProgressSpinner, MatAccordion,
     MatExpansionPanel, MatExpansionPanelTitle, MatCardContent, MatCardSubtitle,
     MatCardTitle, MatLabel, MatExpansionPanelHeader,
-    TopBarComponent, SidebarComponent, CommonModule, MatSidenavContainer, MatSidenavContent, MatSidenav],//
+    TopBarComponent, SidebarComponent, CommonModule, MatSidenavContainer, MatSidenavContent, MatSidenav, RouterLink],//
 //  template: `<app-company></app-company>`,
   standalone: true,
   templateUrl: './app.component.html',

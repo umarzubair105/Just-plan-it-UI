@@ -1,10 +1,23 @@
 <div class="container mt-4">
   <h1 class="mb-0">Welcome to ProjectHaven</h1>
+  <div class="d-flex align-items-center mb-2 mt-2">
   - Where projects feel at home.
+  </div>
+
 
 
   <h5 class="mt-2 mb-0">Our Mission</h5>
-  - Make the Project Management easy and accountable enough, so team can focus on timely business value addition rather management.
+  - Make the Project Management easy and accountable enough, so team can focus on timely business value addition rather management. Start managing your projects smarter today.
+
+  <div class="d-flex align-items-center mb-2 mt-2">
+    <h5 class="mt-2 mb-2">How system works</h5> <button class="btn btn-primary btn-sm ms-2" (click)="openGallery(gallery)">System Tour</button>
+  </div>
+
+  A company account can have multiple projects. Each project can have separate teams. A resource can play different role in different projects.
+  Time can be allocated for each resource per project. Time estimation is done based on role for each Deliverable. After
+  time estimation, deliverable can be picked to plan. System will plan it in first un planned Release having sufficient time for related
+  resources. Once prioritized deliverables are picked. Unplanned Releases can be frozen. Planned release can be started once release start time comes.
+  Dashboard shows all about release and how to keep going. Artifacts can be maintained for company, per project, per release and per deliverable.
   <!--<h5 class="mt-2 mb-0">How do we do it?</h5>
   - Sign up your Company
   - Define working hours & days
@@ -21,6 +34,27 @@
   <div class="row mt-3">
     <div class="col-md-4 mb-3" *ngFor="let feature of features">
       <div class="card h-100 shadow-sm text-center">
+
+<!--        <div id="carousel{{feature.title}}" class="carousel slide" data-bs-ride="carousel">
+          <div class="carousel-inner">
+            <div *ngFor="let img of feature.images; let i = index" [ngClass]="{'carousel-item': true, 'active': i === 0}">
+              <img [src]="img" class="d-block w-100 p-3" style="max-height: 150px; object-fit: contain;" alt="{{ feature.title }}">
+            </div>
+          </div>
+          <button class="carousel-control-prev" type="button" [attr.data-bs-target]="'#carousel' + feature.title" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon"></span>
+            <span class="visually-hidden">Previous</span>
+          </button>
+          <button class="carousel-control-next" type="button" [attr.data-bs-target]="'#carousel' + feature.title" data-bs-slide="next">
+            <span class="carousel-control-next-icon"></span>
+            <span class="visually-hidden">Next</span>
+          </button>
+        </div>-->
+
+        <!--<img [src]="'assets/images/project.png'"
+             alt="{{ feature.title }}"
+             class="card-img-top p-3"
+             style="max-height: 150px; object-fit: contain;">-->
         <div class="card-body">
           <div class="mb-2 display-4">{{ feature.icon }}</div>
           <h5 class="card-title">{{ messageChange(feature.title) }}</h5>
@@ -30,6 +64,35 @@
       </div>
     </div>
   </div>
+  <!-- Fullscreen Gallery Modal -->
+  <ng-template #gallery>
+<!--
+  <div class="modal fade" id="galleryModal" tabindex="-1" aria-hidden="true">
+-->
+<!--
+    <div class="modal fade show d-block">
+      <div class="modal-dialog">
+        <div class="modal-content">
+-->
+
+  <div class="modal fade show d-block"  tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+      <div class="modal-content bg-dark">
+        <div class="modal-header border-0">
+          <h5 class="modal-title text-white">Gallery</h5>
+          <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" (click)="closeModal()"></button>
+        </div>
+        <div class="modal-body d-flex justify-content-center align-items-center">
+          <img [src]="currentImage" class="img-fluid">
+        </div>
+        <div class="modal-footer border-0 justify-content-between">
+          <button class="btn btn-light" (click)="prevImage()">Prev</button>
+          <button class="btn btn-light" (click)="nextImage()">Next</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  </ng-template>
 <!--
   <div class="d-flex justify-content-between align-items-center">
     <div class="mt-20" style="margin-top: 20px;">Left</div>
